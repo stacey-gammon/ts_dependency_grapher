@@ -1,43 +1,43 @@
 digraph test{
       subgraph cluster_root {
         style=filled
-        color="#FFBA08"  
+        color="#C1FFF2"  
         label="root"
         subgraph cluster_root_index_ts {
         style=filled
-        color="#F48C06"  
+        color="#BAFFDF"  
         label="index_ts"
-        _index_ts_NoName [label="index" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+        _index_ts_NoName [label="index" fillcolor="yellow", style=filled fixedsize=true width=3 height=3 fontcolor="#C1FFF2" fixedsize=true width=3 height=3]
 
 }
 subgraph cluster__bar {
         style=filled
-        color="#F48C06"  
+        color="#BAFFDF"  
         label="bar"
-        _bar_index_ts [label="index_ts" fillcolor="#9D0208", style=filled fixedsize=true width=5 height=5 fontcolor="#FFBA08" fixedsize=true width=5 height=5]
+        _bar_index_ts [label="index_ts" fillcolor="#9DC0BC", style=filled fixedsize=true width=7.5 height=7.5 fontcolor="#C1FFF2" fixedsize=true width=7.5 height=7.5]
 
-_bar_using_fn_ts [label="using_fn_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_bar_using_fn_ts [label="using_fn_ts" fillcolor="yellow", style=filled fixedsize=true width=3 height=3 fontcolor="#C1FFF2" fixedsize=true width=3 height=3]
 
-_bar_zed [label="zed" fillcolor="#370617", style=filled fixedsize=true width=10 height=10 fontcolor="#FFBA08" fixedsize=true width=10 height=10]
+_bar_zed [label="zed" fillcolor="#7C7287", style=filled fixedsize=true width=15 height=15 fontcolor="#C1FFF2" fixedsize=true width=15 height=15]
 
 }
 subgraph cluster__foo {
         style=filled
-        color="#F48C06"  
+        color="#BAFFDF"  
         label="foo"
-        _foo_index_ts [label="index_ts" fillcolor="#370617", style=filled fixedsize=true width=10 height=10 fontcolor="#FFBA08" fixedsize=true width=10 height=10]
+        _foo_index_ts [label="index_ts" fillcolor="#7C7287", style=filled fixedsize=true width=15 height=15 fontcolor="#C1FFF2" fixedsize=true width=15 height=15]
 
-_foo_top_level_ts [label="top_level_ts" fillcolor="#9D0208", style=filled fixedsize=true width=5 height=5 fontcolor="#FFBA08" fixedsize=true width=5 height=5]
+_foo_top_level_ts [label="top_level_ts" fillcolor="#9DC0BC", style=filled fixedsize=true width=7.5 height=7.5 fontcolor="#C1FFF2" fixedsize=true width=7.5 height=7.5]
 
 }
 }
 
-       _bar_index_ts -> _bar_index_ts [color="#F48C06"]
-_bar_index_ts -> _foo_index_ts [color="#F48C06"]
-_bar_index_ts -> _bar_zed [color="#F48C06"]
-_bar_using_fn_ts -> _foo_index_ts [color="#F48C06"]
-_bar_zed -> _foo_top_level_ts [color="#F48C06"]
-_index_ts_NoName -> _bar_zed [color="#F48C06"]
-_foo_index_ts -> _bar_zed [color="#F48C06"]
+       _bar_index_ts -> _bar_index_ts [color="#BAFFDF"]
+_bar_index_ts -> _foo_index_ts [color="#7C7287"]
+_bar_index_ts -> _bar_zed [color="#B2EDC5"]
+_bar_using_fn_ts -> _foo_index_ts [color="#7C7287"]
+_bar_zed -> _foo_top_level_ts [color="#B2EDC5"]
+_index_ts_NoName -> _bar_zed [color="#BAFFDF"]
+_foo_index_ts -> _bar_zed [color="#B2EDC5"]
 
     }

@@ -11,8 +11,21 @@ import { getSafeName } from './dot_utils';
 export const MINT_COLOR_SCHEME = ['#C1FFF2', '#BAFFDF', '#B2EDC5', '#9DC0BC', '#7C7287'];
 export const PURPLE_BLACK = ['#9DA2AB', '#A188A6', '#7F5A83', '#0D324D', '#020202'];
 export const SUNRISE_SCHEME = ['#FFBA08', '#F48C06', '#DC2F02', '#9D0208', '#370617'];
+export const LIME = ['#F4E04D', '#F2ED6F', '#CEE397', '#8DB1AB', '#587792'];
+export const MOSS = ['#EAE1DF', '#B79492', '#917C78', '#667761', '#545E56'];
 
-export const CURR_COLOR_SCHEME = SUNRISE_SCHEME;
+const COLOR_SCHEMES = [
+  MINT_COLOR_SCHEME,
+  SUNRISE_SCHEME,
+  PURPLE_BLACK,
+  LIME,
+  MOSS
+];
+
+const RANDOM_COLOR_INDEX = Math.floor(Math.random() * COLOR_SCHEMES.length);
+console.log('RANDOM_COLOR_INDEX', RANDOM_COLOR_INDEX);
+
+export const CURR_COLOR_SCHEME = COLOR_SCHEMES[RANDOM_COLOR_INDEX];
 
 export function getFontColor(bgColor: string): string {
   return bgColor === CURR_COLOR_SCHEME[0] ||
@@ -46,12 +59,24 @@ export function getRelativeSizeOfNode(size: number, maxSize: number): number {
   if (isNaN(size) || isNaN(maxSize)) {
     throw new Error('NAN passed to getRelativeSizeOfNode');
   }
-  const MAX_SIZE = 10;
-
+  const MAX_SIZE = 15;
+  const MIN_SIZE = 3;
   const comparativeApiSizeRatio = size / maxSize;
 
-  return Math.max(comparativeApiSizeRatio * MAX_SIZE, 1);
+  return Math.max(comparativeApiSizeRatio * MAX_SIZE, MIN_SIZE);
 }
+
+export function getWeightedSize(size: number, maxSize: number, weightedMaxSize: number, weightedMinSize: number): number {
+  if (isNaN(size) || isNaN(maxSize)) {
+    throw new Error('NAN passed to getRelativeSizeOfNode');
+  }
+  const MAX_SIZE = weightedMaxSize;
+  const MIN_SIZE = weightedMinSize;
+  const comparativeApiSizeRatio = size / maxSize;
+
+  return Math.max(comparativeApiSizeRatio * MAX_SIZE, MIN_SIZE);
+}
+
 
 export function getWeightedColor(val: number, max: number): string {
   const thresholds = [0, 0.2, 0.4, 0.7, 1];

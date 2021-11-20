@@ -66,6 +66,4 @@ function getNodesAndEdges(sourceFile: SourceFile, fileNode: File, gvEdges: GVEdg
       }
     });
   });
-  
-  console.log(`Collected ${fileNode.exports.length} exports from file ${sourceFile.getFilePath()}`);
 }

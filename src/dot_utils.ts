@@ -1,6 +1,6 @@
 import { getClusteredNodeForFolder } from './folder_to_clustered_node';
 import { rollupEdges } from './rollup_edges';
-import {  getColorForLevel, getNodeProperties, getRelativeSizeOfNode, getWeightedColor } from './styles';
+import {  getColorForLevel, getNodeProperties, getRelativeSizeOfNode, getWeightedColor, getWeightedSize } from './styles';
 import { ClusteredNode, File, Folder, GVEdgeMapping, GVNode } from './types';
 import { isGVNode, isGVNodeArray, zoomOut} from './zoom_out';
 
@@ -42,6 +42,15 @@ function findMaxVal(node: ClusteredNode | GVNode, max: number = 0, key: keyof GV
 function getDependenciesText(
   edges: GVEdgeMapping
 ) {
+
+  const maxWeight = Object.values(edges).reduce((max, dests) => {
+    return dests.reduce((innerMax, dest) => {
+      return dest.weight > innerMax ? dest.weight : innerMax;
+    }, max)
+  }, 0);
+
+
+  console.log('MAX DEST WEIGHT IS ' + maxWeight);
   let text = '';
   Object.keys(edges).forEach((source) => {
     if (!source) {
@@ -55,9 +64,11 @@ function getDependenciesText(
         console.error(edges);
         throw new Error('getDependenciesText: dest.dest not defined!');
       }
-      const color = getWeightedColor(dest.weight, 100);
+      const color = getWeightedColor(dest.weight, maxWeight);
+      const weight = getWeightedSize(dest.weight, maxWeight, 10, 2);
+      console.log(`Weight for ${dest.weight} out of max ${maxWeight} is ${weight}`)
       text += `${getSafeName(source)} -> ${getSafeName(dest.dest)} ${
-        dest.weight ? `[color="${color}"]` : ''
+        dest.weight ? `[color="${color}" penwidth=${weight}]` : ''
       }\n`;
     });
   });
@@ -134,7 +145,6 @@ export function getNodesText(node: ClusteredNode, level = 0, maxes : { maxIncomi
         text += getNodeText(child, maxes) + '\n'
       })
     } else {
-      console.log('should be parent children!', node.children);
       node.children.forEach(child => {
         text += getNodesText(child, level + 1, maxes); + '\n'
       })
