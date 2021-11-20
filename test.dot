@@ -1,12 +1,488 @@
 digraph test{
-    _components_contextmenu_contextMenutsx_show
-_components_contextmenu_contextMenutsx_hide
-_components_contextmenu_contextMenutsx_isOpen
-_components_contextmenu_contextMenutsx_IOffset
+      subgraph cluster_root {
+        style=filled
+        color="#FFBA08"  
+        label="root"
+        subgraph cluster_root_index_ts {
+        style=filled
+        color="#F48C06"  
+        label="index_ts"
+        _index_ts_NoName [label="index" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
 
-     _components_contextmenu_contextMenuTargettsx_NoName -> _components_contextmenu_contextMenutsx_show 
-_components_contextmenu_contextMenutsx_NoName -> _components_contextmenu_contextMenutsx_IOffset 
-_components_contextmenu_contextMenutsx_NoName -> _components_contextmenu_contextMenutsx_IOffset 
-_components_contextmenu_contextMenutsx_NoName -> _components_contextmenu_contextMenutsx_IOffset 
+}
+subgraph cluster__accessibility {
+        style=filled
+        color="#F48C06"  
+        label="accessibility"
+        _accessibility_focusStyleManager_ts [label="focusStyleManager_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
 
-  }
+_accessibility_index_ts [label="index_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+}
+subgraph cluster__common {
+        style=filled
+        color="#F48C06"  
+        label="common"
+        _common_abstractComponent_ts [label="abstractComponent_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_common_abstractComponent2_ts [label="abstractComponent2_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_common_abstractPureComponent_ts [label="abstractPureComponent_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_common_abstractPureComponent2_ts [label="abstractPureComponent2_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_common_alignment_ts [label="alignment_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_common_boundary_ts [label="boundary_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_common_classes_ts [label="classes_ts" fillcolor="yellow", style=filled fixedsize=true width=10 height=10 fontcolor="#FFBA08" fixedsize=true width=10 height=10]
+
+_common_colors_ts [label="colors_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_common_configureDom4_ts [label="configureDom4_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_common_constructor_ts [label="constructor_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_common_context_ts [label="context_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_common_elevation_ts [label="elevation_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_common_errors_ts [label="errors_ts" fillcolor="yellow", style=filled fixedsize=true width=1.8852459016393441 height=1.8852459016393441 fontcolor="#FFBA08" fixedsize=true width=1.8852459016393441 height=1.8852459016393441]
+
+_common_index_ts [label="index_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_common_intent_ts [label="intent_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_common_interactionMode_ts [label="interactionMode_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_common_keys_ts [label="keys_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_common_position_ts [label="position_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_common_props_ts [label="props_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_common_refs_ts [label="refs_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_common_utils [label="utils" fillcolor="yellow", style=filled fixedsize=true width=1.9262295081967213 height=1.9262295081967213 fontcolor="#FFBA08" fixedsize=true width=1.9262295081967213 height=1.9262295081967213]
+
+}
+subgraph cluster__compatibility {
+        style=filled
+        color="#F48C06"  
+        label="compatibility"
+        _compatibility_browser_ts [label="browser_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_compatibility_index_ts [label="index_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+}
+subgraph cluster__components {
+        style=filled
+        color="#F48C06"  
+        label="components"
+        _components_index_ts [label="index_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_alert [label="alert" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_breadcrumbs [label="breadcrumbs" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_button [label="button" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_callout [label="callout" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_card [label="card" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_collapse [label="collapse" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_collapsible_list [label="collapsible_list" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_context_menu [label="context_menu" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_dialog [label="dialog" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_divider [label="divider" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_drawer [label="drawer" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_editable_text [label="editable_text" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_forms [label="forms" fillcolor="yellow", style=filled fixedsize=true width=2.0081967213114753 height=2.0081967213114753 fontcolor="#FFBA08" fixedsize=true width=2.0081967213114753 height=2.0081967213114753]
+
+_components_hotkeys [label="hotkeys" fillcolor="yellow", style=filled fixedsize=true width=1.5163934426229508 height=1.5163934426229508 fontcolor="#FFBA08" fixedsize=true width=1.5163934426229508 height=1.5163934426229508]
+
+_components_html [label="html" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_html_select [label="html_select" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_html_table [label="html_table" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_icon [label="icon" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_menu [label="menu" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_navbar [label="navbar" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_non_ideal_state [label="non_ideal_state" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_overflow_list [label="overflow_list" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_overlay [label="overlay" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_panel_stack [label="panel_stack" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_panel_stack2 [label="panel_stack2" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_popover [label="popover" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_portal [label="portal" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_progress_bar [label="progress_bar" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_resize_sensor [label="resize_sensor" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_slider [label="slider" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_spinner [label="spinner" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_tabs [label="tabs" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_tag [label="tag" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_tag_input [label="tag_input" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_text [label="text" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_toast [label="toast" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_tooltip [label="tooltip" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_components_tree [label="tree" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+}
+subgraph cluster__context {
+        style=filled
+        color="#F48C06"  
+        label="context"
+        _context_index_ts [label="index_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_context_hotkeys [label="hotkeys" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+}
+subgraph cluster__hooks {
+        style=filled
+        color="#F48C06"  
+        label="hooks"
+        _hooks_index_ts [label="index_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+_hooks_hotkeys [label="hotkeys" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+
+}
+}
+
+       _components_overlay -> _common_abstractPureComponent2_ts [color="#F48C06"]
+_components_overlay -> _common_classes_ts [color="#F48C06"]
+_components_overlay -> _common_keys_ts [color="#F48C06"]
+_components_overlay -> _common_props_ts [color="#F48C06"]
+_components_overlay -> _common_utils [color="#F48C06"]
+_components_overlay -> _components_overlay [color="#DC2F02"]
+_components_overlay -> _components_portal [color="#F48C06"]
+_components_resize_sensor -> _common_abstractPureComponent2_ts [color="#F48C06"]
+_components_resize_sensor -> _common_props_ts [color="#F48C06"]
+_components_resize_sensor -> _components_resize_sensor [color="#F48C06"]
+_components_tooltip -> _common_abstractPureComponent2_ts [color="#F48C06"]
+_components_tooltip -> _common_classes_ts [color="#F48C06"]
+_components_tooltip -> _common_props_ts [color="#F48C06"]
+_components_tooltip -> _components_popover [color="#F48C06"]
+_components_tooltip -> _components_tooltip [color="#F48C06"]
+_components_popover -> _common_abstractPureComponent2_ts [color="#F48C06"]
+_components_popover -> _common_classes_ts [color="#DC2F02"]
+_components_popover -> _common_errors_ts [color="#F48C06"]
+_components_popover -> _common_props_ts [color="#F48C06"]
+_components_popover -> _common_refs_ts [color="#F48C06"]
+_components_popover -> _common_utils [color="#F48C06"]
+_components_popover -> _components_overlay [color="#F48C06"]
+_components_popover -> _components_popover [color="#9D0208"]
+_components_popover -> _components_resize_sensor [color="#F48C06"]
+_components_popover -> _components_tooltip [color="#F48C06"]
+_components_popover -> _common_position_ts [color="#F48C06"]
+_components_context_menu -> _common_abstractPureComponent2_ts [color="#F48C06"]
+_components_context_menu -> _common_classes_ts [color="#F48C06"]
+_components_context_menu -> _common_position_ts [color="#F48C06"]
+_components_context_menu -> _components_context_menu [color="#F48C06"]
+_components_context_menu -> _components_overlay [color="#F48C06"]
+_components_context_menu -> _components_popover [color="#F48C06"]
+_components_context_menu -> _common_constructor_ts [color="#F48C06"]
+_components_context_menu -> _common_errors_ts [color="#F48C06"]
+_components_context_menu -> _common_utils [color="#F48C06"]
+_components_icon -> _common_abstractPureComponent2_ts [color="#F48C06"]
+_components_icon -> _common_classes_ts [color="#F48C06"]
+_components_icon -> _common_props_ts [color="#F48C06"]
+_components_icon -> _components_icon [color="#F48C06"]
+_components_spinner -> _common_abstractPureComponent2_ts [color="#F48C06"]
+_components_spinner -> _common_classes_ts [color="#F48C06"]
+_components_spinner -> _common_errors_ts [color="#F48C06"]
+_components_spinner -> _common_props_ts [color="#F48C06"]
+_components_spinner -> _common_utils [color="#F48C06"]
+_components_spinner -> _components_spinner [color="#F48C06"]
+_components_button -> _common_abstractPureComponent2_ts [color="#F48C06"]
+_components_button -> _common_alignment_ts [color="#F48C06"]
+_components_button -> _common_classes_ts [color="#DC2F02"]
+_components_button -> _common_keys_ts [color="#F48C06"]
+_components_button -> _common_props_ts [color="#F48C06"]
+_components_button -> _common_utils [color="#F48C06"]
+_components_button -> _components_button [color="#DC2F02"]
+_components_button -> _components_icon [color="#F48C06"]
+_components_button -> _components_spinner [color="#F48C06"]
+_components_button -> _common_refs_ts [color="#F48C06"]
+_components_dialog -> _common_abstractPureComponent2_ts [color="#F48C06"]
+_components_dialog -> _common_classes_ts [color="#F48C06"]
+_components_dialog -> _common_errors_ts [color="#F48C06"]
+_components_dialog -> _common_props_ts [color="#F48C06"]
+_components_dialog -> _common_utils [color="#F48C06"]
+_components_dialog -> _components_button [color="#F48C06"]
+_components_dialog -> _components_dialog [color="#DC2F02"]
+_components_dialog -> _components_html [color="#F48C06"]
+_components_dialog -> _components_icon [color="#F48C06"]
+_components_dialog -> _components_overlay [color="#F48C06"]
+_components_alert -> _common_abstractPureComponent2_ts [color="#F48C06"]
+_components_alert -> _common_classes_ts [color="#F48C06"]
+_components_alert -> _common_errors_ts [color="#F48C06"]
+_components_alert -> _common_intent_ts [color="#F48C06"]
+_components_alert -> _common_props_ts [color="#F48C06"]
+_components_alert -> _components_alert [color="#F48C06"]
+_components_alert -> _components_button [color="#F48C06"]
+_components_alert -> _components_dialog [color="#F48C06"]
+_components_alert -> _components_icon [color="#F48C06"]
+_components_alert -> _components_overlay [color="#F48C06"]
+_components_text -> _common_abstractPureComponent2_ts [color="#F48C06"]
+_components_text -> _common_classes_ts [color="#F48C06"]
+_components_text -> _common_props_ts [color="#F48C06"]
+_components_text -> _components_text [color="#F48C06"]
+_components_menu -> _common_abstractPureComponent2_ts [color="#F48C06"]
+_components_menu -> _common_classes_ts [color="#F48C06"]
+_components_menu -> _common_position_ts [color="#F48C06"]
+_components_menu -> _common_props_ts [color="#F48C06"]
+_components_menu -> _components_icon [color="#F48C06"]
+_components_menu -> _components_menu [color="#F48C06"]
+_components_menu -> _components_popover [color="#F48C06"]
+_components_menu -> _components_text [color="#F48C06"]
+_components_menu -> _common_refs_ts [color="#F48C06"]
+_components_menu -> _components_html [color="#F48C06"]
+_components_breadcrumbs -> _common_abstractPureComponent2_ts [color="#F48C06"]
+_components_breadcrumbs -> _common_boundary_ts [color="#F48C06"]
+_components_breadcrumbs -> _common_classes_ts [color="#F48C06"]
+_components_breadcrumbs -> _common_position_ts [color="#F48C06"]
+_components_breadcrumbs -> _common_props_ts [color="#F48C06"]
+_components_breadcrumbs -> _components_breadcrumbs [color="#F48C06"]
+_components_breadcrumbs -> _components_menu [color="#F48C06"]
+_components_breadcrumbs -> _components_overflow_list [color="#F48C06"]
+_components_breadcrumbs -> _components_popover [color="#F48C06"]
+_components_breadcrumbs -> _components_icon [color="#F48C06"]
+_components_callout -> _common_abstractPureComponent2_ts [color="#F48C06"]
+_components_callout -> _common_classes_ts [color="#F48C06"]
+_components_callout -> _common_intent_ts [color="#F48C06"]
+_components_callout -> _common_props_ts [color="#F48C06"]
+_components_callout -> _components_callout [color="#F48C06"]
+_components_callout -> _components_html [color="#F48C06"]
+_components_callout -> _components_icon [color="#F48C06"]
+_components_card -> _common_abstractPureComponent2_ts [color="#F48C06"]
+_components_card -> _common_classes_ts [color="#F48C06"]
+_components_card -> _common_elevation_ts [color="#F48C06"]
+_components_card -> _common_props_ts [color="#F48C06"]
+_components_card -> _components_card [color="#F48C06"]
+_components_collapse -> _common_abstractPureComponent2_ts [color="#F48C06"]
+_components_collapse -> _common_classes_ts [color="#F48C06"]
+_components_collapse -> _common_props_ts [color="#F48C06"]
+_components_collapse -> _components_collapse [color="#DC2F02"]
+_components_divider -> _common_abstractPureComponent2_ts [color="#F48C06"]
+_components_divider -> _common_classes_ts [color="#F48C06"]
+_components_divider -> _common_props_ts [color="#F48C06"]
+_components_divider -> _components_divider [color="#F48C06"]
+_components_drawer -> _common_abstractPureComponent2_ts [color="#F48C06"]
+_components_drawer -> _common_classes_ts [color="#F48C06"]
+_components_drawer -> _common_errors_ts [color="#F48C06"]
+_components_drawer -> _common_position_ts [color="#F48C06"]
+_components_drawer -> _common_props_ts [color="#F48C06"]
+_components_drawer -> _components_button [color="#F48C06"]
+_components_drawer -> _components_drawer [color="#F48C06"]
+_components_drawer -> _components_html [color="#F48C06"]
+_components_drawer -> _components_icon [color="#F48C06"]
+_components_drawer -> _components_overlay [color="#F48C06"]
+_components_editable_text -> _common_abstractPureComponent2_ts [color="#F48C06"]
+_components_editable_text -> _common_classes_ts [color="#F48C06"]
+_components_editable_text -> _common_keys_ts [color="#F48C06"]
+_components_editable_text -> _common_props_ts [color="#F48C06"]
+_components_editable_text -> _compatibility_browser_ts [color="#F48C06"]
+_components_editable_text -> _common_utils [color="#F48C06"]
+_components_editable_text -> _components_editable_text [color="#F48C06"]
+_components_forms -> _common_abstractPureComponent2_ts [color="#F48C06"]
+_components_forms -> _common_classes_ts [color="#9D0208"]
+_components_forms -> _common_props_ts [color="#370617"]
+_components_forms -> _components_forms [color="#370617"]
+_components_forms -> _common_alignment_ts [color="#F48C06"]
+_components_forms -> _common_refs_ts [color="#DC2F02"]
+_components_forms -> _common_errors_ts [color="#F48C06"]
+_components_forms -> _components_icon [color="#F48C06"]
+_components_forms -> _common_intent_ts [color="#F48C06"]
+_components_forms -> _common_keys_ts [color="#F48C06"]
+_components_forms -> _common_position_ts [color="#F48C06"]
+_components_forms -> _common_utils [color="#F48C06"]
+_components_forms -> _components_button [color="#F48C06"]
+_components_html_select -> _common_abstractPureComponent2_ts [color="#F48C06"]
+_components_html_select -> _common_classes_ts [color="#F48C06"]
+_components_html_select -> _common_props_ts [color="#F48C06"]
+_components_html_select -> _components_html_select [color="#F48C06"]
+_components_html_select -> _components_icon [color="#F48C06"]
+_components_html_table -> _common_abstractPureComponent2_ts [color="#F48C06"]
+_components_html_table -> _common_classes_ts [color="#F48C06"]
+_components_html_table -> _common_props_ts [color="#F48C06"]
+_components_html_table -> _components_html_table [color="#F48C06"]
+_components_hotkeys -> _common_abstractPureComponent2_ts [color="#F48C06"]
+_components_hotkeys -> _common_classes_ts [color="#F48C06"]
+_components_hotkeys -> _common_props_ts [color="#F48C06"]
+_components_hotkeys -> _components_hotkeys [color="#370617"]
+_components_hotkeys -> _components_icon [color="#F48C06"]
+_components_hotkeys -> _hooks_hotkeys [color="#F48C06"]
+_components_hotkeys -> _common_errors_ts [color="#F48C06"]
+_components_hotkeys -> _common_utils [color="#F48C06"]
+_components_hotkeys -> _components_html [color="#F48C06"]
+_components_hotkeys -> _components_dialog [color="#F48C06"]
+_components_hotkeys -> _common_constructor_ts [color="#F48C06"]
+_components_navbar -> _common_abstractPureComponent2_ts [color="#F48C06"]
+_components_navbar -> _common_classes_ts [color="#F48C06"]
+_components_navbar -> _common_props_ts [color="#DC2F02"]
+_components_navbar -> _components_navbar [color="#DC2F02"]
+_components_navbar -> _common_alignment_ts [color="#F48C06"]
+_components_non_ideal_state -> _common_abstractPureComponent2_ts [color="#F48C06"]
+_components_non_ideal_state -> _common_classes_ts [color="#F48C06"]
+_components_non_ideal_state -> _common_props_ts [color="#F48C06"]
+_components_non_ideal_state -> _common_utils [color="#F48C06"]
+_components_non_ideal_state -> _components_html [color="#F48C06"]
+_components_non_ideal_state -> _components_icon [color="#F48C06"]
+_components_non_ideal_state -> _components_non_ideal_state [color="#F48C06"]
+_components_panel_stack -> _common_abstractPureComponent2_ts [color="#F48C06"]
+_components_panel_stack -> _common_classes_ts [color="#F48C06"]
+_components_panel_stack -> _components_button [color="#F48C06"]
+_components_panel_stack -> _components_panel_stack [color="#DC2F02"]
+_components_panel_stack -> _components_text [color="#F48C06"]
+_components_panel_stack -> _common_errors_ts [color="#F48C06"]
+_components_panel_stack -> _common_props_ts [color="#F48C06"]
+_components_progress_bar -> _common_abstractPureComponent2_ts [color="#F48C06"]
+_components_progress_bar -> _common_classes_ts [color="#F48C06"]
+_components_progress_bar -> _common_props_ts [color="#F48C06"]
+_components_progress_bar -> _common_utils [color="#F48C06"]
+_components_progress_bar -> _components_progress_bar [color="#F48C06"]
+_components_slider -> _common_abstractPureComponent2_ts [color="#F48C06"]
+_components_slider -> _common_classes_ts [color="#F48C06"]
+_components_slider -> _common_keys_ts [color="#F48C06"]
+_components_slider -> _common_props_ts [color="#F48C06"]
+_components_slider -> _common_utils [color="#F48C06"]
+_components_slider -> _components_slider [color="#370617"]
+_components_slider -> _common_errors_ts [color="#F48C06"]
+_components_slider -> _common_intent_ts [color="#F48C06"]
+_components_tabs -> _common_abstractPureComponent2_ts [color="#F48C06"]
+_components_tabs -> _common_classes_ts [color="#F48C06"]
+_components_tabs -> _common_props_ts [color="#F48C06"]
+_components_tabs -> _components_tabs [color="#9D0208"]
+_components_tabs -> _common_keys_ts [color="#F48C06"]
+_components_tabs -> _common_utils [color="#F48C06"]
+_components_tag -> _common_abstractPureComponent2_ts [color="#F48C06"]
+_components_tag -> _common_classes_ts [color="#F48C06"]
+_components_tag -> _common_props_ts [color="#F48C06"]
+_components_tag -> _common_utils [color="#F48C06"]
+_components_tag -> _components_icon [color="#F48C06"]
+_components_tag -> _components_tag [color="#F48C06"]
+_components_tag -> _components_text [color="#F48C06"]
+_components_tag_input -> _common_abstractPureComponent2_ts [color="#F48C06"]
+_components_tag_input -> _common_classes_ts [color="#F48C06"]
+_components_tag_input -> _common_keys_ts [color="#F48C06"]
+_components_tag_input -> _common_props_ts [color="#F48C06"]
+_components_tag_input -> _common_refs_ts [color="#F48C06"]
+_components_tag_input -> _common_utils [color="#F48C06"]
+_components_tag_input -> _components_icon [color="#F48C06"]
+_components_tag_input -> _components_tag [color="#F48C06"]
+_components_tag_input -> _components_tag_input [color="#F48C06"]
+_components_toast -> _common_abstractPureComponent2_ts [color="#F48C06"]
+_components_toast -> _common_classes_ts [color="#F48C06"]
+_components_toast -> _common_props_ts [color="#F48C06"]
+_components_toast -> _components_button [color="#F48C06"]
+_components_toast -> _components_icon [color="#F48C06"]
+_components_toast -> _components_toast [color="#DC2F02"]
+_components_toast -> _common_errors_ts [color="#F48C06"]
+_components_toast -> _common_keys_ts [color="#F48C06"]
+_components_toast -> _common_position_ts [color="#F48C06"]
+_components_toast -> _common_utils [color="#F48C06"]
+_components_toast -> _components_overlay [color="#F48C06"]
+_common_alignment_ts -> _common_alignment_ts [color="#F48C06"]
+_common_classes_ts -> _common_alignment_ts [color="#F48C06"]
+_common_classes_ts -> _common_classes_ts [color="#370617"]
+_common_classes_ts -> _common_elevation_ts [color="#F48C06"]
+_common_classes_ts -> _common_intent_ts [color="#F48C06"]
+_common_classes_ts -> _common_position_ts [color="#F48C06"]
+_common_boundary_ts -> _common_boundary_ts [color="#F48C06"]
+_components_overflow_list -> _common_boundary_ts [color="#F48C06"]
+_components_overflow_list -> _common_classes_ts [color="#F48C06"]
+_components_overflow_list -> _common_errors_ts [color="#F48C06"]
+_components_overflow_list -> _common_props_ts [color="#F48C06"]
+_components_overflow_list -> _common_utils [color="#F48C06"]
+_components_overflow_list -> _components_overflow_list [color="#DC2F02"]
+_components_overflow_list -> _components_resize_sensor [color="#F48C06"]
+_components_collapsible_list -> _common_boundary_ts [color="#F48C06"]
+_components_collapsible_list -> _common_classes_ts [color="#F48C06"]
+_components_collapsible_list -> _common_errors_ts [color="#F48C06"]
+_components_collapsible_list -> _common_position_ts [color="#F48C06"]
+_components_collapsible_list -> _common_props_ts [color="#F48C06"]
+_components_collapsible_list -> _common_utils [color="#F48C06"]
+_components_collapsible_list -> _components_collapsible_list [color="#F48C06"]
+_components_collapsible_list -> _components_menu [color="#F48C06"]
+_components_collapsible_list -> _components_popover [color="#F48C06"]
+_common_utils -> _common_classes_ts [color="#F48C06"]
+_common_utils -> _common_errors_ts [color="#F48C06"]
+_common_utils -> _common_refs_ts [color="#F48C06"]
+_common_utils -> _common_utils [color="#370617"]
+_components_tree -> _common_classes_ts [color="#F48C06"]
+_components_tree -> _common_props_ts [color="#F48C06"]
+_components_tree -> _components_collapse [color="#F48C06"]
+_components_tree -> _components_icon [color="#F48C06"]
+_components_tree -> _components_tree [color="#9D0208"]
+_components_tree -> _common_utils [color="#F48C06"]
+_accessibility_focusStyleManager_ts -> _common_classes_ts [color="#F48C06"]
+_accessibility_focusStyleManager_ts -> _common_interactionMode_ts [color="#F48C06"]
+_components_html -> _common_classes_ts [color="#F48C06"]
+_components_html -> _common_props_ts [color="#F48C06"]
+_components_panel_stack2 -> _common_classes_ts [color="#F48C06"]
+_components_panel_stack2 -> _common_props_ts [color="#F48C06"]
+_components_panel_stack2 -> _components_button [color="#F48C06"]
+_components_panel_stack2 -> _components_panel_stack2 [color="#DC2F02"]
+_components_panel_stack2 -> _components_text [color="#F48C06"]
+_components_portal -> _common_classes_ts [color="#F48C06"]
+_components_portal -> _common_context_ts [color="#F48C06"]
+_components_portal -> _common_errors_ts [color="#F48C06"]
+_components_portal -> _common_props_ts [color="#F48C06"]
+_components_portal -> _common_utils [color="#F48C06"]
+_components_portal -> _components_portal [color="#F48C06"]
+_common_index_ts -> _common_colors_ts [color="#F48C06"]
+_common_context_ts -> _common_context_ts [color="#F48C06"]
+_common_elevation_ts -> _common_elevation_ts [color="#F48C06"]
+_common_intent_ts -> _common_intent_ts [color="#F48C06"]
+_common_props_ts -> _common_intent_ts [color="#F48C06"]
+_common_props_ts -> _common_props_ts [color="#F48C06"]
+_common_props_ts -> _common_refs_ts [color="#F48C06"]
+_common_keys_ts -> _common_keys_ts [color="#F48C06"]
+_common_position_ts -> _common_position_ts [color="#DC2F02"]
+_common_refs_ts -> _common_refs_ts [color="#DC2F02"]
+_context_hotkeys -> _common_utils [color="#F48C06"]
+_context_hotkeys -> _components_hotkeys [color="#F48C06"]
+_context_hotkeys -> _context_hotkeys [color="#F48C06"]
+_context_hotkeys -> _hooks_hotkeys [color="#F48C06"]
+_common_abstractComponent_ts -> _common_utils [color="#F48C06"]
+_common_abstractComponent2_ts -> _common_utils [color="#F48C06"]
+_common_abstractPureComponent_ts -> _common_utils [color="#F48C06"]
+_common_abstractPureComponent2_ts -> _common_utils [color="#F48C06"]
+_hooks_hotkeys -> _components_hotkeys [color="#F48C06"]
+_hooks_hotkeys -> _context_hotkeys [color="#F48C06"]
+_hooks_hotkeys -> _hooks_hotkeys [color="#F48C06"]
+_components_index_ts -> _components_panel_stack2 [color="#F48C06"]
+_context_index_ts -> _context_hotkeys [color="#F48C06"]
+_hooks_index_ts -> _hooks_hotkeys [color="#F48C06"]
+
+    }

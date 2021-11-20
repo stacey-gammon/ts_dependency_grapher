@@ -1,57 +1,44 @@
-import { Node, Project, SourceFile } from 'ts-morph'
+import { Project, SourceFile } from 'ts-morph'
 import { addEdges, addGVNode, isNamedNode } from './tsmorph_utils';
-import { GVEdge, GVNode } from './types';
+import { File, Folder, GVEdgeMapping } from './types';
 import Path from 'path';
+import { addFileToTree, getDiGraphText } from './dot_utils';
+import { getRootRelativePath } from './utils';
 
 export let repoRoot: string;
 
-export function getDotFileText({ entry , tsconfig}: { entry: string; tsconfig: string }): string | undefined{
+export function getDotFileText({ entry , zoom, tsconfig}: { entry?: string; tsconfig: string, zoom: number }): string | undefined{
+  const { gvEdges, root } = getEdgesAndRoot({ entry, tsconfig });
+  return  getDiGraphText(gvEdges, root, zoom);
+}
+
+export function getEdgesAndRoot({ entry , tsconfig}: { entry?: string; tsconfig: string }): { gvEdges: GVEdgeMapping, root: Folder } {
   const project = new Project({ tsConfigFilePath: tsconfig });
   project.resolveSourceFileDependencies();
-
-  const file = project.getSourceFileOrThrow(entry);
-
+  
+  const files: SourceFile[] = entry ? [project.getSourceFileOrThrow(entry)] : project.getSourceFiles();
+  
   repoRoot = Path.resolve(tsconfig, '..');
-
-  if (file) {
-    const { nodes, edges } = getNodesAndEdges(file);
-    return getDiGraphText(edges, nodes);
-  } else {
-    console.error(`No file found: ${entry}`);
-    return undefined;
-  }
-}
-
-function getDiGraphText(dependencies: Array<GVEdge>, nodes: GVNode[]) {
-  return `digraph test{
-    ${getNodesText(nodes)}
-     ${getDependenciesText(dependencies)}
-  }`;
-}
-
-function getNodesText(nodes: GVNode[]): string {
-  let text = '';
-  nodes.forEach(({ label }) => {
-    text += `${getSafeName(label)}\n`;
-  });
-  return text;
-}
   
-
-function getDependenciesText(
-  dependencies: Array<{ source: string; dest: string; properties?: string }>
-) {
-  let text = '';
-  dependencies.forEach(({ source, dest, properties }) => {
-    text += `${getSafeName(source)} -> ${getSafeName(dest)} ${
-      properties ? `[${properties}]` : ''
-    }\n`;
-  });
-  return text;
-}
+  const root: Folder = {
+    name: 'root',
+    path: 'root',
+    folders: {},
+    files: {},  
+  };
   
-export function getSafeName(name: string): string {
-  return name === 'graph' ? 'graph1' : name.replace(/[ /\-.@]/gi, '');
+  const gvEdges: GVEdgeMapping = parseFiles(files, root, repoRoot);
+  return  { gvEdges, root };
+}
+
+export function parseFiles(files: SourceFile[], root: Folder, repoRoot: string): GVEdgeMapping {
+  const gvEdges: GVEdgeMapping = {};
+
+  files.forEach(file => {
+    const fileNode = addFileToTree(getRootRelativePath(file.getFilePath(), repoRoot), root);
+    getNodesAndEdges(file, fileNode, gvEdges);    
+  });
+  return gvEdges;
 }
 
 /**
@@ -59,26 +46,25 @@ export function getSafeName(name: string): string {
  * @param source the file we want to extract exported declaration nodes from.
  * @param log
  */
-function getNodesAndEdges(source: SourceFile): { edges: GVEdge[], nodes: GVNode[] } {
-  const nodes: Node[] = [];
-  const exported = source.getExportedDeclarations();
-  const gvEdges: GVEdge[] = [];
-  const gvNodes: GVNode[] = [];
+function getNodesAndEdges(sourceFile: SourceFile, fileNode: File, gvEdges: GVEdgeMapping) {
+  const exported = sourceFile.getExportedDeclarations();
   
   // Filter out the exported declarations that exist only for the plugin system itself.
   exported.forEach((val) => {
     val.forEach((ed) => {
       const name: string = isNamedNode(ed) ? ed.getName() : '';
+      if (ed.getSourceFile().getFilePath() != sourceFile.getFilePath()) {
+        console.log(`node ${name} is defined in a different file. Skipping`);
+        return;
+      }
       if (name && name !== '') {
         addEdges(ed, gvEdges);
-        addGVNode(ed, gvNodes);
+        addGVNode(ed, fileNode, gvEdges[name] ? gvEdges[name].length : 0);
       } else {
         console.log('API with missing name encountered, text is ' + ed.getText().substring(0, 50));
       }
     });
   });
   
-  console.log(`Collected ${nodes.length} exports from file ${source.getFilePath()}`);
-  return { edges: gvEdges, nodes: gvNodes }
+  console.log(`Collected ${fileNode.exports.length} exports from file ${sourceFile.getFilePath()}`);
 }
-

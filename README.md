@@ -1,14 +1,18 @@
-# A TypeScript template repository
+# A TypeScript dependency graph builder
 
-The bare minimum repository set up just the way I like when writing typescript. Includes:
 
-- eslint
-- jest
-- yarn
-- tsconfig.json
+To build the GraphVis dot file:
+```
+yarn dep --tsconfig [TSCONFIGPATH] --output [OUTPUTFILE]
+```
 
-Output is stored in the `build` folder.
+An example:
+```
+yarn dep --tsconfig ../blueprint/packages/core/src/tsconfig.json  --output test.dot
+```
+
+Then to build the Graph:
 
 ```
-yarn add --dev typescript @types/jest ts-jest jest eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin
+fdp -x -Goverlap=scale -Tpng test.dot > test.png
 ```

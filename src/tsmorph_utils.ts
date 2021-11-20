@@ -1,6 +1,7 @@
 import { Node, ReferenceFindableNode } from 'ts-morph';
 import { repoRoot } from './build_dot';
-import { GVEdge, GVNode } from './types';
+import { getSafeName } from './dot_utils';
+import { File, GVEdge, GVEdgeMapping } from './types';
 
 export interface NamedNode extends Node {
     getName(): string;
@@ -14,28 +15,47 @@ export function isNamedNode(node: Node | NamedNode | ReferenceFindableNode): nod
   return (node as NamedNode).getName !== undefined;
 }
 
-export function addGVNode(node: Node, nodes: GVNode[]) {
-  nodes.push( {
-    label: getIdForNode(node)
+export function addGVNode(node: Node, file: File, incomingDependencyCount: number) {
+  if (incomingDependencyCount === NaN) {
+    throw new Error('why adding Nan to incomdepcount')
+  }
+  file.exports.push({
+    id: getIdForNode(node),
+    label: getLabelForNode(node),
+    publicAPICount: 1,
+    incomingDependencyCount, 
   });
 }
 
-export function addEdges(node: Node, edges: GVEdge[]) {
+export function addEdges(node: Node, edges: GVEdgeMapping) {
   if (Node.isReferenceFindableNode(node)) {
     const refNodes = node.findReferencesAsNodes();
     refNodes.forEach((ref) => {
-      edges.push({
+      const id = getIdForNode(ref);
+      if (!edges[id]) {
+        edges[id] = [];
+      }
+      edges[id].push({
         dest: getIdForNode(node),
-        source: getIdForNode(ref)
+        weight: 1,
       });       
     });
   }
 }
 
-function getIdForNode(node: Node): string {
+function getLabelForNode(node: Node) {
+  if (isNamedNode(node)) return node.getName();
+   
   const path = getRelativePath(node.getSourceFile().getFilePath());
-  console.log('path is ' + path);
-  return `${path.replace(/[/\\]/gi, '_')}_${isNamedNode(node) ? node.getName() : 'NoName'}`
+  const filename = path.replace(/^.*[\\/]/, '') ;
+  return filename;
+}
+
+function getIdForNode(node: Node): string {
+  const unsafePath = getRelativePath(node.getSourceFile().getFilePath());
+  const name = isNamedNode(node) ? node.getName() : 'NoName';
+  const path = getSafeName(unsafePath)
+  return name ? [path, name].join('_') : path;
 }
 
 function getRelativePath(path: string): string {

@@ -3,23 +3,28 @@ import fs from 'fs';
 import {  getDotFileText } from './build_dot'
 
 interface CmdArgs {
-  entry: string;
+  entry?: string;
   output: string;
   tsconfig: string;
+  zoom: number;
 }
 
+const DEFAULT_ARGS = {
+  zoom: 1
+}
 
 const optionDefinitions = [
   { name: 'entry', alias: 'e', type: String },
   { name: 'output', alias: 'o', type: String },
   { name: 'tsconfig', alias: 't', type: String },
+  { name: 'zoom', alias : 'z', type: Number }
 ];
 
 export function main() {
-  const options: CmdArgs = cmd(optionDefinitions) as CmdArgs;
+  const options: CmdArgs = { ...DEFAULT_ARGS, ...cmd(optionDefinitions) } as CmdArgs;
 
-  if (!options.entry  || !options.tsconfig) {
-    throw new Error('Use --entry and --tsconfig args');
+  if (!options.tsconfig) {
+    throw new Error('tsconfig arg required');
   }
 
   const text = getDotFileText(options);
