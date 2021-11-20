@@ -7,27 +7,27 @@ digraph test{
         style=filled
         color="#F48C06"  
         label="index_ts"
-        _index_ts_NoName [label="index" fillcolor="white", style=filled  fontcolor="#FFBA08" ]
+        _index_ts_NoName [label="index" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
 
 }
 subgraph cluster__bar {
         style=filled
         color="#F48C06"  
         label="bar"
-        _bar_index_ts [label="index_ts" fillcolor="white", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+        _bar_index_ts [label="index_ts" fillcolor="#9D0208", style=filled fixedsize=true width=5 height=5 fontcolor="#FFBA08" fixedsize=true width=5 height=5]
 
-_bar_using_fn_ts [label="using_fn_ts" fillcolor="white", style=filled  fontcolor="#FFBA08" ]
+_bar_using_fn_ts [label="using_fn_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
 
-_bar_zed [label="zed" fillcolor="white", style=filled fixedsize=true width=2 height=2 fontcolor="#FFBA08" fixedsize=true width=2 height=2]
+_bar_zed [label="zed" fillcolor="#370617", style=filled fixedsize=true width=10 height=10 fontcolor="#FFBA08" fixedsize=true width=10 height=10]
 
 }
 subgraph cluster__foo {
         style=filled
         color="#F48C06"  
         label="foo"
-        _foo_index_ts [label="index_ts" fillcolor="white", style=filled fixedsize=true width=2 height=2 fontcolor="#FFBA08" fixedsize=true width=2 height=2]
+        _foo_index_ts [label="index_ts" fillcolor="#370617", style=filled fixedsize=true width=10 height=10 fontcolor="#FFBA08" fixedsize=true width=10 height=10]
 
-_foo_top_level_ts [label="top_level_ts" fillcolor="white", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_foo_top_level_ts [label="top_level_ts" fillcolor="#9D0208", style=filled fixedsize=true width=5 height=5 fontcolor="#FFBA08" fixedsize=true width=5 height=5]
 
 }
 }

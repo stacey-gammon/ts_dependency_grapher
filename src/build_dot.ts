@@ -1,5 +1,5 @@
 import { Project, SourceFile } from 'ts-morph'
-import { addEdges, addGVNode, isNamedNode } from './tsmorph_utils';
+import { addEdges, addGVNode, getIdForNode, isNamedNode } from './tsmorph_utils';
 import { File, Folder, GVEdgeMapping } from './types';
 import Path from 'path';
 import { addFileToTree, getDiGraphText } from './dot_utils';
@@ -51,17 +51,18 @@ function getNodesAndEdges(sourceFile: SourceFile, fileNode: File, gvEdges: GVEdg
   
   // Filter out the exported declarations that exist only for the plugin system itself.
   exported.forEach((val) => {
-    val.forEach((ed) => {
-      const name: string = isNamedNode(ed) ? ed.getName() : '';
-      if (ed.getSourceFile().getFilePath() != sourceFile.getFilePath()) {
+    val.forEach((destNode) => {
+      const destNodeId = getIdForNode(destNode);
+      const name: string = isNamedNode(destNode) ? destNode.getName() : '';
+      if (destNode.getSourceFile().getFilePath() != sourceFile.getFilePath()) {
         console.log(`node ${name} is defined in a different file. Skipping`);
         return;
       }
       if (name && name !== '') {
-        addEdges(ed, gvEdges);
-        addGVNode(ed, fileNode, gvEdges[name] ? gvEdges[name].length : 0);
+        addEdges(destNode, gvEdges);
+        addGVNode(destNode, fileNode, gvEdges[destNodeId] ? gvEdges[destNodeId].length + 1 : 1);
       } else {
-        console.log('API with missing name encountered, text is ' + ed.getText().substring(0, 50));
+        console.log('API with missing name encountered, text is ' + destNode.getText().substring(0, 50));
       }
     });
   });

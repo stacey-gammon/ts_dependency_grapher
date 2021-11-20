@@ -14,7 +14,7 @@ subgraph cluster__accessibility {
         style=filled
         color="#F48C06"  
         label="accessibility"
-        _accessibility_focusStyleManager_ts [label="focusStyleManager_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+        _accessibility_focusStyleManager_ts [label="focusStyleManager_ts" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
 _accessibility_index_ts [label="index_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
 
@@ -23,54 +23,54 @@ subgraph cluster__common {
         style=filled
         color="#F48C06"  
         label="common"
-        _common_abstractComponent_ts [label="abstractComponent_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+        _common_abstractComponent_ts [label="abstractComponent_ts" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_common_abstractComponent2_ts [label="abstractComponent2_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_common_abstractComponent2_ts [label="abstractComponent2_ts" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_common_abstractPureComponent_ts [label="abstractPureComponent_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_common_abstractPureComponent_ts [label="abstractPureComponent_ts" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_common_abstractPureComponent2_ts [label="abstractPureComponent2_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_common_abstractPureComponent2_ts [label="abstractPureComponent2_ts" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_common_alignment_ts [label="alignment_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_common_alignment_ts [label="alignment_ts" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_common_boundary_ts [label="boundary_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_common_boundary_ts [label="boundary_ts" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_common_classes_ts [label="classes_ts" fillcolor="yellow", style=filled fixedsize=true width=10 height=10 fontcolor="#FFBA08" fixedsize=true width=10 height=10]
+_common_classes_ts [label="classes_ts" fillcolor="#370617", style=filled fixedsize=true width=10 height=10 fontcolor="#FFBA08" fixedsize=true width=10 height=10]
 
-_common_colors_ts [label="colors_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_common_colors_ts [label="colors_ts" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
 _common_configureDom4_ts [label="configureDom4_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
 
-_common_constructor_ts [label="constructor_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_common_constructor_ts [label="constructor_ts" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_common_context_ts [label="context_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_common_context_ts [label="context_ts" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_common_elevation_ts [label="elevation_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_common_elevation_ts [label="elevation_ts" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_common_errors_ts [label="errors_ts" fillcolor="yellow", style=filled fixedsize=true width=1.8852459016393441 height=1.8852459016393441 fontcolor="#FFBA08" fixedsize=true width=1.8852459016393441 height=1.8852459016393441]
+_common_errors_ts [label="errors_ts" fillcolor="#F48C06", style=filled fixedsize=true width=1.8852459016393441 height=1.8852459016393441 fontcolor="#370617" fixedsize=true width=1.8852459016393441 height=1.8852459016393441]
 
 _common_index_ts [label="index_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
 
-_common_intent_ts [label="intent_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_common_intent_ts [label="intent_ts" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_common_interactionMode_ts [label="interactionMode_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_common_interactionMode_ts [label="interactionMode_ts" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_common_keys_ts [label="keys_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_common_keys_ts [label="keys_ts" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_common_position_ts [label="position_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_common_position_ts [label="position_ts" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_common_props_ts [label="props_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_common_props_ts [label="props_ts" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_common_refs_ts [label="refs_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_common_refs_ts [label="refs_ts" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_common_utils [label="utils" fillcolor="yellow", style=filled fixedsize=true width=1.9262295081967213 height=1.9262295081967213 fontcolor="#FFBA08" fixedsize=true width=1.9262295081967213 height=1.9262295081967213]
+_common_utils [label="utils" fillcolor="#F48C06", style=filled fixedsize=true width=1.9262295081967213 height=1.9262295081967213 fontcolor="#370617" fixedsize=true width=1.9262295081967213 height=1.9262295081967213]
 
 }
 subgraph cluster__compatibility {
         style=filled
         color="#F48C06"  
         label="compatibility"
-        _compatibility_browser_ts [label="browser_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+        _compatibility_browser_ts [label="browser_ts" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
 _compatibility_index_ts [label="index_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
 
@@ -79,83 +79,83 @@ subgraph cluster__components {
         style=filled
         color="#F48C06"  
         label="components"
-        _components_index_ts [label="index_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+        _components_index_ts [label="index_ts" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_alert [label="alert" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_alert [label="alert" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_breadcrumbs [label="breadcrumbs" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_breadcrumbs [label="breadcrumbs" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_button [label="button" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_button [label="button" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_callout [label="callout" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_callout [label="callout" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_card [label="card" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_card [label="card" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_collapse [label="collapse" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_collapse [label="collapse" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_collapsible_list [label="collapsible_list" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_collapsible_list [label="collapsible_list" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_context_menu [label="context_menu" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_context_menu [label="context_menu" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_dialog [label="dialog" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_dialog [label="dialog" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_divider [label="divider" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_divider [label="divider" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_drawer [label="drawer" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_drawer [label="drawer" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_editable_text [label="editable_text" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_editable_text [label="editable_text" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_forms [label="forms" fillcolor="yellow", style=filled fixedsize=true width=2.0081967213114753 height=2.0081967213114753 fontcolor="#FFBA08" fixedsize=true width=2.0081967213114753 height=2.0081967213114753]
+_components_forms [label="forms" fillcolor="#DC2F02", style=filled fixedsize=true width=2.0081967213114753 height=2.0081967213114753 fontcolor="#370617" fixedsize=true width=2.0081967213114753 height=2.0081967213114753]
 
-_components_hotkeys [label="hotkeys" fillcolor="yellow", style=filled fixedsize=true width=1.5163934426229508 height=1.5163934426229508 fontcolor="#FFBA08" fixedsize=true width=1.5163934426229508 height=1.5163934426229508]
+_components_hotkeys [label="hotkeys" fillcolor="#F48C06", style=filled fixedsize=true width=1.5163934426229508 height=1.5163934426229508 fontcolor="#370617" fixedsize=true width=1.5163934426229508 height=1.5163934426229508]
 
-_components_html [label="html" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_html [label="html" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_html_select [label="html_select" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_html_select [label="html_select" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_html_table [label="html_table" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_html_table [label="html_table" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_icon [label="icon" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_icon [label="icon" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_menu [label="menu" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_menu [label="menu" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_navbar [label="navbar" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_navbar [label="navbar" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_non_ideal_state [label="non_ideal_state" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_non_ideal_state [label="non_ideal_state" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_overflow_list [label="overflow_list" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_overflow_list [label="overflow_list" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_overlay [label="overlay" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_overlay [label="overlay" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_panel_stack [label="panel_stack" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_panel_stack [label="panel_stack" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_panel_stack2 [label="panel_stack2" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_panel_stack2 [label="panel_stack2" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_popover [label="popover" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_popover [label="popover" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_portal [label="portal" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_portal [label="portal" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_progress_bar [label="progress_bar" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_progress_bar [label="progress_bar" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_resize_sensor [label="resize_sensor" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_resize_sensor [label="resize_sensor" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_slider [label="slider" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_slider [label="slider" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_spinner [label="spinner" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_spinner [label="spinner" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_tabs [label="tabs" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_tabs [label="tabs" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_tag [label="tag" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_tag [label="tag" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_tag_input [label="tag_input" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_tag_input [label="tag_input" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_text [label="text" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_text [label="text" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_toast [label="toast" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_toast [label="toast" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_tooltip [label="tooltip" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_tooltip [label="tooltip" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
-_components_tree [label="tree" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_components_tree [label="tree" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
 }
 subgraph cluster__context {
@@ -164,7 +164,7 @@ subgraph cluster__context {
         label="context"
         _context_index_ts [label="index_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
 
-_context_hotkeys [label="hotkeys" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_context_hotkeys [label="hotkeys" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
 }
 subgraph cluster__hooks {
@@ -173,7 +173,7 @@ subgraph cluster__hooks {
         label="hooks"
         _hooks_index_ts [label="index_ts" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
 
-_hooks_hotkeys [label="hotkeys" fillcolor="yellow", style=filled fixedsize=true width=1 height=1 fontcolor="#FFBA08" fixedsize=true width=1 height=1]
+_hooks_hotkeys [label="hotkeys" fillcolor="#F48C06", style=filled fixedsize=true width=1 height=1 fontcolor="#370617" fixedsize=true width=1 height=1]
 
 }
 }

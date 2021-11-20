@@ -12,21 +12,24 @@ export function getDiGraphText(edges: GVEdgeMapping, folder: Folder, zoom: numbe
 
   const rolledUpEdges = rollupEdges(edges, leafToParentId);
 
-  const maxPublicApiSize = findMaxPublicApiSize(cluster);
+  const maxPublicApiSize = findMaxVal(cluster, 0, 'publicAPICount');
+  const maxIncomingDependencyCount = findMaxVal(cluster, 0, 'incomingDependencyCount');
 
+  console.log('maxIncomingDependencyCount is ' + maxIncomingDependencyCount);
   return `digraph test{
-      ${getNodesText(cluster, 0, maxPublicApiSize)}
+      ${getNodesText(cluster, 0, { maxPublicApiSize, maxIncomingDependencyCount })}
        ${getDependenciesText(rolledUpEdges)}
     }`;
 }
 
-function findMaxPublicApiSize(node: ClusteredNode | GVNode, max: number = 0): number {
+function findMaxVal(node: ClusteredNode | GVNode, max: number = 0, key: keyof GVNode): number {
   if (isGVNode(node)) {
-   return node.publicAPICount > max ? node.publicAPICount : max;
+    const val: number = node[key] as number;
+   return val > max ? val : max;
   } else {
     let maxChild = max;
     node.children.forEach(child => {
-      const childSize = findMaxPublicApiSize(child, maxChild);
+      const childSize = findMaxVal(child, maxChild, key);
       if (childSize > maxChild) {
         maxChild = childSize;
       }
@@ -102,14 +105,14 @@ export function addFileToTree(filePath: string, root: Folder): File {
   throw new Error('Reached end and never returned a file.');
 }
   
-function getNodeText(node: GVNode, maxPublicApiSize: number): string {
-  const color = getWeightedColor(node.incomingDependencyCount, 10);
+function getNodeText(node: GVNode, { maxPublicApiSize, maxIncomingDependencyCount } : {maxIncomingDependencyCount: number, maxPublicApiSize: number }): string {
+  const color = getWeightedColor(node.incomingDependencyCount, maxIncomingDependencyCount);
   const scaledSize = getRelativeSizeOfNode(node.publicAPICount, maxPublicApiSize);
   const properties = getNodeProperties(node.label, color, scaledSize);
   return `${getSafeName(node.id)} [${properties}]\n`
 }
   
-export function getNodesText(node: ClusteredNode, level = 0, maxPublicApiSize: number): string {
+export function getNodesText(node: ClusteredNode, level = 0, maxes : { maxIncomingDependencyCount: number, maxPublicApiSize: number }): string {
   let text = '';
 
   if (isGVNode(node)) {
@@ -128,12 +131,12 @@ export function getNodesText(node: ClusteredNode, level = 0, maxPublicApiSize: n
         `;
     if (isGVNodeArray(node.children)) {
       node.children.forEach(child => {
-        text += getNodeText(child, maxPublicApiSize) + '\n'
+        text += getNodeText(child, maxes) + '\n'
       })
     } else {
       console.log('should be parent children!', node.children);
       node.children.forEach(child => {
-        text += getNodesText(child, level + 1, maxPublicApiSize); + '\n'
+        text += getNodesText(child, level + 1, maxes); + '\n'
       })
     }
     text += '}\n';

@@ -27,16 +27,16 @@ export function addGVNode(node: Node, file: File, incomingDependencyCount: numbe
   });
 }
 
-export function addEdges(node: Node, edges: GVEdgeMapping) {
-  if (Node.isReferenceFindableNode(node)) {
-    const refNodes = node.findReferencesAsNodes();
-    refNodes.forEach((ref) => {
-      const id = getIdForNode(ref);
-      if (!edges[id]) {
-        edges[id] = [];
+export function addEdges(destNode: Node, edges: GVEdgeMapping) {
+  if (Node.isReferenceFindableNode(destNode)) {
+    const refNodes = destNode.findReferencesAsNodes();
+    refNodes.forEach((sourceNode) => {
+      const sourceNodeId = getIdForNode(sourceNode);
+      if (!edges[sourceNodeId]) {
+        edges[sourceNodeId] = [];
       }
-      edges[id].push({
-        dest: getIdForNode(node),
+      edges[sourceNodeId].push({
+        dest: getIdForNode(destNode),
         weight: 1,
       });       
     });
@@ -51,7 +51,7 @@ function getLabelForNode(node: Node) {
   return filename;
 }
 
-function getIdForNode(node: Node): string {
+export function getIdForNode(node: Node): string {
   const unsafePath = getRelativePath(node.getSourceFile().getFilePath());
   const name = isNamedNode(node) ? node.getName() : 'NoName';
   const path = getSafeName(unsafePath)

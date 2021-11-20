@@ -42,7 +42,7 @@ it('getNodesText', () => {
     };
 
   const cluster = getClusteredNodeForFolder(root);
-  expect(getNodesText(cluster)).toMatchInlineSnapshot(`
+  expect(getNodesText(cluster, 0, { maxIncomingDependencyCount: 10, maxPublicApiSize: 10})).toMatchInlineSnapshot(`
 "subgraph cluster_root {
         style=filled
         color=\\"#FFBA08\\"  
