@@ -53,4 +53,3 @@ export interface NodeWithLeafChildren {
     label: string;
     children: GVNode[];
 }
-

@@ -1,2 +1,14 @@
 {
+    "repos": [
+        "grafana/grafana", 
+        "microsoft/rushstack",
+        "angular/angular",
+        "puppeteer/puppeteer",
+        "storybookjs/storybook",
+        "highcharts/highcharts",
+        "facebook/jest"
+    ],
+    "outputFolder": "docs/examples",
+    "maxImageSize": "14",
+    "buildDocsSite": true
 }

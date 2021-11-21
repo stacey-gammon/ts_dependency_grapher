@@ -55,12 +55,8 @@ function turnNodeWithLeafsIntoLeafNode(
   node: NodeWithLeafChildren,
   leafToParentId: { [key: string]: string },
   parentIdToLeafs: { [key: string]: string[] },): GVNode {
-  console.log('turnNodeWithLeafsIntoLeafNode');
-//  leafToParentId[node.id] = node.id;
   const { incomingDependencyCount, publicAPICount } = node.children.reduce((acc, child) => {
     if(child.incomingDependencyCount === undefined || child.incomingDependencyCount === NaN) {
-      console.log('nongc node in arr',child);
-      console.log('parent is ', node);
       throw new Error('non gc node in this array!');
     }
     acc.incomingDependencyCount += child.incomingDependencyCount;
@@ -69,7 +65,6 @@ function turnNodeWithLeafsIntoLeafNode(
     const leafs: string[] = parentIdToLeafs[child.id] || [child.id];
 
     leafs.forEach(leaf => {
-      console.log(`Adding leaf ${leaf} to parent id ${node.id}`);
       leafToParentId[leaf] = node.id;
     });
 

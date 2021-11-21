@@ -4,7 +4,7 @@ import {  getColorForLevel, getNodeProperties, getRelativeSizeOfNode, getWeighte
 import { ClusteredNode, File, Folder, GVEdgeMapping, GVNode } from './types';
 import { isGVNode, isGVNodeArray, zoomOut} from './zoom_out';
 
-export function getDiGraphText(edges: GVEdgeMapping, folder: Folder, zoom: number) {
+export function getDiGraphText(edges: GVEdgeMapping, folder: Folder, zoom: number, maxImageSize: number) {
   const leafToParentId: { [key: string]: string } = {};
   const parentIdToLeaf: { [key: string]: string[] } = {};
 
@@ -17,6 +17,8 @@ export function getDiGraphText(edges: GVEdgeMapping, folder: Folder, zoom: numbe
 
   console.log('maxIncomingDependencyCount is ' + maxIncomingDependencyCount);
   return `digraph test{
+      ratio="compress";
+      size="${maxImageSize}, ${maxImageSize}!";
       ${getNodesText(cluster, 0, { maxPublicApiSize, maxIncomingDependencyCount })}
        ${getDependenciesText(rolledUpEdges)}
     }`;
@@ -65,8 +67,7 @@ function getDependenciesText(
         throw new Error('getDependenciesText: dest.dest not defined!');
       }
       const color = getWeightedColor(dest.weight, maxWeight);
-      const weight = getWeightedSize(dest.weight, maxWeight, 10, 2);
-      console.log(`Weight for ${dest.weight} out of max ${maxWeight} is ${weight}`)
+      const weight = getWeightedSize(dest.weight, maxWeight, 15, 2);
       text += `${getSafeName(source)} -> ${getSafeName(dest.dest)} ${
         dest.weight ? `[color="${color}" penwidth=${weight}]` : ''
       }\n`;

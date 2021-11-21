@@ -14,7 +14,7 @@ export const SUNRISE_SCHEME = ['#FFBA08', '#F48C06', '#DC2F02', '#9D0208', '#370
 export const LIME = ['#F4E04D', '#F2ED6F', '#CEE397', '#8DB1AB', '#587792'];
 export const MOSS = ['#EAE1DF', '#B79492', '#917C78', '#667761', '#545E56'];
 
-const COLOR_SCHEMES = [
+export const COLOR_SCHEMES = [
   MINT_COLOR_SCHEME,
   SUNRISE_SCHEME,
   PURPLE_BLACK,
@@ -22,21 +22,27 @@ const COLOR_SCHEMES = [
   MOSS
 ];
 
-const RANDOM_COLOR_INDEX = Math.floor(Math.random() * COLOR_SCHEMES.length);
+let RANDOM_COLOR_INDEX = Math.floor(Math.random() * COLOR_SCHEMES.length);
 console.log('RANDOM_COLOR_INDEX', RANDOM_COLOR_INDEX);
 
-export const CURR_COLOR_SCHEME = COLOR_SCHEMES[RANDOM_COLOR_INDEX];
+export function getCurrColorScheme() {
+  return COLOR_SCHEMES[RANDOM_COLOR_INDEX];
+}
+
+export function regenerateColorScheme() {
+  RANDOM_COLOR_INDEX = Math.floor(Math.random() * COLOR_SCHEMES.length);
+}
 
 export function getFontColor(bgColor: string): string {
-  return bgColor === CURR_COLOR_SCHEME[0] ||
-    bgColor === CURR_COLOR_SCHEME[1] ||
-    bgColor === CURR_COLOR_SCHEME[2]
-    ? CURR_COLOR_SCHEME[4]
-    : CURR_COLOR_SCHEME[0];
+  return bgColor === getCurrColorScheme()[0] ||
+    bgColor === getCurrColorScheme()[1] ||
+    bgColor === getCurrColorScheme()[2]
+    ? getCurrColorScheme()[4]
+    : getCurrColorScheme()[0];
 }
 
 export function getColorForLevel(level: number) {
-  return CURR_COLOR_SCHEME[level%5];
+  return getCurrColorScheme()[level%5];
 }
 
 export function getNodeProperties(label: string, color?: string, size?: number): string {
@@ -85,12 +91,12 @@ export function getWeightedColor(val: number, max: number): string {
 
   for (let i = 0; i < thresholds.length; i++) {
     if (valRatio <= thresholds[i]) {
-      return CURR_COLOR_SCHEME[i];
+      return getCurrColorScheme()[i];
     }
   }
 
   // eslint-disable-next-line no-console
   console.warn(`${valRatio} is larger than 1! val is ${val} and max is ${max}`);
 
-  return CURR_COLOR_SCHEME[4];
+  return getCurrColorScheme()[4];
 }

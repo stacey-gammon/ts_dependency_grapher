@@ -7,9 +7,9 @@ import { getRootRelativePath } from './utils';
 
 export let repoRoot: string;
 
-export function getDotFileText({ entry , zoom, tsconfig}: { entry?: string; tsconfig: string, zoom: number }): string | undefined{
+export function getDotFileText({ entry , zoom, tsconfig, maxImageSize}: { maxImageSize: number, entry?: string; tsconfig: string, zoom: number }): string | undefined{
   const { gvEdges, root } = getEdgesAndRoot({ entry, tsconfig });
-  return  getDiGraphText(gvEdges, root, zoom);
+  return  getDiGraphText(gvEdges, root, zoom, maxImageSize);
 }
 
 export function getEdgesAndRoot({ entry , tsconfig}: { entry?: string; tsconfig: string }): { gvEdges: GVEdgeMapping, root: Folder } {
@@ -55,7 +55,7 @@ function getNodesAndEdges(sourceFile: SourceFile, fileNode: File, gvEdges: GVEdg
       const destNodeId = getIdForNode(destNode);
       const name: string = isNamedNode(destNode) ? destNode.getName() : '';
       if (destNode.getSourceFile().getFilePath() != sourceFile.getFilePath()) {
-        console.log(`node ${name} is defined in a different file. Skipping`);
+        // console.log(`node ${name} is defined in a different file. Skipping`);
         return;
       }
       if (name && name !== '') {

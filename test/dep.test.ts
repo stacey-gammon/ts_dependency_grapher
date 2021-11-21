@@ -28,7 +28,7 @@ it('suite', () => {
 });
 
 it('create test png', () => {
-  const text = getDotFileText({ tsconfig: Path.resolve(__dirname, './__fixtures__/tsconfig.json'), zoom: 2 });
+  const text = getDotFileText({ tsconfig: Path.resolve(__dirname, './__fixtures__/tsconfig.json'), zoom: 2, maxImageSize: 5 });
   expect(text).toBeDefined();
   expect(text?.indexOf("bar_zed_lag")).toBeLessThan(0);
   fs.writeFileSync(Path.resolve(__dirname, 'test.dot'), text!);
