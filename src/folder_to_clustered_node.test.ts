@@ -20,7 +20,8 @@ it('getClusteredNodeForFolder different lengths', () => {
                 label: 'node2',
                 id: 'node2',
                 incomingDependencyCount: 1,
-                publicAPICount: 1
+                publicAPICount: 1,
+                innerNodeCount: 0
               }]
             }
           },
@@ -48,7 +49,8 @@ it('getClusteredNodeForFolder different lengths', () => {
                         label: 'node3',
                         id: 'node3',
                         incomingDependencyCount: 1,
-                        publicAPICount: 1
+                        publicAPICount: 1,
+                        innerNodeCount: 0,
                       }]
                   },
                 }

@@ -4,6 +4,19 @@ export interface GVEdgeMapping {
     [key: string]: GVEdge[];
 }
 
+/**
+ * Map the destination key to each of it's incoming dependency source nodes, and how many times they
+ * there is an edge between them.
+ */
+export interface CouplingWeightMapping {
+  [node: string]: { [connectedNode: string]: number };
+}
+
+export interface StatStructs {
+  innerDependencyCount: { [key: string]: number };
+  couplingWeights: CouplingWeightMapping;
+}
+
 export interface GVEdge {
     dest: string;
     colorWeight?: number;
@@ -13,6 +26,7 @@ export interface GVEdge {
 export interface GVNode {
     id: string;
     label: string;
+    innerNodeCount: number,
     incomingDependencyCount: number;
     publicAPICount: number;
 }

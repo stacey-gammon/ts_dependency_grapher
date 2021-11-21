@@ -1,27 +1,34 @@
 import { GVEdgeMapping } from "./types";
 
-export  function rollupEdges(edges: GVEdgeMapping, leafToParentId: { [key: string]: string} ): GVEdgeMapping {
+export  function rollupEdges(leafSourceEdges: GVEdgeMapping, leafToParentId: { [key: string]: string} ):
+    { rolledUpEdges: GVEdgeMapping, innerDependencyCount: { [key: string]: number } } {
   const rolledUpEdges: GVEdgeMapping = {};
+  const innerDependencyCount: { [key: string]: number } = {};
 
-  Object.keys(edges).forEach((source) => {
-    const leafEdges = edges[source];
-    const rolledUpSource = leafToParentId[source] || source;
+  Object.keys(leafSourceEdges).forEach((leafSource) => {
+    const leafDestEdges = leafSourceEdges[leafSource];
+    const rolledUpSource = leafToParentId[leafSource] || leafSource;
 
     if (rolledUpEdges[rolledUpSource] === undefined) {
       rolledUpEdges[rolledUpSource] = []
     }
-    leafEdges.forEach(leafEdge => {
-      const parentDest = leafToParentId[leafEdge.dest] || leafEdge.dest;
+    leafDestEdges.forEach(leafDestEdge => {
+      if (leafToParentId[leafDestEdge.dest] === leafToParentId[leafSource] && leafToParentId[leafSource] !== undefined) {
+        if (!innerDependencyCount[rolledUpSource]) innerDependencyCount[rolledUpSource] = 0;
+        innerDependencyCount[rolledUpSource]++; 
+      }
+
+      const parentDest = leafToParentId[leafDestEdge.dest] || leafDestEdge.dest;
       const rolledUpEdge = rolledUpEdges[rolledUpSource].find(e => e.dest === parentDest);
       if (!rolledUpEdge && rolledUpSource != parentDest) {
         rolledUpEdges[rolledUpSource].push({
           dest: parentDest,
-          weight: leafEdge.weight
+          weight: leafDestEdge.weight
         });
       } else if (rolledUpEdge) {
-        rolledUpEdge.weight += leafEdge.weight || 0;
+        rolledUpEdge.weight += leafDestEdge.weight || 0;
       }
     })
   });
-  return rolledUpEdges;
+  return { rolledUpEdges, innerDependencyCount };
 }

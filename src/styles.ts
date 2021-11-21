@@ -7,6 +7,7 @@
  */
 
 import { getSafeName } from './dot_utils';
+import nconf from 'nconf';
 
 export const MINT_COLOR_SCHEME = ['#C1FFF2', '#BAFFDF', '#B2EDC5', '#9DC0BC', '#7C7287'];
 export const PURPLE_BLACK = ['#9DA2AB', '#A188A6', '#7F5A83', '#0D324D', '#020202'];
@@ -56,7 +57,7 @@ export function getNodeProperties(label: string, color?: string, size?: number):
   }
 
   const sizeAttr = size ? `fixedsize=true width=${size} height=${size}` : '';
-  const colorAttr = colorTxt ? `fillcolor="${color}", style=filled ${sizeAttr} fontcolor="${fontColor}"` : '';
+  const colorAttr = colorTxt ? `fillcolor="${color}", style=filled fontcolor="${fontColor}"` : '';
 
   return `label="${getSafeName(label)}" ${colorAttr} ${sizeAttr}`;
 }
@@ -72,7 +73,7 @@ export function getRelativeSizeOfNode(size: number, maxSize: number): number {
   return Math.max(comparativeApiSizeRatio * MAX_SIZE, MIN_SIZE);
 }
 
-export function getWeightedSize(size: number, maxSize: number, weightedMaxSize: number, weightedMinSize: number): number {
+export function getWeightedSize(size: number, maxSize: number, weightedMinSize: number, weightedMaxSize: number): number {
   if (isNaN(size) || isNaN(maxSize)) {
     throw new Error('NAN passed to getRelativeSizeOfNode');
   }
@@ -80,13 +81,19 @@ export function getWeightedSize(size: number, maxSize: number, weightedMaxSize: 
   const MIN_SIZE = weightedMinSize;
   const comparativeApiSizeRatio = size / maxSize;
 
-  return Math.max(comparativeApiSizeRatio * MAX_SIZE, MIN_SIZE);
+  console.log(`size / maxSize = ${size} / ${maxSize} = ${comparativeApiSizeRatio}`)
+  console.log(`MAX_SIZE is ${MAX_SIZE}`);
+  console.log(`Scaled is ${comparativeApiSizeRatio * MAX_SIZE}`);
+
+  console.log(`Math.max(${comparativeApiSizeRatio * MAX_SIZE}, ${MIN_SIZE}) is ${Math.max(comparativeApiSizeRatio * MAX_SIZE, MIN_SIZE)}`);
+
+  return Math.floor(Math.max(comparativeApiSizeRatio * MAX_SIZE, MIN_SIZE));
 }
 
 
 export function getWeightedColor(val: number, max: number): string {
   const thresholds = [0, 0.2, 0.4, 0.7, 1];
-  if (val === undefined || val === 0 || isNaN(val)) return 'yellow';
+  if (val === undefined || val === 0 || isNaN(val)) return nconf.get('unusedNodeColor');
   const valRatio = val / max;
 
   for (let i = 0; i < thresholds.length; i++) {

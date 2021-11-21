@@ -34,7 +34,8 @@ function turnIntoLeafNode(
         id: node.id,
         label: node.label,
         incomingDependencyCount: 0,
-        publicAPICount: 0
+        publicAPICount: 0,
+        innerNodeCount: 0,
       };
   }
 
@@ -79,6 +80,8 @@ function turnNodeWithLeafsIntoLeafNode(
     label: node.label,
     incomingDependencyCount,
     publicAPICount,
+    innerNodeCount: node.children.reduce((sum, c) => (c.innerNodeCount || 1) + sum, 0),
+    innerNodeConnections: 0,
   } as GVNode;
 }
 

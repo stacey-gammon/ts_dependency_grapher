@@ -9,6 +9,8 @@ export function buildDocsSite(repoImages: { [key: string]: { [key: string]: stri
 
 _Visualizing cohesion and coupling_
 
+
+
 ${Object.keys(repoImages).map(repo => buildDocSiteRepoSection(repo, repoImages[repo])).join('\n')}
 
 `;
@@ -33,7 +35,7 @@ function buildDocSiteZoomSection(repo: string, zoomLevel: string, zoomImage: str
 
 ### Zoom ${zoomLevel}
 
-![${repo} dependency graph at zoom ${zoomLevel}](./${zoomImage});
+![${repo} dependency graph at zoom ${zoomLevel}](./${zoomImage})
 
 `;
 }

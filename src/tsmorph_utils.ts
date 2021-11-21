@@ -24,6 +24,7 @@ export function addGVNode(node: Node, file: File, incomingDependencyCount: numbe
     label: getLabelForNode(node),
     publicAPICount: 1,
     incomingDependencyCount, 
+    innerNodeCount: 0
   });
 }
 

@@ -1,8 +1,17 @@
+import { COLOR_NODE_BY_CONFIG_KEY, INCOMING_DEP_COUNT, MAX_COUPLING_SCORE, PUBLIC_API_COUNT, SIZE_NODE_BY_CONFIG_KEY } from './config';
+import { collectNodeCouplingWeights, getMaxCoupledWeight, getTightestCoupledNodeCount } from './coupling_weights';
 import { getClusteredNodeForFolder } from './folder_to_clustered_node';
 import { rollupEdges } from './rollup_edges';
 import {  getColorForLevel, getNodeProperties, getRelativeSizeOfNode, getWeightedColor, getWeightedSize } from './styles';
-import { ClusteredNode, File, Folder, GVEdgeMapping, GVNode } from './types';
+import { ClusteredNode, CouplingWeightMapping, File, Folder, GVEdgeMapping, GVNode, StatStructs } from './types';
 import { isGVNode, isGVNodeArray, zoomOut} from './zoom_out';
+import nconf from 'nconf';
+
+interface MaxWeights {
+  maxIncomingDependencyCount: number,
+  maxPublicApiSize: number,
+  maxNodeCouplingWeight: number
+}
 
 export function getDiGraphText(edges: GVEdgeMapping, folder: Folder, zoom: number, maxImageSize: number) {
   const leafToParentId: { [key: string]: string } = {};
@@ -10,16 +19,19 @@ export function getDiGraphText(edges: GVEdgeMapping, folder: Folder, zoom: numbe
 
   const cluster = zoomOut(getClusteredNodeForFolder(folder), edges, leafToParentId, parentIdToLeaf, 0, zoom) as ClusteredNode;
 
-  const rolledUpEdges = rollupEdges(edges, leafToParentId);
+  const { rolledUpEdges, innerDependencyCount } = rollupEdges(edges, leafToParentId);
+
+  const couplingWeights = collectNodeCouplingWeights(rolledUpEdges);
 
   const maxPublicApiSize = findMaxVal(cluster, 0, 'publicAPICount');
   const maxIncomingDependencyCount = findMaxVal(cluster, 0, 'incomingDependencyCount');
+  const maxNodeCouplingWeight = getMaxCoupledWeight(couplingWeights);
 
   console.log('maxIncomingDependencyCount is ' + maxIncomingDependencyCount);
   return `digraph test{
       ratio="compress";
       size="${maxImageSize}, ${maxImageSize}!";
-      ${getNodesText(cluster, 0, { maxPublicApiSize, maxIncomingDependencyCount })}
+      ${getNodesText(cluster, { maxPublicApiSize, maxIncomingDependencyCount, maxNodeCouplingWeight }, { innerDependencyCount, couplingWeights })}
        ${getDependenciesText(rolledUpEdges)}
     }`;
 }
@@ -51,8 +63,6 @@ function getDependenciesText(
     }, max)
   }, 0);
 
-
-  console.log('MAX DEST WEIGHT IS ' + maxWeight);
   let text = '';
   Object.keys(edges).forEach((source) => {
     if (!source) {
@@ -94,7 +104,8 @@ export function addFileToTree(filePath: string, root: Folder): File {
               id: getSafeName(pathAccrued + '/' + name + '_NoName'),
               label: 'index',
               incomingDependencyCount: 0,
-              publicAPICount: 0
+              publicAPICount: 0,
+              innerNodeCount: 0
             }
           ]
         }
@@ -117,14 +128,70 @@ export function addFileToTree(filePath: string, root: Folder): File {
   throw new Error('Reached end and never returned a file.');
 }
   
-function getNodeText(node: GVNode, { maxPublicApiSize, maxIncomingDependencyCount } : {maxIncomingDependencyCount: number, maxPublicApiSize: number }): string {
-  const color = getWeightedColor(node.incomingDependencyCount, maxIncomingDependencyCount);
-  const scaledSize = getRelativeSizeOfNode(node.publicAPICount, maxPublicApiSize);
+function getNodeText(
+    node: GVNode,
+    { maxPublicApiSize, maxIncomingDependencyCount, maxNodeCouplingWeight } : MaxWeights,
+    statStructs: StatStructs): string {
+
+  const colorBy = nconf.get(COLOR_NODE_BY_CONFIG_KEY);
+  const sizeBy = nconf.get(SIZE_NODE_BY_CONFIG_KEY);
+
+  const maxCouplingWeight = getTightestCoupledNodeCount(node.id, statStructs.couplingWeights);
+  const innerNodeConnectionCount = statStructs.innerDependencyCount[node.id] || 1;
+  const cohesion = node.innerNodeCount === 1 ? 1 : innerNodeConnectionCount / (node.innerNodeCount * node.innerNodeCount);
+
+  console.log(`----Node ${node.id}------`);
+  console.log(`Max coupling weight: ${maxCouplingWeight} / ${maxNodeCouplingWeight}`);
+  console.log(`Cohesion score: ${cohesion} / ?`);
+  console.log(`Incoming dependency weight: ${node.incomingDependencyCount} / ${maxIncomingDependencyCount}`);
+  console.log(`Public API count: ${node.publicAPICount} / ${maxPublicApiSize}`);
+  console.log(`Inner node count: ${node.innerNodeCount} / ?`);
+
+  const matches = [INCOMING_DEP_COUNT, MAX_COUPLING_SCORE, PUBLIC_API_COUNT];
+  const vals = [node.incomingDependencyCount, maxCouplingWeight, node.publicAPICount];
+  const maxVals = [maxIncomingDependencyCount, maxNodeCouplingWeight, maxPublicApiSize];
+
+  const colorByVal = getCorrectVal(colorBy, matches, vals);
+  const colorByMaxVal = getCorrectVal(colorBy, matches, maxVals);
+  const sizeByVal = getCorrectVal(sizeBy, matches, vals);
+  const sizeByMaxVal = getCorrectVal(sizeBy, matches, maxVals);
+
+  console.log( `colorByVal: ${colorByVal}, maxColorByVal: ${colorByMaxVal}`)
+  console.log( `sizeByVal: ${sizeByVal}, sizeByMaxVal: ${sizeByMaxVal}`)
+
+  console.log(`node ${node.id} has innerNodeCount of ${node.innerNodeCount} and inner dependency count of ${innerNodeConnectionCount} equaling cohesion of ${cohesion}`);
+
+  const color = getWeightedColor(colorByVal, colorByMaxVal);
+  const scaledSize = getWeightedSize(sizeByVal, sizeByMaxVal, 6, 16);
+  const fontSize = getWeightedSize(sizeByVal, sizeByMaxVal, 50, 150);
   const properties = getNodeProperties(node.label, color, scaledSize);
-  return `${getSafeName(node.id)} [${properties}]\n`
+
+
+  console.log( `scaledSize: ${scaledSize}`)
+
+  return `${getSafeName(node.id)} [${properties} fontsize="${fontSize}"]\n`
+}
+
+function getCorrectVal(configVal: string, matches: string[], vals: Array<number>): number {
+  let indexInVal = 0;
+
+  for (const match of matches) {
+    if (match === configVal) { 
+      return vals[indexInVal];
+    } else {
+      console.log(`${match} != ${configVal}`)
+    }
+    indexInVal++;
+  };
+
+  return 1;
 }
   
-export function getNodesText(node: ClusteredNode, level = 0, maxes : { maxIncomingDependencyCount: number, maxPublicApiSize: number }): string {
+export function getNodesText(
+    node: ClusteredNode,
+    maxes: MaxWeights,
+    statStructs: StatStructs,
+    level = 0,): string {
   let text = '';
 
   if (isGVNode(node)) {
@@ -143,11 +210,11 @@ export function getNodesText(node: ClusteredNode, level = 0, maxes : { maxIncomi
         `;
     if (isGVNodeArray(node.children)) {
       node.children.forEach(child => {
-        text += getNodeText(child, maxes) + '\n'
+        text += getNodeText(child, maxes, statStructs) + '\n'
       })
     } else {
       node.children.forEach(child => {
-        text += getNodesText(child, level + 1, maxes); + '\n'
+        text += getNodesText(child, maxes, statStructs, level + 1, ); + '\n'
       })
     }
     text += '}\n';

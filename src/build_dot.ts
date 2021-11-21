@@ -2,17 +2,19 @@ import { Project, SourceFile } from 'ts-morph'
 import { addEdges, addGVNode, getIdForNode, isNamedNode } from './tsmorph_utils';
 import { File, Folder, GVEdgeMapping } from './types';
 import Path from 'path';
+import fs from 'fs';
+import os from 'os';
 import { addFileToTree, getDiGraphText } from './dot_utils';
 import { getRootRelativePath } from './utils';
 
 export let repoRoot: string;
 
-export function getDotFileText({ entry , zoom, tsconfig, maxImageSize}: { maxImageSize: number, entry?: string; tsconfig: string, zoom: number }): string | undefined{
-  const { gvEdges, root } = getEdgesAndRoot({ entry, tsconfig });
+export function getDotFileText({ repo, entry , zoom, tsconfig, maxImageSize}: {repo: string, maxImageSize: number, entry?: string; tsconfig: string, zoom: number }): string | undefined{
+  const { gvEdges, root } = getEdgesAndRoot({ entry, tsconfig, repo });
   return  getDiGraphText(gvEdges, root, zoom, maxImageSize);
 }
 
-export function getEdgesAndRoot({ entry , tsconfig}: { entry?: string; tsconfig: string }): { gvEdges: GVEdgeMapping, root: Folder } {
+export function getEdgesAndRoot({ entry , tsconfig, repo }: { repo: string; entry?: string; tsconfig: string }): { gvEdges: GVEdgeMapping, root: Folder } {
   const project = new Project({ tsConfigFilePath: tsconfig });
   project.resolveSourceFileDependencies();
   
@@ -27,17 +29,27 @@ export function getEdgesAndRoot({ entry , tsconfig}: { entry?: string; tsconfig:
     files: {},  
   };
   
-  const gvEdges: GVEdgeMapping = parseFiles(files, root, repoRoot);
+  const gvEdges: GVEdgeMapping = parseFiles(files, root, repoRoot, repo);
   return  { gvEdges, root };
 }
 
-export function parseFiles(files: SourceFile[], root: Folder, repoRoot: string): GVEdgeMapping {
+export function parseFiles(files: SourceFile[], root: Folder, repoRoot: string, repo: string): GVEdgeMapping {
+  const parsedRepoFilePathCache = Path.resolve(os.tmpdir(), repo.replace('/', '_') + `ParsedRepo.json`);
+  if (fs.existsSync(parsedRepoFilePathCache)) {
+    const { cachedRoot, cachedEdges } = JSON.parse(fs.readFileSync(parsedRepoFilePathCache, { encoding: 'utf-8' }));
+    root.files = cachedRoot.files;
+    root.folders = cachedRoot.folders;
+    return cachedEdges;
+  }
+
   const gvEdges: GVEdgeMapping = {};
 
   files.forEach(file => {
     const fileNode = addFileToTree(getRootRelativePath(file.getFilePath(), repoRoot), root);
     getNodesAndEdges(file, fileNode, gvEdges);    
   });
+
+  fs.writeFileSync(parsedRepoFilePathCache, JSON.stringify({ cachedRoot: root, cachedEdges: gvEdges }));
   return gvEdges;
 }
 

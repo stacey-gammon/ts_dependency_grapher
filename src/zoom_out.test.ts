@@ -17,13 +17,15 @@ it('zoomOut', () => {
           id: 'root_foo_bar',
           label: 'bar',
           incomingDependencyCount: 1,
-          publicAPICount: 1
+          publicAPICount: 1,
+          innerNodeCount: 0,
         },
         {
           id: 'root_foo_zed',
           label: 'zed',
           incomingDependencyCount: 1,
-          publicAPICount: 1
+          publicAPICount: 1,
+          innerNodeCount: 0,
         }
       ]
     }]
@@ -84,13 +86,15 @@ const cluster: ParentNode = {
         id: 'root_foo_bar_lee',
         label: 'bar',
         incomingDependencyCount: 1,
-        publicAPICount: 1
+        publicAPICount: 1,
+        innerNodeCount: 0,
       },
       {
         id: 'root_foo_bar_zed',
         label: 'zed',
         incomingDependencyCount: 1,
-        publicAPICount: 1
+        publicAPICount: 1,
+        innerNodeCount: 0,
       }]
     },
     {

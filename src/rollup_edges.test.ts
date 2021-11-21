@@ -26,7 +26,7 @@ it('rollupEdges', () => {
   'deep_leaf_childb': 'parentb',
  }
 
- const rolledUpEdges = rollupEdges(edges, leafToParentId);
+ const { rolledUpEdges } = rollupEdges(edges, leafToParentId);
 
  expect(rolledUpEdges).toMatchInlineSnapshot(`
 Object {
