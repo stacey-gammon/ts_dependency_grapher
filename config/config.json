@@ -1,12 +1,8 @@
 {
     "repos": [
-        "grafana/grafana", 
-        "microsoft/rushstack",
-        "angular/angular",
-        "puppeteer/puppeteer",
-        "storybookjs/storybook",
-        "highcharts/highcharts",
-        "facebook/jest"
+        { 
+            "full_name": "stacey-gammon/ts_dependency_grapher"
+        }
     ],
     "outputFolder": "docs/examples",
     "maxImageSize": "14",

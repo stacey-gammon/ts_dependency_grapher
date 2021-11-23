@@ -1,12 +1,15 @@
 {
     "repos": [
-        "grafana/grafana", 
-        "microsoft/rushstack",
-        "angular/angular",
-        "puppeteer/puppeteer",
-        "storybookjs/storybook",
-        "highcharts/highcharts",
-        "facebook/jest"
+        { "full_name": "grafana/grafana" },
+        { "full_name": "microsoft/rushstack" },
+        { "full_name": "angular/angular" },
+        { "full_name": "puppeteer/puppeteer" },
+        { "full_name": "storybookjs/storybook" },
+        { "full_name": "highcharts/highcharts" },
+        { "full_name": "facebook/jest" },
+        { 
+            "full_name": "stacey-gammon/ts_dependency_grapher"
+        }
     ],
     "outputFolder": "docs/examples",
     "maxImageSize": "14",
@@ -14,5 +17,6 @@
     "unusedNodeColor": "white",
     "nodeColorWeight": "MaxCouplingScore",
     "nodeSizeWeight": "PublicAPICount",
-    "clearDotCache": false
+    "clearDotCache": false,
+    "zooms": [2, 3, 4, 5]
 }

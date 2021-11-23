@@ -6,8 +6,8 @@
  * Side Public License, v 1.
  */
 
-import { getSafeName } from './dot_utils';
 import nconf from 'nconf';
+import { getSafeName } from './graph_vis/utils';
 
 export const MINT_COLOR_SCHEME = ['#C1FFF2', '#BAFFDF', '#B2EDC5', '#9DC0BC', '#7C7287'];
 export const PURPLE_BLACK = ['#9DA2AB', '#A188A6', '#7F5A83', '#0D324D', '#020202'];
@@ -15,13 +15,7 @@ export const SUNRISE_SCHEME = ['#FFBA08', '#F48C06', '#DC2F02', '#9D0208', '#370
 export const LIME = ['#F4E04D', '#F2ED6F', '#CEE397', '#8DB1AB', '#587792'];
 export const MOSS = ['#EAE1DF', '#B79492', '#917C78', '#667761', '#545E56'];
 
-export const COLOR_SCHEMES = [
-  MINT_COLOR_SCHEME,
-  SUNRISE_SCHEME,
-  PURPLE_BLACK,
-  LIME,
-  MOSS
-];
+export const COLOR_SCHEMES = [MINT_COLOR_SCHEME, SUNRISE_SCHEME, PURPLE_BLACK, LIME, MOSS];
 
 let RANDOM_COLOR_INDEX = Math.floor(Math.random() * COLOR_SCHEMES.length);
 console.log('RANDOM_COLOR_INDEX', RANDOM_COLOR_INDEX);
@@ -43,7 +37,7 @@ export function getFontColor(bgColor: string): string {
 }
 
 export function getColorForLevel(level: number) {
-  return getCurrColorScheme()[level%5];
+  return getCurrColorScheme()[level % 5];
 }
 
 export function getNodeProperties(label: string, color?: string, size?: number): string {
@@ -73,7 +67,12 @@ export function getRelativeSizeOfNode(size: number, maxSize: number): number {
   return Math.max(comparativeApiSizeRatio * MAX_SIZE, MIN_SIZE);
 }
 
-export function getWeightedSize(size: number, maxSize: number, weightedMinSize: number, weightedMaxSize: number): number {
+export function getWeightedSize(
+  size: number,
+  maxSize: number,
+  weightedMinSize: number,
+  weightedMaxSize: number
+): number {
   if (isNaN(size) || isNaN(maxSize)) {
     throw new Error('NAN passed to getRelativeSizeOfNode');
   }
@@ -81,15 +80,19 @@ export function getWeightedSize(size: number, maxSize: number, weightedMinSize: 
   const MIN_SIZE = weightedMinSize;
   const comparativeApiSizeRatio = size / maxSize;
 
-  console.log(`size / maxSize = ${size} / ${maxSize} = ${comparativeApiSizeRatio}`)
+  console.log(`size / maxSize = ${size} / ${maxSize} = ${comparativeApiSizeRatio}`);
   console.log(`MAX_SIZE is ${MAX_SIZE}`);
   console.log(`Scaled is ${comparativeApiSizeRatio * MAX_SIZE}`);
 
-  console.log(`Math.max(${comparativeApiSizeRatio * MAX_SIZE}, ${MIN_SIZE}) is ${Math.max(comparativeApiSizeRatio * MAX_SIZE, MIN_SIZE)}`);
+  console.log(
+    `Math.max(${comparativeApiSizeRatio * MAX_SIZE}, ${MIN_SIZE}) is ${Math.max(
+      comparativeApiSizeRatio * MAX_SIZE,
+      MIN_SIZE
+    )}`
+  );
 
   return Math.floor(Math.max(comparativeApiSizeRatio * MAX_SIZE, MIN_SIZE));
 }
-
 
 export function getWeightedColor(val: number, max: number): string {
   const thresholds = [0, 0.2, 0.4, 0.7, 1];

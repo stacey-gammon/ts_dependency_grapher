@@ -26,10 +26,13 @@
     "command-line-args": "^5.2.0",
     "nconf": "^0.11.3",
     "octokit": "^1.7.0",
+    "prettier": "^2.4.1",
     "sharp": "^0.29.3",
     "ts-morph": "^12.2.0"
   },
   "devDependencies": {
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
     "@types/command-line-args": "^5.2.0",
     "@types/jest": "^27.0.2",
     "@types/nconf": "^0.10.1",

@@ -5,7 +5,8 @@ import fs from 'fs';
 import nconf from 'nconf';
 
 interface ReturnResults {
- newData: boolean; dir: string
+  newData: boolean;
+  dir: string;
 }
 
 export async function downloadRepo(fullName: string): Promise<ReturnResults> {
@@ -17,12 +18,12 @@ export async function downloadRepo(fullName: string): Promise<ReturnResults> {
 
   let newData = false;
   if (!fs.existsSync(cloneDirectory)) {
-    console.log(`Cloning repo, ${fullName} into ${cloneDirectory}`);  
-    await execSync(`git clone ${htmlUrl} ${cloneDirectory}`); 
+    console.log(`Cloning repo, ${fullName} into ${cloneDirectory}`);
+    await execSync(`git clone ${htmlUrl} ${cloneDirectory}`);
   } else {
     console.log(`Repo, ${fullName} is already cloned into ${cloneDirectory}`);
-    if (nconf.get('refresh')) {  
-      const output = await execSync('git pull origin', { 'cwd': cloneDirectory });
+    if (nconf.get('refresh')) {
+      const output = await execSync('git pull origin', { cwd: cloneDirectory });
       if (output.indexOf('Already up to date') >= 0) {
         newData = false;
       } else {

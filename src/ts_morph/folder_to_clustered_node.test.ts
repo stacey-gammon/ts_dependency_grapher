@@ -1,65 +1,64 @@
-import { getClusteredNodeForFolder } from "./folder_to_clustered_node"
-import { Folder } from "./types";
-
+import { getClusteredNodeForFolder } from './folder_to_clustered_node';
+import { Folder } from '../types';
+import { getNode } from '../node.mock';
 
 it('getClusteredNodeForFolder different lengths', () => {
-  const root: Folder = 
-    {
-      name: 'root',
-      path: 'root',
-      files: { },
-      folders: {
-        'L1Folder1': {
-          name: 'L1Folder1',
-          path: 'root/L1Folder1',
-          files: {
-            'L1Folder1File1': {
-              name: 'L1Folder1File1',
-              path: 'root/L1Folder1/L1Folder1File1',
-              exports: [{
+  const root: Folder = {
+    name: 'root',
+    path: 'root',
+    files: {},
+    folders: {
+      L1Folder1: {
+        name: 'L1Folder1',
+        path: 'root/L1Folder1',
+        files: {
+          L1Folder1File1: {
+            name: 'L1Folder1File1',
+            path: 'root/L1Folder1/L1Folder1File1',
+            exports: [
+              {
+                ...getNode(),
                 label: 'node2',
                 id: 'node2',
-                incomingDependencyCount: 1,
-                publicAPICount: 1,
-                innerNodeCount: 0
-              }]
-            }
+              },
+            ],
           },
-          folders: {},
         },
-        'L1Folder2': {
-          name: 'L1Folder2',
-          path: 'root/L1Folder2',
-          files: {},
-          folders: {
-            'L2Folder1': {
-              name: 'L2Folder1',
-              path: 'root/L1Folder2/L2Folder1',
-              files: {},
-              folders: {
-                'L3Folder1': {
-                  name: 'L3Folder1',
-                  path: 'root/L1Folder2/L2Folder1/L3Folder1',
-                  folders: {},
-                  files: {
-                    'L3Folder1File1': {
-                      name: 'L3Folder1File1',
-                      path: 'root/L1Folder2/L2Folder1/L3Folder1/L3Folder1File1',
-                      exports: [{
+        folders: {},
+      },
+      L1Folder2: {
+        name: 'L1Folder2',
+        path: 'root/L1Folder2',
+        files: {},
+        folders: {
+          L2Folder1: {
+            name: 'L2Folder1',
+            path: 'root/L1Folder2/L2Folder1',
+            files: {},
+            folders: {
+              L3Folder1: {
+                name: 'L3Folder1',
+                path: 'root/L1Folder2/L2Folder1/L3Folder1',
+                folders: {},
+                files: {
+                  L3Folder1File1: {
+                    name: 'L3Folder1File1',
+                    path: 'root/L1Folder2/L2Folder1/L3Folder1/L3Folder1File1',
+                    exports: [
+                      {
+                        ...getNode(),
                         label: 'node3',
                         id: 'node3',
-                        incomingDependencyCount: 1,
-                        publicAPICount: 1,
-                        innerNodeCount: 0,
-                      }]
+                      },
+                    ],
                   },
-                }
+                },
               },
-            }
+            },
           },
-        }
-      }
-    }
+        },
+      },
+    },
   };
 
   const node = getClusteredNodeForFolder(root);
@@ -120,4 +119,4 @@ Object {
   "label": "root",
 }
 `);
-})
+});

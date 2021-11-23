@@ -1,7 +1,5 @@
-import { isGVNode } from "./zoom_out";
-
 export interface GVEdgeMapping {
-    [key: string]: GVEdge[];
+  [key: string]: GVEdge[];
 }
 
 /**
@@ -13,57 +11,72 @@ export interface CouplingWeightMapping {
 }
 
 export interface StatStructs {
-  innerDependencyCount: { [key: string]: number };
   couplingWeights: CouplingWeightMapping;
 }
 
 export interface GVEdge {
-    dest: string;
-    colorWeight?: number;
-    weight: number;
+  dest: string;
+  colorWeight?: number;
+  weight: number;
 }
 
-export interface GVNode {
-    id: string;
-    label: string;
-    innerNodeCount: number,
-    incomingDependencyCount: number;
-    publicAPICount: number;
+export interface CodeChunkNode {
+  id: string;
+  label: string;
+  innerDependencyCount: number;
+  innerNodeCount: number;
+  incomingDependencyCount: number;
+  publicAPICount: number;
+
+  /**
+   * We need a way to determine when a module should be broken apart because there is too much complexity in a single node.
+   */
+  complexityScore: number;
+
+  /**
+   * Consider a node, A, with the following edges and weights:
+   * A -> B, weight: 10
+   * A -> C, weight: 10
+   * A -> D, weight: 5
+   *
+   * Then this value should be 10. It can be used to decide
+   */
+  maxSingleCoupleWeight: number;
 }
 
 export interface File {
   path: string;
   name: string;
-  exports: GVNode[];
+  exports: CodeChunkNode[];
 }
 
 export interface Folder {
-   path: string;
-   name: string; 
-   files: {
-       [key:string]: File
-   };
-   folders: { [key: string]: Folder };
+  path: string;
+  name: string;
+  files: {
+    [key: string]: File;
+  };
+  folders: { [key: string]: Folder };
 }
 
 export interface ClusteredNode {
-    id: string;
-    label: string;
-    children: LeafNode[] | ParentNode[];
+  id: string;
+  label: string;
+  children: LeafNode[] | ParentNode[];
 }
 
 export type ParentNode = NodeWithNonLeafChildren | NodeWithLeafChildren;
 
-export type LeafNode = GVNode;
+export type LeafNode = CodeChunkNode;
 
 export interface NodeWithNonLeafChildren {
-    id: string;
-    label: string;
-    children: ParentNode[];
+  id: string;
+  label: string;
+  children: ParentNode[];
 }
 
 export interface NodeWithLeafChildren {
-    id: string;
-    label: string;
-    children: GVNode[];
+  id: string;
+  label: string;
+  children: CodeChunkNode[];
 }
