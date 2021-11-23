@@ -33,19 +33,19 @@ export async function main() {
 
   validateConfig();
 
-  const repos = nconf
-    .get('repos')
-    .map(({ full_name }: { full_name: string }) => full_name) as string[];
+  const repos: Array<{ full_name: string; tsconfig: string }> = nconf.get('repos');
 
   const repoImages: { [key: string]: { [key: string]: string } } = {};
 
-  for (const repo of repos) {
+  for (const repoInfo of repos) {
+    const repo = repoInfo.full_name;
     regenerateColorScheme();
     const path = await downloadRepo(repo);
-    const tsconfig = Path.resolve(path.dir, 'tsconfig.json');
+    const tsconfigPath = repoInfo.tsconfig || 'tsconfig.json';
+    const tsconfig = Path.resolve(path.dir, tsconfigPath);
 
     if (!fs.existsSync(tsconfig)) {
-      console.warn(`${repo} does not have a root tsconfig.json file.`);
+      console.warn(`${repo} does not have a root tsconfig.json file at ${tsconfig}`);
       continue;
     }
 
