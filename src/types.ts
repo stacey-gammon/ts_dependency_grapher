@@ -1,31 +1,57 @@
 export interface GVEdgeMapping {
-  [key: string]: GVEdge[];
+  [key: string]: {
+    source: LeafNode | ParentNode;
+
+    // Edges have different weighs associated them based on how many imports are between them.
+    destinations: Array<{ destinationNode: LeafNode | ParentNode; dependencyWeight: number }>;
+  };
 }
+
+export type Edges = Array<{ source: LeafNode; destination: LeafNode }>;
 
 /**
  * Map the destination key to each of it's incoming dependency source nodes, and how many times they
  * there is an edge between them.
  */
 export interface CouplingWeightMapping {
-  [node: string]: { [connectedNode: string]: number };
+  [node: string]: Array<{ connectionId: string; connectionWeight: number }>;
 }
 
 export interface StatStructs {
   couplingWeights: CouplingWeightMapping;
 }
 
-export interface GVEdge {
-  dest: string;
-  colorWeight?: number;
-  weight: number;
+export interface ParentNode extends BaseNode {
+  children: Array<LeafNode | ParentNode>;
 }
 
-export interface CodeChunkNode {
-  id: string;
-  label: string;
-  innerDependencyCount: number;
-  innerNodeCount: number;
+// export type ParentNode = NodeWithNonLeafChildren | NodeWithLeafChildren;
+
+export interface LeafNode extends BaseNode, NodeStats {}
+
+export interface NodeStats {
+  /*
+   * TBD on whether this is different than intraDependencyCount. Perhaps it should count _all_ incoming dependencies, both from
+   * nodes outside it's parent, and from those internal?
+   */
   incomingDependencyCount: number;
+
+  // An indication of cohesion within this node.
+  interDependencyCount: number;
+
+  // afferent + efferent Coupling
+  intraDependencyCount: number;
+
+  afferentCoupling: number;
+
+  efferentCoupling: number;
+  /**
+   * This is interDependencyCount - maxSingleCoupleWeight. It is a rough measure of whether this node fits in it's spot. If
+   * it has a tighter connection to another node, than it does with it's own siblings, then it might be an indication is should move
+   * there. > 0 is good, < 0 means potential for a better home.
+   */
+  orgScore: number;
+  innerNodeCount: number;
   publicAPICount: number;
 
   /**
@@ -44,39 +70,28 @@ export interface CodeChunkNode {
   maxSingleCoupleWeight: number;
 }
 
-export interface File {
-  path: string;
-  name: string;
-  exports: CodeChunkNode[];
-}
-
-export interface Folder {
-  path: string;
-  name: string;
-  files: {
-    [key: string]: File;
-  };
-  folders: { [key: string]: Folder };
-}
-
-export interface ClusteredNode {
-  id: string;
-  label: string;
-  children: LeafNode[] | ParentNode[];
-}
-
-export type ParentNode = NodeWithNonLeafChildren | NodeWithLeafChildren;
-
-export type LeafNode = CodeChunkNode;
-
-export interface NodeWithNonLeafChildren {
-  id: string;
-  label: string;
+export interface NodeWithNonLeafChildren extends BaseNode {
   children: ParentNode[];
 }
 
-export interface NodeWithLeafChildren {
-  id: string;
+export interface NodeWithLeafChildren extends BaseNode {
+  children: LeafNode[];
+}
+
+export interface BaseNode {
   label: string;
-  children: CodeChunkNode[];
+  id: string;
+  filePath: string;
+
+  // An indication of cohesion within this node.
+  interDependencyCount: number;
+
+  // afferent + efferent Coupling
+  intraDependencyCount: number;
+
+  afferentCoupling: number;
+
+  efferentCoupling: number;
+
+  orgScore: number;
 }

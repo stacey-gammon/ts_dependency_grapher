@@ -1,0 +1,45 @@
+{
+    "repos": [
+        { 
+            "full_name": "stacey-gammon/ts_dependency_grapher",
+            "refresh": false,
+            "tsconfig": "./tsconfig.json",
+            "source": "file"
+        },
+        { 
+            "full_name": "stacey-gammon/ts_dependency_grapher",
+            "tsconfig": "./examples/simple/tsconfig.json",
+            "source": "file",
+            "outputName": "simple",
+            "refresh": true
+        },
+        { 
+            "full_name": "stacey-gammon/ts_dependency_grapher",
+            "tsconfig": "./examples/well_organized/tsconfig.json",
+            "source": "file",
+            "outputName": "sg-well_organized"
+        },
+        { 
+            "full_name": "stacey-gammon/ts_dependency_grapher",
+            "tsconfig": "./examples/well_organized/tsconfig.json",
+            "source": "file",
+            "outputName": "well_organized",
+            "refresh": true
+        },
+        { 
+            "full_name": "stacey-gammon/ts_dependency_grapher",
+            "tsconfig": "./examples/poor_organized/tsconfig.json",
+            "source": "file",
+            "outputName": "poor_organized",
+            "refresh": true
+        },
+    ],
+    "outputFolder": "docs/examples",
+    "maxImageSize": "14",
+    "buildDocsSite": true,
+    "unusedNodeColor": "white",
+    "nodeColorWeight": "MaxCouplingScore",
+    "nodeSizeWeight": "PublicAPICount",
+    "clearDotCache": false,
+    "zooms": [2, 3, 4, 5]
+}

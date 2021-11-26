@@ -9,11 +9,12 @@ interface ReturnResults {
   dir: string;
 }
 
-export async function downloadRepo(fullName: string): Promise<ReturnResults> {
+export async function downloadRepo(fullName: string, refresh?: boolean): Promise<ReturnResults> {
+  console.log(`download repo ${fullName}`);
   const htmlUrl = `https://github.com/${fullName}`;
   const cloneDirectory = Path.resolve(os.tmpdir(), fullName);
-  if (fs.existsSync(cloneDirectory) && nconf.get('clearCloneDirCache')) {
-    fs.rmSync(cloneDirectory);
+  if (fs.existsSync(cloneDirectory) && (nconf.get('clearCloneDirCache') || refresh)) {
+    fs.rmSync(cloneDirectory, { recursive: true, force: true });
   }
 
   let newData = false;

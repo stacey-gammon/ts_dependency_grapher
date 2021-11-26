@@ -3,11 +3,13 @@ import nconf from 'nconf';
 export const INCOMING_DEP_COUNT = 'IncomingDependencyCount';
 export const MAX_COUPLING_SCORE = 'MaxCouplingScore';
 export const PUBLIC_API_COUNT = 'PublicAPICount';
+export const ORG_SCORE = 'OrgScore';
 
 export const NODE_WEIGHT_OPTIONS = [
-  'IncomingDependencyCount',
-  'MaxCouplingScore',
-  'PublicAPICount',
+  INCOMING_DEP_COUNT,
+  MAX_COUPLING_SCORE,
+  PUBLIC_API_COUNT,
+  ORG_SCORE,
 ];
 
 export const SIZE_NODE_BY_CONFIG_KEY = 'nodeSizeWeight';

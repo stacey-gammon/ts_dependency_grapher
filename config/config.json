@@ -1,20 +1,20 @@
 {
     "repos": [
         { 
-            "full_name": "stacey-gammon/ts_dependency_grapher"
-        },
-
-        { 
             "full_name": "stacey-gammon/ts_dependency_grapher",
-            "tsconfig": "examples/good_ex_1/tsconfig.json"
+            "refresh": false,
+            "tsconfig": "./tsconfig.json",
+            "source": "file"
         }
     ],
-    "outputFolder": "docs/examples",
+    "outputFolder": "docs",
+    "excludeFilePaths" : ["_test_", ".test.ts"],
     "maxImageSize": "14",
     "buildDocsSite": true,
     "unusedNodeColor": "white",
-    "nodeColorWeight": "MaxCouplingScore",
+    "nodeColorWeight": "OrgScore",
     "nodeSizeWeight": "PublicAPICount",
     "clearDotCache": false,
-    "zooms": [2, 3, 4, 5]
+    "refreshParsing": false,
+    "zooms": [6]
 }

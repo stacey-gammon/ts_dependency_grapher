@@ -11,7 +11,7 @@
     },
     "include": [
       "./src",
-      "./test"
+      "_test_"
     ],
     "exclude": [
       "node_modules",

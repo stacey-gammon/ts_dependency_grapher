@@ -1,14 +1,26 @@
-import { LeafNode } from './types';
+import { getSafeName } from './graph_vis/utils';
+import { LeafNode, ParentNode, BaseNode } from './types';
+import { getEmptyNodeCounts } from './utils';
 
-export function getNode(): LeafNode {
+export function getNode(filePath = 'foo'): LeafNode {
   return {
-    incomingDependencyCount: 0,
-    publicAPICount: 0,
-    innerNodeCount: 0,
-    innerDependencyCount: 0,
-    complexityScore: 0,
-    maxSingleCoupleWeight: 0,
-    id: 'foo',
-    label: 'foo',
+    ...getBaseNode(filePath),
+    ...getEmptyNodeCounts(),
+  };
+}
+
+export function getParentNode(filePath = 'foo'): ParentNode {
+  return {
+    ...getBaseNode(filePath),
+    children: [],
+  };
+}
+
+export function getBaseNode(filePath = 'foo'): BaseNode {
+  return {
+    id: getSafeName(filePath),
+    label: filePath,
+    filePath,
+    ...getEmptyNodeCounts(),
   };
 }

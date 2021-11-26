@@ -2,6 +2,7 @@ import { GVEdgeMapping, LeafNode, ParentNode } from '../types';
 import { getDiGraphText } from './build_digraph_text';
 import fs from 'fs';
 import nconf from 'nconf';
+import { RangeWeights } from '../stats/types';
 
 /**
  *
@@ -13,10 +14,12 @@ import nconf from 'nconf';
 export async function buildDotFile(
   edges: GVEdgeMapping,
   root: ParentNode | LeafNode,
-  path: string
+  path: string,
+  refresh: boolean,
+  ranges: RangeWeights
 ): Promise<boolean> {
-  if (nconf.get('clearDotCache') || !fs.existsSync(path)) {
-    const text = getDiGraphText(edges, root);
+  if (refresh || nconf.get('clearDotCache') || !fs.existsSync(path)) {
+    const text = getDiGraphText(edges, root, ranges);
     if (!text) {
       throw new Error('Text not generated');
     }

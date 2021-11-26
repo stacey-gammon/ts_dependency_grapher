@@ -6,16 +6,13 @@
  * Side Public License, v 1.
  */
 
-import nconf from 'nconf';
-import { getSafeName } from './graph_vis/utils';
-
-export const MINT_COLOR_SCHEME = ['#C1FFF2', '#BAFFDF', '#B2EDC5', '#9DC0BC', '#7C7287'];
-export const PURPLE_BLACK = ['#9DA2AB', '#A188A6', '#7F5A83', '#0D324D', '#020202'];
+export const BLUE = ['#001A9A10', '#001A9A30', '#001A9A50', '#001A9A99', '#001A9A'];
 export const SUNRISE_SCHEME = ['#FFBA08', '#F48C06', '#DC2F02', '#9D0208', '#370617'];
 export const LIME = ['#F4E04D', '#F2ED6F', '#CEE397', '#8DB1AB', '#587792'];
 export const MOSS = ['#EAE1DF', '#B79492', '#917C78', '#667761', '#545E56'];
 
-export const COLOR_SCHEMES = [MINT_COLOR_SCHEME, SUNRISE_SCHEME, PURPLE_BLACK, LIME, MOSS];
+//export const COLOR_SCHEMES = [SUNRISE_SCHEME, BLUE, LIME, MOSS];
+export const COLOR_SCHEMES = [BLUE];
 
 let RANDOM_COLOR_INDEX = Math.floor(Math.random() * COLOR_SCHEMES.length);
 console.log('RANDOM_COLOR_INDEX', RANDOM_COLOR_INDEX);
@@ -31,9 +28,9 @@ export function regenerateColorScheme() {
 export function getFontColor(bgColor: string): string {
   return bgColor === getCurrColorScheme()[0] ||
     bgColor === getCurrColorScheme()[1] ||
-    bgColor === getCurrColorScheme()[2]
+    bgColor === 'white'
     ? getCurrColorScheme()[4]
-    : getCurrColorScheme()[0];
+    : 'white';
 }
 
 export function getColorForLevel(level: number) {
@@ -53,60 +50,29 @@ export function getNodeProperties(label: string, color?: string, size?: number):
   const sizeAttr = size ? `fixedsize=true width=${size} height=${size}` : '';
   const colorAttr = colorTxt ? `fillcolor="${color}", style=filled fontcolor="${fontColor}"` : '';
 
-  return `label="${getSafeName(label)}" ${colorAttr} ${sizeAttr}`;
-}
-
-export function getRelativeSizeOfNode(size: number, maxSize: number): number {
-  if (isNaN(size) || isNaN(maxSize)) {
-    throw new Error('NAN passed to getRelativeSizeOfNode');
-  }
-  const MAX_SIZE = 15;
-  const MIN_SIZE = 3;
-  const comparativeApiSizeRatio = size / maxSize;
-
-  return Math.max(comparativeApiSizeRatio * MAX_SIZE, MIN_SIZE);
+  return `label="${label}" ${colorAttr} ${sizeAttr}`;
 }
 
 export function getWeightedSize(
   size: number,
+  minSize: number,
   maxSize: number,
   weightedMinSize: number,
   weightedMaxSize: number
 ): number {
-  if (isNaN(size) || isNaN(maxSize)) {
-    throw new Error('NAN passed to getRelativeSizeOfNode');
+  if (isNaN(size) || isNaN(maxSize) || isNaN(weightedMaxSize) || isNaN(weightedMinSize)) {
+    throw new Error(
+      `NAN passed to getWeightedSize. size: ${size}, maxSize: ${maxSize}, minSize: ${minSize}, weightedMaxSize: ${weightedMaxSize}, weightedMinSize: ${weightedMinSize}`
+    );
   }
-  const MAX_SIZE = weightedMaxSize;
-  const MIN_SIZE = weightedMinSize;
-  const comparativeApiSizeRatio = size / maxSize;
 
-  console.log(`size / maxSize = ${size} / ${maxSize} = ${comparativeApiSizeRatio}`);
-  console.log(`MAX_SIZE is ${MAX_SIZE}`);
-  console.log(`Scaled is ${comparativeApiSizeRatio * MAX_SIZE}`);
-
-  console.log(
-    `Math.max(${comparativeApiSizeRatio * MAX_SIZE}, ${MIN_SIZE}) is ${Math.max(
-      comparativeApiSizeRatio * MAX_SIZE,
-      MIN_SIZE
-    )}`
-  );
-
-  return Math.floor(Math.max(comparativeApiSizeRatio * MAX_SIZE, MIN_SIZE));
+  const currentRange = maxSize - minSize;
+  const newRange = weightedMaxSize - weightedMinSize;
+  if (currentRange == 0) return weightedMinSize;
+  return Math.round(((size - minSize) * newRange) / currentRange + weightedMinSize);
 }
 
-export function getWeightedColor(val: number, max: number): string {
-  const thresholds = [0, 0.2, 0.4, 0.7, 1];
-  if (val === undefined || val === 0 || isNaN(val)) return nconf.get('unusedNodeColor');
-  const valRatio = val / max;
-
-  for (let i = 0; i < thresholds.length; i++) {
-    if (valRatio <= thresholds[i]) {
-      return getCurrColorScheme()[i];
-    }
-  }
-
-  // eslint-disable-next-line no-console
-  console.warn(`${valRatio} is larger than 1! val is ${val} and max is ${max}`);
-
-  return getCurrColorScheme()[4];
+export function getWeightedColor(val: number, min: number, max: number): string {
+  const colorRange = getWeightedSize(val, min, max, 0, 5);
+  return getCurrColorScheme()[colorRange];
 }

@@ -1,23 +1,20 @@
-import { collectNodeCouplingWeights } from './coupling_weights';
 import {
-  ClusteredNode,
   GVEdgeMapping,
-  CodeChunkNode,
   LeafNode,
   NodeWithLeafChildren,
   NodeWithNonLeafChildren,
   ParentNode,
 } from '../types';
 import { rollupEdges } from './rollup_edges';
+import { getEmptyNodeCounts } from '../utils';
 
 export function zoomOut(node: ParentNode | LeafNode, edges: GVEdgeMapping, zoomLevel: number) {
-  const leafToParentId: { [key: string]: string } = {};
+  const leafToParent: { [key: string]: ParentNode } = {};
   const parentIdToLeaf: { [key: string]: string[] } = {};
 
-  const zoomedOutRoot = zoomOutInner(node, edges, leafToParentId, parentIdToLeaf, 0, zoomLevel);
-  const zoomedOutEdges = rollupEdges(edges, leafToParentId, zoomedOutRoot);
+  const zoomedOutRoot = zoomOutInner(node, edges, leafToParent, parentIdToLeaf, 0, zoomLevel);
 
-  collectNodeCouplingWeights(zoomedOutEdges, zoomedOutRoot);
+  const zoomedOutEdges = rollupEdges(edges, leafToParent);
 
   return { zoomedOutEdges, zoomedOutRoot };
 }
@@ -25,24 +22,23 @@ export function zoomOut(node: ParentNode | LeafNode, edges: GVEdgeMapping, zoomL
 export function zoomOutInner(
   node: ParentNode | LeafNode,
   edges: GVEdgeMapping,
-  leafToParentId: { [key: string]: string },
+  leafToParent: { [key: string]: ParentNode },
   parentIdToLeaf: { [key: string]: string[] },
   currDepth: number,
   maxDepth: number
 ): LeafNode | ParentNode {
-  if (isGVNode(node)) {
+  if (isLeafNode(node)) {
     return node;
   } else if (currDepth < maxDepth && node.children.length > 0) {
-    const children: ParentNode[] | LeafNode[] = node.children.map((child) =>
-      zoomOutInner(child, edges, leafToParentId, parentIdToLeaf, currDepth + 1, maxDepth)
-    ) as any;
+    const children: Array<ParentNode | LeafNode> = node.children.map((child) =>
+      zoomOutInner(child, edges, leafToParent, parentIdToLeaf, currDepth + 1, maxDepth)
+    );
     return {
-      id: node.id,
-      label: node.label,
+      ...node,
       children,
-    } as any;
-  } else if (currDepth >= maxDepth && !isGVNode(node)) {
-    return turnIntoLeafNode(node, leafToParentId, parentIdToLeaf);
+    };
+  } else if (currDepth >= maxDepth && !isLeafNode(node)) {
+    return turnIntoLeafNode(node, leafToParent, parentIdToLeaf);
   } else {
     return node;
     // console.log(node);
@@ -52,44 +48,44 @@ export function zoomOutInner(
 
 function turnIntoLeafNode(
   node: ParentNode,
-  leafToParentId: { [key: string]: string },
+  leafToParent: { [key: string]: ParentNode },
   parentIdToLeaf: { [key: string]: string[] }
 ): LeafNode {
-  if (node.children.length === 0) {
+  console.log(`turnIntoLeafNode: node id is ${node.id}`);
+
+  if (isLeafNode(node)) {
+    console.log('turnIntoLeafNode: is leaf node! returning self');
+    return node;
+  } else if (node.children.length === 0) {
     return {
-      id: node.id,
-      label: node.label,
-      incomingDependencyCount: 0,
-      publicAPICount: 0,
-      innerNodeCount: 0,
-      maxSingleCoupleWeight: 0,
-      complexityScore: 0,
-      innerDependencyCount: 0, // This will be calculated later when the edges are rolled up
-    };
+      ...node,
+      ...getEmptyNodeCounts(),
+      children: undefined,
+      filePath: node.filePath,
+    } as LeafNode;
   }
 
-  if (nodeHasLeafChildren(node)) {
-    return turnNodeWithLeafsIntoLeafNode(node, leafToParentId, parentIdToLeaf);
+  if (nodeHasOnlyLeafChildren(node)) {
+    return turnNodeWithLeafsIntoLeafNode(node, leafToParent, parentIdToLeaf);
   } else if (nodeHasParentChildren(node)) {
-    const rolledUpChildren: NodeWithLeafChildren[] = [];
+    console.log(`Node has parent children, node id is ${node.id}`);
+    const rolledUpChildren: Array<ParentNode | LeafNode> = [];
     node.children.forEach((child) => {
-      const rolledUpChild = turnIntoLeafNode(child, leafToParentId, parentIdToLeaf);
-      rolledUpChildren.push(rolledUpChild as any);
+      const rolledUpChild = turnIntoLeafNode(child, leafToParent, parentIdToLeaf);
+      rolledUpChildren.push(rolledUpChild);
     });
-    return turnIntoLeafNode(
-      { ...node, children: rolledUpChildren },
-      leafToParentId,
-      parentIdToLeaf
-    );
+    return turnIntoLeafNode({ ...node, children: rolledUpChildren }, leafToParent, parentIdToLeaf);
   }
   throw new Error('Shouldnt get here');
 }
 
 function turnNodeWithLeafsIntoLeafNode(
   node: NodeWithLeafChildren,
-  leafToParentId: { [key: string]: string },
+  leafToParent: { [key: string]: ParentNode },
   parentIdToLeafs: { [key: string]: string[] }
-): CodeChunkNode {
+): LeafNode {
+  console.log(`turnNodeWithLeafsIntoLeafNode node id is ${node.id}`);
+
   const { incomingDependencyCount, publicAPICount } = node.children.reduce(
     (acc, child) => {
       if (child.incomingDependencyCount === undefined || isNaN(child.incomingDependencyCount)) {
@@ -101,7 +97,7 @@ function turnNodeWithLeafsIntoLeafNode(
       const leafs: string[] = parentIdToLeafs[child.id] || [child.id];
 
       leafs.forEach((leaf) => {
-        leafToParentId[leaf] = node.id;
+        leafToParent[leaf] = node;
       });
 
       if (!parentIdToLeafs[node.id]) parentIdToLeafs[node.id] = [];
@@ -116,34 +112,43 @@ function turnNodeWithLeafsIntoLeafNode(
   );
 
   return {
-    id: node.id,
-    label: node.label,
+    ...node,
+    ...getEmptyNodeCounts(),
     incomingDependencyCount,
-    maxSingleCoupleWeight: 0,
     publicAPICount,
     innerNodeCount: node.children.reduce((sum, c) => (c.innerNodeCount || 1) + sum, 0),
-    innerNodeConnections: 0,
-    innerDependencyCount: 0,
     complexityScore: node.children.reduce((sum, c) => (c.complexityScore || 1) + sum, 0),
-  } as CodeChunkNode;
+    children: undefined,
+  } as LeafNode;
 }
 
-export function nodeHasLeafChildren(node?: ParentNode): node is NodeWithLeafChildren {
-  return !!node && node.children.length > 0 && isGVNode(node.children[0]);
+export function nodeHasOnlyLeafChildren(node?: ParentNode): node is NodeWithLeafChildren {
+  console.log('nodeHasOnlyLeafChildren');
+  if (!node || node.children.length === 0) {
+    return false;
+  } else {
+    for (const child of node.children) {
+      if (!isLeafNode(child)) return false;
+    }
+    return true;
+  }
 }
 
 function nodeHasParentChildren(
   node: NodeWithNonLeafChildren | ParentNode
 ): node is NodeWithNonLeafChildren {
-  return !!node && node.children.length > 0 && !isGVNode(node.children[0]);
+  console.log('nodeHasParentChildren');
+
+  if (!node || node.children.length === 0) {
+    return false;
+  } else {
+    for (const child of node.children) {
+      if (!isLeafNode(child)) return true;
+    }
+    return false;
+  }
 }
 
-export function isGVNodeArray(
-  node?: Array<CodeChunkNode> | Array<ParentNode>
-): node is Array<CodeChunkNode> {
-  return !!node && node.length > 0 && isGVNode(node[0]);
-}
-
-export function isGVNode(node: LeafNode | ParentNode): node is LeafNode {
-  return (node as ClusteredNode).children === undefined;
+export function isLeafNode(node: LeafNode | ParentNode): node is LeafNode {
+  return (node as ParentNode).children === undefined;
 }
