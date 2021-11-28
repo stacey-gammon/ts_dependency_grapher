@@ -52,7 +52,7 @@ export function addEdges(
           }
 
           const path = getFilePathForTsNode(destNode, repoRoot);
-          const node = addNode(path, root);
+          const node = addNode(path, root, 0);
           if (!node) {
             console.error(`Did not find node for path ${path} in root tree`, root);
             throw new Error(`Did not find node for path ${path} in root tree`);

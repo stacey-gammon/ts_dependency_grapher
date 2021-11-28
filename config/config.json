@@ -2,9 +2,17 @@
     "repos": [
         { 
             "full_name": "stacey-gammon/ts_dependency_grapher",
-            "refresh": false,
-            "tsconfig": "./tsconfig.json",
-            "source": "file"
+            "tsconfig": "./examples/well_organized/tsconfig.json",
+            "source": "file",
+            "outputName": "well_organized",
+            "refresh": true
+        },
+        { 
+            "full_name": "stacey-gammon/ts_dependency_grapher",
+            "tsconfig": "./examples/poor_organized/tsconfig.json",
+            "source": "file",
+            "outputName": "poor_organized",
+            "refresh": true
         }
     ],
     "outputFolder": "docs",
@@ -16,5 +24,5 @@
     "nodeSizeWeight": "PublicAPICount",
     "clearDotCache": false,
     "refreshParsing": false,
-    "zooms": [6]
+    "zooms": [4]
 }

@@ -1,4 +1,4 @@
-import { getWeightedSize } from './styles';
+import { getWeightedSize } from './graph_vis/styles';
 
 it('getWeightedSize', () => {
   expect(getWeightedSize(1, 1, 1, 1, 10)).toBe(1);

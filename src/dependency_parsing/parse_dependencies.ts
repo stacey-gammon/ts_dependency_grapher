@@ -1,4 +1,4 @@
-import { Project, SourceFile } from 'ts-morph';
+import { ClassDeclaration, InterfaceDeclaration, Project, SourceFile } from 'ts-morph';
 import Path from 'path';
 import { GVEdgeMapping, LeafNode, ParentNode } from '../types';
 import nconf from 'nconf';
@@ -78,7 +78,11 @@ export function parseFiles(
 
   files.forEach((file) => {
     if (!excludeFile(file)) {
-      addNode(getRootRelativePath(file.getFilePath(), repoRoot), root);
+      addNode(
+        getRootRelativePath(file.getFilePath(), repoRoot),
+        root,
+        getComplexityScoreOfFile(file)
+      );
     }
   });
 
@@ -89,7 +93,23 @@ export function parseFiles(
   });
 
   if (parsedRepoFilePathCache) {
-    fs.writeFileSync(parsedRepoFilePathCache, JSON.stringify({ root, edges }));
+    //  fs.writeFileSync(parsedRepoFilePathCache, JSON.stringify({ root, edges }));
   }
   return { edges, root };
+}
+
+function getComplexityScoreOfFile(file: SourceFile): number {
+  return (
+    getComplexityScoreOfClasses(file.getClasses()) +
+    file.getFunctions().length +
+    getComplexityScoreOfClasses(file.getInterfaces()) +
+    file.getExportedDeclarations().size +
+    file.getTypeAliases().length
+  );
+}
+
+function getComplexityScoreOfClasses(node: Array<ClassDeclaration | InterfaceDeclaration>) {
+  return (
+    1 + node.reduce((sum, cls) => sum + cls.getMembers().length + cls.getProperties().length, 0)
+  );
 }

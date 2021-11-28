@@ -1,12 +1,7 @@
-import {
-  GVEdgeMapping,
-  LeafNode,
-  NodeWithLeafChildren,
-  NodeWithNonLeafChildren,
-  ParentNode,
-} from '../types';
+import { GVEdgeMapping, LeafNode, ParentNode } from '../types';
 import { rollupEdges } from './rollup_edges';
 import { getEmptyNodeCounts } from '../utils';
+import { NodeWithLeafChildren, NodeWithNonLeafChildren } from './types';
 
 export function zoomOut(node: ParentNode | LeafNode, edges: GVEdgeMapping, zoomLevel: number) {
   const leafToParent: { [key: string]: ParentNode } = {};
@@ -47,7 +42,7 @@ export function zoomOutInner(
 }
 
 function turnIntoLeafNode(
-  node: ParentNode,
+  node: ParentNode | LeafNode,
   leafToParent: { [key: string]: ParentNode },
   parentIdToLeaf: { [key: string]: string[] }
 ): LeafNode {
@@ -88,10 +83,6 @@ function turnNodeWithLeafsIntoLeafNode(
 
   const { incomingDependencyCount, publicAPICount } = node.children.reduce(
     (acc, child) => {
-      if (child.incomingDependencyCount === undefined || isNaN(child.incomingDependencyCount)) {
-        throw new Error('non gc node in this array!');
-      }
-      acc.incomingDependencyCount += child.incomingDependencyCount;
       acc.publicAPICount += child.publicAPICount;
 
       const leafs: string[] = parentIdToLeafs[child.id] || [child.id];

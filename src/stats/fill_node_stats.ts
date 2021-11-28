@@ -1,13 +1,14 @@
 import { LeafNode, NodeStats, ParentNode, GVEdgeMapping } from '../types';
-import { collectNodeCouplingWeights } from './coupling_weights';
-import { fillDependencyCounts } from './fill_dependency_counts';
-import { RangeWeights } from './types';
-import { isLeafNode } from '../zoom/zoom_out';
+import { getNodeStats } from './coupling_weights';
+import { AllNodeStats } from './types';
+import { getCouplingWeightMapping } from './get_coupling_weight_mapping';
 
-export function fillNodeStats(node: ParentNode | LeafNode, edges: GVEdgeMapping): RangeWeights {
-  // Order is important here.
-  fillDependencyCounts(node, edges);
-  collectNodeCouplingWeights(node, edges);
+export function fillNodeStats(node: ParentNode | LeafNode, edges: GVEdgeMapping): AllNodeStats {
+  const dependencyStats = {};
+
+  const couplingWeights = getCouplingWeightMapping(edges, dependencyStats);
+  const stats = {};
+  getNodeStats(couplingWeights, node, dependencyStats, stats);
 
   const statKeys: Array<keyof NodeStats> = [
     'efferentCoupling',
@@ -18,48 +19,25 @@ export function fillNodeStats(node: ParentNode | LeafNode, edges: GVEdgeMapping)
     'publicAPICount',
     'orgScore',
     'maxSingleCoupleWeight',
-    'innerNodeCount',
+    //  'innerNodeCount',
   ];
 
   const maxes: Partial<NodeStats> = {};
-  statKeys.forEach((stat) => (maxes[stat] = findMaxVal(node, stat)));
+  statKeys.forEach((stat) => (maxes[stat] = findMaxVal(stats, stat)));
   const mins: Partial<NodeStats> = {};
-  statKeys.forEach((stat) => (mins[stat] = findMinVal(node, stat)));
+  statKeys.forEach((stat) => (mins[stat] = findMinVal(stats, stat)));
 
   return {
+    stats,
     maxes,
     mins,
-  } as RangeWeights;
+  } as AllNodeStats;
 }
 
-function findMaxVal(node: ParentNode | LeafNode, key: keyof LeafNode, max = -999): number {
-  if (isLeafNode(node)) {
-    const val: number = node[key] as number;
-    return val > max ? val : max;
-  } else {
-    let maxChild = max;
-    node.children.forEach((child) => {
-      const childSize = findMaxVal(child, key, maxChild);
-      if (childSize > maxChild) {
-        maxChild = childSize;
-      }
-    });
-    return maxChild;
-  }
+function findMaxVal(stats: { [key: string]: NodeStats }, key: keyof NodeStats): number {
+  return Object.values(stats).reduce((max, curr) => Math.max(curr[key], max), -999);
 }
 
-function findMinVal(node: ParentNode | LeafNode, key: keyof LeafNode, min = 999): number {
-  if (isLeafNode(node)) {
-    const val: number = node[key] as number;
-    return val < min ? val : min;
-  } else {
-    let minChild = min;
-    node.children.forEach((child) => {
-      const childSize = findMinVal(child, key, minChild);
-      if (childSize < minChild) {
-        minChild = childSize;
-      }
-    });
-    return minChild;
-  }
+function findMinVal(stats: { [key: string]: NodeStats }, key: keyof NodeStats): number {
+  return Object.values(stats).reduce((max, curr) => Math.min(curr[key], max), 999);
 }

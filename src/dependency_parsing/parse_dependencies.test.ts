@@ -1,7 +1,10 @@
 import { parseDependencies } from './parse_dependencies';
 import Path from 'path';
 import { isLeafNode } from '../zoom/zoom_out';
-import { fillNodeStats } from '../stats/fill_node_stats';
+import {
+  removeCircularDependencies,
+  removeCircularDependenciesFromEdges,
+} from '../remove_node_circular_deps';
 
 it('parseDependencies simple', () => {
   const { edges, root } = parseDependencies({
@@ -10,59 +13,37 @@ it('parseDependencies simple', () => {
     refresh: true,
   });
 
-  fillNodeStats(root, edges);
-
   expect(isLeafNode(root)).toBe(false);
 
   expect(edges['_one_index_ts']).toBeDefined();
   expect(edges['_one_index_ts'].destinations.length).toBe(1);
-
   // Five functions are imported, and then each are used. Each is considered a connection.
   expect(edges['_one_index_ts'].destinations[0].dependencyWeight).toBe(10);
-  expect(edges['_one_index_ts'].destinations[0].destinationNode.intraDependencyCount).toBe(10);
-  expect(edges['_one_index_ts'].destinations[0].destinationNode.efferentCoupling).toBe(0);
-  expect(edges['_one_index_ts'].destinations[0].destinationNode.afferentCoupling).toBe(10);
-  expect(edges['_one_index_ts'].source.intraDependencyCount).toBe(10);
-  expect(edges['_one_index_ts'].source.efferentCoupling).toBe(10);
-  expect(edges['_one_index_ts'].source.afferentCoupling).toBe(0);
 });
 
-it('parseDependencies well organized', () => {
+it.only('parseDependencies well organized', () => {
   const { edges, root } = parseDependencies({
     repo: 'test',
     tsconfig: Path.resolve(__dirname, '../../examples/well_organized/tsconfig.json'),
     refresh: true,
   });
 
-  fillNodeStats(root, edges);
+  expect(Object.keys(edges).length).toBe(3);
 
-  const oneOneEdge = edges['_one_one_ts'];
-  const oneOneSource = edges['_one_one_ts'].source;
+  const a3Edge = edges['_A_3_ts'];
+  const a3Source = edges['_A_3_ts'].source;
 
-  expect(oneOneEdge).toBeDefined();
-  expect(oneOneEdge.destinations.length).toBe(3);
-  expect(oneOneSource.intraDependencyCount).toBe(2);
-  expect(oneOneSource.interDependencyCount).toBe(4);
-  expect(oneOneSource.afferentCoupling).toBe(0);
-  expect(oneOneSource.efferentCoupling).toBe(2);
+  expect(a3Edge).toBeDefined();
+  expect(a3Edge.destinations.length).toBe(3);
 
-  expect(isLeafNode(oneOneSource)).toBeTruthy();
+  expect(isLeafNode(a3Source)).toBeTruthy();
 
-  if (isLeafNode(oneOneSource)) {
-    expect(oneOneSource.maxSingleCoupleWeight).toBe(2);
-    expect(oneOneSource.orgScore).toBe(2);
-  }
-
-  expect(edges['_two_one_ts'].destinations.length).toBe(3);
-  expect(edges['_two_one_ts'].source.intraDependencyCount).toBe(4);
-  expect(edges['_two_one_ts'].source.interDependencyCount).toBe(4);
-  expect(edges['_two_one_ts'].source.afferentCoupling).toBe(2);
-  expect(edges['_two_one_ts'].source.efferentCoupling).toBe(2);
+  expect(edges['_B_6_ts'].destinations.length).toBe(3);
 
   expect(isLeafNode(root)).toBe(false);
   if (!isLeafNode(root)) {
-    const oneFolder = root.children.find((c) => c.id === '_one');
-    expect(oneFolder).toBeDefined();
+    const aFolder = root.children.find((c) => c.id === '_A');
+    expect(aFolder).toBeDefined();
   }
 });
 
@@ -73,32 +54,18 @@ it('parseDependencies poor organized', () => {
     refresh: true,
   });
 
-  const oneOneEdge = edges['_one_one_ts'];
-  const oneOneSource = edges['_one_one_ts'].source;
+  expect(Object.keys(edges).length).toBe(3);
 
-  expect(oneOneEdge).toBeDefined();
-  expect(oneOneEdge.destinations.length).toBe(3);
-  expect(oneOneSource.intraDependencyCount).toBe(2);
-  expect(oneOneSource.interDependencyCount).toBe(4);
-  expect(oneOneSource.afferentCoupling).toBe(0);
-  expect(oneOneSource.efferentCoupling).toBe(2);
+  const aThreeEdge = edges['_A_3_ts'];
+  expect(aThreeEdge).toBeDefined();
 
-  expect(isLeafNode(oneOneSource)).toBeTruthy();
-
-  if (isLeafNode(oneOneSource)) {
-    expect(oneOneSource.maxSingleCoupleWeight).toBe(2);
-    expect(oneOneSource.orgScore).toBe(2);
-  }
-
-  expect(edges['_two_one_ts'].destinations.length).toBe(3);
-  expect(edges['_two_one_ts'].source.intraDependencyCount).toBe(4);
-  expect(edges['_two_one_ts'].source.interDependencyCount).toBe(4);
-  expect(edges['_two_one_ts'].source.afferentCoupling).toBe(2);
-  expect(edges['_two_one_ts'].source.efferentCoupling).toBe(2);
-
+  const a3Source = edges['_A_3_ts'].source;
+  expect(isLeafNode(a3Source)).toBeTruthy();
+  expect(aThreeEdge.destinations.length).toBe(3);
+  expect(edges['_B_6_ts'].destinations.length).toBe(3);
   expect(isLeafNode(root)).toBe(false);
   if (!isLeafNode(root)) {
-    const oneFolder = root.children.find((c) => c.id === '_one');
+    const oneFolder = root.children.find((c) => c.id === '_A');
     expect(oneFolder).toBeDefined();
   }
 });

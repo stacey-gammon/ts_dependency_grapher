@@ -1,5 +1,5 @@
 import { isLeafNode, zoomOut } from './zoom_out';
-import { GVEdgeMapping, ParentNode, LeafNode } from '../types';
+import { GVEdgeMapping, ParentNode } from '../types';
 import { getNode, getParentNode } from '../node.mock';
 
 it.only('zoomOut', () => {
@@ -42,10 +42,8 @@ it.only('zoomOut', () => {
           "filePath": "root/foo",
           "id": "root_foo",
           "incomingDependencyCount": 0,
-          "innerDependencyCount": 0,
-          "innerNodeConnections": 0,
           "innerNodeCount": 2,
-          "interDependencyCount": undefined,
+          "interDependencyCount": 0,
           "intraDependencyCount": 0,
           "label": "root/foo",
           "maxSingleCoupleWeight": 0,
@@ -53,12 +51,18 @@ it.only('zoomOut', () => {
           "publicAPICount": 0,
         },
       ],
+      "complexityScore": 0,
       "efferentCoupling": 0,
       "filePath": "root",
       "id": "root",
+      "incomingDependencyCount": 0,
+      "innerNodeCount": 0,
       "interDependencyCount": 0,
       "intraDependencyCount": 0,
       "label": "root",
+      "maxSingleCoupleWeight": 0,
+      "orgScore": 0,
+      "publicAPICount": 0,
     }
   `);
 
@@ -78,6 +82,7 @@ it.only('zoomOut', () => {
           "intraDependencyCount": 0,
           "label": "root/foo",
           "maxSingleCoupleWeight": 0,
+          "orgScore": 0,
           "publicAPICount": 0,
         },
       },
@@ -89,7 +94,6 @@ it.only('zoomOut', () => {
   } else {
     expect(zoomedOutRoot.children).toBeDefined();
     expect(zoomedOutRoot.children.length).toBe(1);
-    expect((zoomedOutRoot.children[0] as LeafNode).afferentCoupling).toBe(2);
   }
 });
 
@@ -144,231 +148,6 @@ it('zoomOut with different length children, level 2', () => {
   const { edges, root } = getTestEdgesAndRoot();
   const { zoomedOutRoot, zoomedOutEdges } = zoomOut(root, edges, 2);
 
-  expect(zoomedOutRoot).toMatchInlineSnapshot(`
-    Object {
-      "afferentCoupling": 0,
-      "children": Array [
-        Object {
-          "afferentCoupling": 0,
-          "children": Array [
-            Object {
-              "afferentCoupling": 0,
-              "children": undefined,
-              "complexityScore": 3,
-              "efferentCoupling": 0,
-              "filePath": "root/foo/bar",
-              "id": "root_foo_bar",
-              "incomingDependencyCount": 0,
-              "innerDependencyCount": 0,
-              "innerNodeConnections": 0,
-              "innerNodeCount": 3,
-              "interDependencyCount": undefined,
-              "intraDependencyCount": 0,
-              "label": "root/foo/bar",
-              "maxSingleCoupleWeight": 3,
-              "orgScore": 0,
-              "publicAPICount": 0,
-            },
-            Object {
-              "afferentCoupling": 0,
-              "children": undefined,
-              "complexityScore": 0,
-              "efferentCoupling": 0,
-              "filePath": "root/foo/no_kids",
-              "id": "root_foo_no_kids",
-              "incomingDependencyCount": 0,
-              "innerNodeCount": 0,
-              "interDependencyCount": undefined,
-              "intraDependencyCount": 0,
-              "label": "root/foo/no_kids",
-              "maxSingleCoupleWeight": 0,
-              "publicAPICount": 0,
-            },
-          ],
-          "efferentCoupling": 0,
-          "filePath": "root/foo",
-          "id": "root_foo",
-          "interDependencyCount": 0,
-          "intraDependencyCount": 3,
-          "label": "root/foo",
-        },
-        Object {
-          "afferentCoupling": 0,
-          "complexityScore": 0,
-          "efferentCoupling": 0,
-          "filePath": "root/daa.ts",
-          "id": "root_daa_ts",
-          "incomingDependencyCount": 0,
-          "innerNodeCount": 0,
-          "interDependencyCount": undefined,
-          "intraDependencyCount": 3,
-          "label": "root/daa.ts",
-          "maxSingleCoupleWeight": 3,
-          "publicAPICount": 0,
-        },
-      ],
-      "efferentCoupling": 0,
-      "filePath": "root",
-      "id": "root",
-      "interDependencyCount": 3,
-      "intraDependencyCount": 0,
-      "label": "root",
-    }
-  `);
-
-  expect(zoomedOutEdges).toMatchInlineSnapshot(`
-    Object {
-      "root_daa_ts": Object {
-        "destinations": Array [
-          Object {
-            "dependencyWeight": 2,
-            "destinationNode": Object {
-              "afferentCoupling": 0,
-              "children": Array [
-                Object {
-                  "afferentCoupling": 0,
-                  "complexityScore": 0,
-                  "efferentCoupling": 0,
-                  "filePath": "root/foo/bar/lee.ts",
-                  "id": "root_foo_bar_lee_ts",
-                  "incomingDependencyCount": 0,
-                  "innerNodeCount": 0,
-                  "interDependencyCount": 0,
-                  "intraDependencyCount": 0,
-                  "label": "root/foo/bar/lee.ts",
-                  "maxSingleCoupleWeight": 0,
-                  "publicAPICount": 0,
-                },
-                Object {
-                  "afferentCoupling": 0,
-                  "complexityScore": 0,
-                  "efferentCoupling": 0,
-                  "filePath": "root/foo/bar/bed.ts",
-                  "id": "root_foo_bar_bed_ts",
-                  "incomingDependencyCount": 0,
-                  "innerNodeCount": 0,
-                  "interDependencyCount": 0,
-                  "intraDependencyCount": 0,
-                  "label": "root/foo/bar/bed.ts",
-                  "maxSingleCoupleWeight": 0,
-                  "publicAPICount": 0,
-                },
-                Object {
-                  "afferentCoupling": 0,
-                  "complexityScore": 0,
-                  "efferentCoupling": 0,
-                  "filePath": "root/foo/bar/zed.ts",
-                  "id": "root_foo_bar_zed_ts",
-                  "incomingDependencyCount": 0,
-                  "innerNodeCount": 0,
-                  "interDependencyCount": 0,
-                  "intraDependencyCount": 0,
-                  "label": "root/foo/bar/zed.ts",
-                  "maxSingleCoupleWeight": 0,
-                  "publicAPICount": 0,
-                },
-              ],
-              "efferentCoupling": 0,
-              "filePath": "root/foo/bar",
-              "id": "root_foo_bar",
-              "interDependencyCount": 0,
-              "intraDependencyCount": 0,
-              "label": "root/foo/bar",
-            },
-          },
-        ],
-        "source": Object {
-          "afferentCoupling": 0,
-          "complexityScore": 0,
-          "efferentCoupling": 0,
-          "filePath": "root/daa.ts",
-          "id": "root_daa_ts",
-          "incomingDependencyCount": 0,
-          "innerNodeCount": 0,
-          "interDependencyCount": undefined,
-          "intraDependencyCount": 3,
-          "label": "root/daa.ts",
-          "maxSingleCoupleWeight": 3,
-          "publicAPICount": 0,
-        },
-      },
-      "root_foo_bar": Object {
-        "destinations": Array [
-          Object {
-            "dependencyWeight": 1,
-            "destinationNode": Object {
-              "afferentCoupling": 0,
-              "complexityScore": 0,
-              "efferentCoupling": 0,
-              "filePath": "root/daa.ts",
-              "id": "root_daa_ts",
-              "incomingDependencyCount": 0,
-              "innerNodeCount": 0,
-              "interDependencyCount": undefined,
-              "intraDependencyCount": 3,
-              "label": "root/daa.ts",
-              "maxSingleCoupleWeight": 3,
-              "publicAPICount": 0,
-            },
-          },
-        ],
-        "source": Object {
-          "afferentCoupling": 0,
-          "children": Array [
-            Object {
-              "afferentCoupling": 0,
-              "complexityScore": 0,
-              "efferentCoupling": 0,
-              "filePath": "root/foo/bar/lee.ts",
-              "id": "root_foo_bar_lee_ts",
-              "incomingDependencyCount": 0,
-              "innerNodeCount": 0,
-              "interDependencyCount": 0,
-              "intraDependencyCount": 0,
-              "label": "root/foo/bar/lee.ts",
-              "maxSingleCoupleWeight": 0,
-              "publicAPICount": 0,
-            },
-            Object {
-              "afferentCoupling": 0,
-              "complexityScore": 0,
-              "efferentCoupling": 0,
-              "filePath": "root/foo/bar/bed.ts",
-              "id": "root_foo_bar_bed_ts",
-              "incomingDependencyCount": 0,
-              "innerNodeCount": 0,
-              "interDependencyCount": 0,
-              "intraDependencyCount": 0,
-              "label": "root/foo/bar/bed.ts",
-              "maxSingleCoupleWeight": 0,
-              "publicAPICount": 0,
-            },
-            Object {
-              "afferentCoupling": 0,
-              "complexityScore": 0,
-              "efferentCoupling": 0,
-              "filePath": "root/foo/bar/zed.ts",
-              "id": "root_foo_bar_zed_ts",
-              "incomingDependencyCount": 0,
-              "innerNodeCount": 0,
-              "interDependencyCount": 0,
-              "intraDependencyCount": 0,
-              "label": "root/foo/bar/zed.ts",
-              "maxSingleCoupleWeight": 0,
-              "publicAPICount": 0,
-            },
-          ],
-          "efferentCoupling": 0,
-          "filePath": "root/foo/bar",
-          "id": "root_foo_bar",
-          "interDependencyCount": 0,
-          "intraDependencyCount": 0,
-          "label": "root/foo/bar",
-        },
-      },
-    }
-  `);
-
   const daaNodeId = getNode('root/daa.ts').id;
   const rootFooNodeId = getParentNode('root/foo').id;
   expect(zoomedOutEdges[daaNodeId]).toBeDefined();
@@ -380,193 +159,12 @@ it('zoomOut with different length children, level 2', () => {
   if (!isLeafNode(zoomedOutRoot)) {
     expect(zoomedOutRoot.children).toBeDefined();
     expect(zoomedOutRoot.children.length).toBe(2);
-    expect((zoomedOutRoot.children[0] as LeafNode).incomingDependencyCount).toBe(undefined);
   }
 });
 
 it('zoomOut with different length children, level 1', () => {
   const { edges, root } = getTestEdgesAndRoot();
-  const { zoomedOutRoot, zoomedOutEdges } = zoomOut(root, edges, 1);
-  expect(zoomedOutRoot).toMatchInlineSnapshot(`
-    Object {
-      "afferentCoupling": 0,
-      "children": Array [
-        Object {
-          "afferentCoupling": 0,
-          "children": undefined,
-          "complexityScore": 4,
-          "efferentCoupling": 0,
-          "filePath": "root/foo",
-          "id": "root_foo",
-          "incomingDependencyCount": 0,
-          "innerDependencyCount": 0,
-          "innerNodeConnections": 0,
-          "innerNodeCount": 4,
-          "interDependencyCount": undefined,
-          "intraDependencyCount": 3,
-          "label": "root/foo",
-          "maxSingleCoupleWeight": 3,
-          "orgScore": 0,
-          "publicAPICount": 0,
-        },
-        Object {
-          "afferentCoupling": 0,
-          "complexityScore": 0,
-          "efferentCoupling": 0,
-          "filePath": "root/daa.ts",
-          "id": "root_daa_ts",
-          "incomingDependencyCount": 0,
-          "innerNodeCount": 0,
-          "interDependencyCount": undefined,
-          "intraDependencyCount": 3,
-          "label": "root/daa.ts",
-          "maxSingleCoupleWeight": 3,
-          "publicAPICount": 0,
-        },
-      ],
-      "efferentCoupling": 0,
-      "filePath": "root",
-      "id": "root",
-      "interDependencyCount": 3,
-      "intraDependencyCount": 0,
-      "label": "root",
-    }
-  `);
-
-  expect(zoomedOutEdges).toMatchInlineSnapshot(`
-    Object {
-      "root_daa_ts": Object {
-        "destinations": Array [
-          Object {
-            "dependencyWeight": 2,
-            "destinationNode": Object {
-              "afferentCoupling": 0,
-              "children": Array [
-                Object {
-                  "afferentCoupling": 0,
-                  "children": undefined,
-                  "complexityScore": 3,
-                  "efferentCoupling": 0,
-                  "filePath": "root/foo/bar",
-                  "id": "root_foo_bar",
-                  "incomingDependencyCount": 0,
-                  "innerDependencyCount": 0,
-                  "innerNodeConnections": 0,
-                  "innerNodeCount": 3,
-                  "interDependencyCount": 0,
-                  "intraDependencyCount": 0,
-                  "label": "root/foo/bar",
-                  "maxSingleCoupleWeight": 0,
-                  "orgScore": 0,
-                  "publicAPICount": 0,
-                },
-                Object {
-                  "afferentCoupling": 0,
-                  "children": undefined,
-                  "complexityScore": 0,
-                  "efferentCoupling": 0,
-                  "filePath": "root/foo/no_kids",
-                  "id": "root_foo_no_kids",
-                  "incomingDependencyCount": 0,
-                  "innerNodeCount": 0,
-                  "interDependencyCount": 0,
-                  "intraDependencyCount": 0,
-                  "label": "root/foo/no_kids",
-                  "maxSingleCoupleWeight": 0,
-                  "publicAPICount": 0,
-                },
-              ],
-              "efferentCoupling": 0,
-              "filePath": "root/foo",
-              "id": "root_foo",
-              "interDependencyCount": 0,
-              "intraDependencyCount": 0,
-              "label": "root/foo",
-            },
-          },
-        ],
-        "source": Object {
-          "afferentCoupling": 0,
-          "complexityScore": 0,
-          "efferentCoupling": 0,
-          "filePath": "root/daa.ts",
-          "id": "root_daa_ts",
-          "incomingDependencyCount": 0,
-          "innerNodeCount": 0,
-          "interDependencyCount": undefined,
-          "intraDependencyCount": 3,
-          "label": "root/daa.ts",
-          "maxSingleCoupleWeight": 3,
-          "publicAPICount": 0,
-        },
-      },
-      "root_foo": Object {
-        "destinations": Array [
-          Object {
-            "dependencyWeight": 1,
-            "destinationNode": Object {
-              "afferentCoupling": 0,
-              "complexityScore": 0,
-              "efferentCoupling": 0,
-              "filePath": "root/daa.ts",
-              "id": "root_daa_ts",
-              "incomingDependencyCount": 0,
-              "innerNodeCount": 0,
-              "interDependencyCount": undefined,
-              "intraDependencyCount": 3,
-              "label": "root/daa.ts",
-              "maxSingleCoupleWeight": 3,
-              "publicAPICount": 0,
-            },
-          },
-        ],
-        "source": Object {
-          "afferentCoupling": 0,
-          "children": Array [
-            Object {
-              "afferentCoupling": 0,
-              "children": undefined,
-              "complexityScore": 3,
-              "efferentCoupling": 0,
-              "filePath": "root/foo/bar",
-              "id": "root_foo_bar",
-              "incomingDependencyCount": 0,
-              "innerDependencyCount": 0,
-              "innerNodeConnections": 0,
-              "innerNodeCount": 3,
-              "interDependencyCount": 0,
-              "intraDependencyCount": 0,
-              "label": "root/foo/bar",
-              "maxSingleCoupleWeight": 0,
-              "orgScore": 0,
-              "publicAPICount": 0,
-            },
-            Object {
-              "afferentCoupling": 0,
-              "children": undefined,
-              "complexityScore": 0,
-              "efferentCoupling": 0,
-              "filePath": "root/foo/no_kids",
-              "id": "root_foo_no_kids",
-              "incomingDependencyCount": 0,
-              "innerNodeCount": 0,
-              "interDependencyCount": 0,
-              "intraDependencyCount": 0,
-              "label": "root/foo/no_kids",
-              "maxSingleCoupleWeight": 0,
-              "publicAPICount": 0,
-            },
-          ],
-          "efferentCoupling": 0,
-          "filePath": "root/foo",
-          "id": "root_foo",
-          "interDependencyCount": 0,
-          "intraDependencyCount": 0,
-          "label": "root/foo",
-        },
-      },
-    }
-  `);
+  const { zoomedOutRoot } = zoomOut(root, edges, 1);
 
   expect(isLeafNode(zoomedOutRoot)).toBeFalsy();
   if (!isLeafNode(zoomedOutRoot)) {
@@ -575,6 +173,5 @@ it('zoomOut with different length children, level 1', () => {
     zoomedOutRoot.children.forEach((child) => {
       expect(isLeafNode(child)).toBe(true);
     });
-    expect((zoomedOutRoot.children[0] as LeafNode).intraDependencyCount).toBe(3);
   }
 });

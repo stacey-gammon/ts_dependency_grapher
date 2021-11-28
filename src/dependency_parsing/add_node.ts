@@ -5,7 +5,8 @@ import { getSafeName } from '../graph_vis/utils';
 
 export function addNode(
   filePath: string,
-  node: ParentNode | LeafNode
+  node: ParentNode | LeafNode,
+  complexityScore: number
 ): LeafNode | ParentNode | undefined {
   const parentFolder = getParentFolder(filePath);
 
@@ -25,15 +26,19 @@ export function addNode(
       label: filePath,
       id: getSafeName(filePath),
       ...getEmptyNodeCounts(),
+      complexityScore,
     };
     if (!(node as ParentNode).children) {
       // convert to parent node.
       (node as ParentNode).children = [newChild];
+      newChild.parentNode = node as ParentNode;
+
       return newChild;
     } else if (!isLeafNode(node)) {
       for (const child of node.children) {
         if (child.filePath === filePath) return child;
       }
+      newChild.parentNode = node as ParentNode;
       node.children.push(newChild);
       return newChild;
     }
@@ -42,12 +47,12 @@ export function addNode(
   // /root/src/foo | /root
   if (filePath.startsWith(node.filePath)) {
     // parentPath = /root/src, now will match above recursively.
-    const found = addNode(parentFolder, node);
+    const found = addNode(parentFolder, node, complexityScore);
 
     if (found) {
       if (found.filePath === filePath) return found;
 
-      return addNode(filePath, found);
+      return addNode(filePath, found, complexityScore);
     }
   }
 }

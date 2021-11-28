@@ -4,7 +4,7 @@ import { getParentNode } from '../node.mock';
 
 it('addNode', () => {
   const root: ParentNode = getParentNode('');
-  const addedNode = addNode('/src/foo/bar', root);
+  const addedNode = addNode('/src/foo/bar', root, 0);
   expect(root).toMatchInlineSnapshot(`
     Object {
       "afferentCoupling": 0,
@@ -27,6 +27,8 @@ it('addNode', () => {
                   "intraDependencyCount": 0,
                   "label": "/src/foo/bar",
                   "maxSingleCoupleWeight": 0,
+                  "orgScore": 0,
+                  "parentNode": [Circular],
                   "publicAPICount": 0,
                 },
               ],
@@ -40,6 +42,8 @@ it('addNode', () => {
               "intraDependencyCount": 0,
               "label": "/src/foo",
               "maxSingleCoupleWeight": 0,
+              "orgScore": 0,
+              "parentNode": [Circular],
               "publicAPICount": 0,
             },
           ],
@@ -53,15 +57,22 @@ it('addNode', () => {
           "intraDependencyCount": 0,
           "label": "/src",
           "maxSingleCoupleWeight": 0,
+          "orgScore": 0,
           "publicAPICount": 0,
         },
       ],
+      "complexityScore": 0,
       "efferentCoupling": 0,
       "filePath": "",
       "id": "",
+      "incomingDependencyCount": 0,
+      "innerNodeCount": 0,
       "interDependencyCount": 0,
       "intraDependencyCount": 0,
       "label": "",
+      "maxSingleCoupleWeight": 0,
+      "orgScore": 0,
+      "publicAPICount": 0,
     }
   `);
 

@@ -7,6 +7,7 @@
  */
 
 export const BLUE = ['#001A9A10', '#001A9A30', '#001A9A50', '#001A9A99', '#001A9A'];
+export const RED = ['#FF180110', '#FF180130', '#FF180150', '#FF180199', '#FF1801'];
 export const SUNRISE_SCHEME = ['#FFBA08', '#F48C06', '#DC2F02', '#9D0208', '#370617'];
 export const LIME = ['#F4E04D', '#F2ED6F', '#CEE397', '#8DB1AB', '#587792'];
 export const MOSS = ['#EAE1DF', '#B79492', '#917C78', '#667761', '#545E56'];
@@ -73,6 +74,6 @@ export function getWeightedSize(
 }
 
 export function getWeightedColor(val: number, min: number, max: number): string {
-  const colorRange = getWeightedSize(val, min, max, 0, 5);
-  return getCurrColorScheme()[colorRange];
+  const newVal = val < 0 ? getWeightedSize(val, min, 0, -4, 0) : getWeightedSize(val, 0, max, 0, 4);
+  return val < 0 ? RED[Math.abs(newVal)] : BLUE[newVal]; // getCurrColorScheme()[newVal];
 }

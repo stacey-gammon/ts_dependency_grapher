@@ -1,6 +1,7 @@
 import { NodeStats } from '../types';
 
-export interface RangeWeights {
+export interface AllNodeStats {
+  stats: { [key: string]: NodeStats };
   maxes: NodeStats;
   mins: NodeStats;
 }

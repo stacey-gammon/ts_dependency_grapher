@@ -32,7 +32,7 @@
             "source": "file",
             "outputName": "poor_organized",
             "refresh": true
-        },
+        }
     ],
     "outputFolder": "docs/examples",
     "maxImageSize": "14",

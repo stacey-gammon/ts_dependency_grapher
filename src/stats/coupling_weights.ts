@@ -1,99 +1,57 @@
-import { CouplingWeightMapping, GVEdgeMapping, LeafNode, ParentNode } from '../types';
-import { getParentFolder } from '../utils';
+import { LeafNode, NodeStats, ParentNode } from '../types';
+import { getEmptyNodeCounts } from '../utils';
 import { isLeafNode } from '../zoom/zoom_out';
+import { CouplingWeightMapping, DependencyStatsMapping } from './get_coupling_weight_mapping';
 
-export function collectNodeCouplingWeights(
-  root: ParentNode | LeafNode,
-  edges: GVEdgeMapping
-): CouplingWeightMapping {
-  const nodeCouplingWeights: CouplingWeightMapping = {};
-
-  Object.keys(edges).forEach((sourceId) => {
-    const source = edges[sourceId].source;
-    const sourceParent = getParentFolder(source.filePath);
-
-    edges[sourceId].destinations.forEach(({ destinationNode, dependencyWeight }) => {
-      const destinationParentFolder = getParentFolder(destinationNode.filePath);
-
-      if (destinationParentFolder === sourceParent) return;
-
-      if (!nodeCouplingWeights[destinationNode.id]) {
-        nodeCouplingWeights[destinationNode.id] = [];
-      }
-      if (!nodeCouplingWeights[sourceId]) {
-        nodeCouplingWeights[sourceId] = [];
-      }
-
-      const interConn = nodeCouplingWeights[destinationNode.id].find(
-        (f) => f.connectionId === sourceParent
-      );
-
-      if (!interConn) {
-        nodeCouplingWeights[destinationNode.id].push({
-          connectionId: sourceParent,
-          connectionWeight: dependencyWeight,
-        });
-      } else {
-        interConn.connectionWeight += dependencyWeight;
-      }
-
-      const intraCon = nodeCouplingWeights[sourceId].find(
-        (f) => f.connectionId === destinationParentFolder
-      );
-
-      if (!intraCon) {
-        nodeCouplingWeights[sourceId].push({
-          connectionId: destinationParentFolder,
-          connectionWeight: dependencyWeight,
-        });
-      } else {
-        intraCon.connectionWeight += dependencyWeight;
-      }
-    });
-  });
-
-  fillCouplingWeight(nodeCouplingWeights, root);
-
-  return nodeCouplingWeights;
+export interface CoupledConnection {
+  parentNode: ParentNode;
+  connectionWeight: number;
 }
 
-/**
- *
- * @param dest
- * @param destMapping
- * @param edges
- * @returns the sum of the incoming dependency count plus outgoing dependency count from a single node. For example, if there are the following edges
- * with the following weights:
- * A -> B, weight: 10
- * B -> A, weight: 10
- * A -> C, weight: 5
- * C -> B, weight : 5
- *
- * Then the tightest coupled nodes would be A and B and a score of 20 would be returned.
- */
-export function getMaxCoupledWeight(node: ParentNode | LeafNode, max = 0): number {
+export function getNodeStats(
+  weights: CouplingWeightMapping,
+  node: ParentNode | LeafNode,
+  depStats: DependencyStatsMapping,
+  nodeStats: { [key: string]: NodeStats }
+) {
   if (isLeafNode(node)) {
-    return node.maxSingleCoupleWeight > max ? node.maxSingleCoupleWeight : max;
-  } else {
-    const kidCounts = node.children.map((child) => getMaxCoupledWeight(child, max));
-    return Math.max(...kidCounts, max);
-  }
-}
-
-function fillCouplingWeight(weights: CouplingWeightMapping, node: ParentNode | LeafNode) {
-  if (isLeafNode(node)) {
+    let maxSingleCoupleWeight = 0;
     if (weights[node.id]) {
-      const max = weights[node.id].reduce(
-        (max, curr) => (curr.connectionWeight > max.connectionWeight ? curr : max),
-        { connectionId: '', connectionWeight: 0 }
+      const { connectionWeight, parentNode } = weights[node.id].reduce(
+        (max, curr) => {
+          // Skip inter counts
+          if (node.parentNode && curr.parentNode.id === node.parentNode.id) return max;
+
+          return curr.connectionWeight > max.connectionWeight ? curr : max;
+        },
+        { parentNode: undefined, connectionWeight: 0 } as {
+          parentNode?: ParentNode;
+          connectionWeight: number;
+        }
       );
-      node.maxSingleCoupleWeight = max.connectionWeight;
-      node.orgScore = node.interDependencyCount - node.maxSingleCoupleWeight;
-      if (node.orgScore < 0) {
-        console.error(`Consider moving node ${node.id} to ${max.connectionId}`);
+
+      if (connectionWeight === undefined) {
+        console.error(`fillCouplingWeight: ConnectionWeight not found for ${node.id}.`, weights);
+        throw new Error('fillCouplingWeight: ConnectionWeight should be defined');
+      }
+      const orgScore = depStats[node.id].interDependencyCount - maxSingleCoupleWeight;
+      maxSingleCoupleWeight = connectionWeight;
+      if (parentNode && orgScore < 0) {
+        console.log(`Consider moving node ${node.id} to ${parentNode.filePath}`);
       }
     }
+
+    const orgScore = depStats[node.id].interDependencyCount - maxSingleCoupleWeight;
+
+    nodeStats[node.id] = {
+      ...getEmptyNodeCounts(),
+      ...depStats[node.id],
+      publicAPICount: node.publicAPICount,
+      complexityScore: node.complexityScore,
+      maxSingleCoupleWeight,
+      orgScore,
+    };
   } else {
-    node.children.forEach((child) => fillCouplingWeight(weights, child));
+    node.children.forEach((child) => getNodeStats(weights, child, depStats, nodeStats));
   }
 }

@@ -3,7 +3,7 @@ import nconf from 'nconf';
 import { downloadRepo } from './download_repo';
 import Path from 'path';
 import { execSync } from 'child_process';
-import { regenerateColorScheme } from './styles';
+import { regenerateColorScheme } from './graph_vis/styles';
 import { buildDocsSite } from './build_docs_site';
 import {
   COLOR_NODE_BY_CONFIG_KEY,
@@ -81,9 +81,9 @@ export async function main() {
 
       const { zoomedOutRoot, zoomedOutEdges } = zoomOut(root, edges, zoom);
 
-      const maxes = fillNodeStats(zoomedOutRoot, zoomedOutEdges);
+      const stats = fillNodeStats(zoomedOutRoot, zoomedOutEdges);
 
-      generateCSVs(zoomedOutRoot, zoomedOutEdges, outputName + `_z${zoom}_`);
+      generateCSVs(zoomedOutRoot, zoomedOutEdges, outputName + `_z${zoom}_`, stats);
 
       console.log(`Generating dot file for ${id} at zoom level ${zoom}`);
 
@@ -94,16 +94,17 @@ export async function main() {
         zoomedOutRoot,
         dotOutputPath,
         !!repoInfo.refresh,
-        maxes
+        stats
       );
 
       ['sfdp', 'fdp'].forEach(async (layoutEngine) => {
         const imageFileName = outputName + `_z${zoom}_${layoutEngine}.png`;
         const dotPngPath = Path.resolve(nconf.get('outputFolder'), imageFileName);
+
         if (!repoImages[outputName + layoutEngine]) repoImages[outputName + layoutEngine] = {};
         repoImages[outputName + layoutEngine][zoom] = imageFileName;
 
-        if (redoPng || !fs.existsSync(dotPngPath)) {
+        if (redoPng || !fs.existsSync(dotPngPath) || nconf.get('refresh')) {
           console.log(`Generating png for ${id} at zoom level ${zoom}`);
           await execSync(
             `${layoutEngine} -x -Goverlap=scale -Tpng ${dotOutputPath} > ${dotPngPath}`

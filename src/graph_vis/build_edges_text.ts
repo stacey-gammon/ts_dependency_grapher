@@ -1,4 +1,4 @@
-import { getWeightedColor, getWeightedSize } from '../styles';
+import { getWeightedColor, getWeightedSize } from './styles';
 import { GVEdgeMapping } from '../types';
 import { getSafeName } from './utils';
 

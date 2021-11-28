@@ -35,17 +35,14 @@ export function excludeFile(file: SourceFile) {
   );
 }
 
-export function getEmptyNodeCounts(): NodeStats {
+export function getEmptyNodeCounts(): {
+  publicAPICount: number;
+  innerNodeCount: number;
+  complexityScore: number;
+} {
   return {
-    interDependencyCount: 0,
-    intraDependencyCount: 0,
-    afferentCoupling: 0,
-    efferentCoupling: 0,
     publicAPICount: 0,
-    orgScore: 0,
     innerNodeCount: 0,
     complexityScore: 0,
-    maxSingleCoupleWeight: 0,
-    incomingDependencyCount: 0,
   };
 }
