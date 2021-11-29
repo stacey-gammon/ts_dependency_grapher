@@ -1,4 +1,4 @@
-import { GVEdgeMapping, LeafNode, ParentNode } from '../types';
+import { Edge, GVEdgeMapping, LeafNode, NodeEdges } from '../types';
 
 /**
  *
@@ -6,70 +6,91 @@ import { GVEdgeMapping, LeafNode, ParentNode } from '../types';
  * root_foo, and root_zed.ts has a dependency on root_foo_bar, we need to fix the edges so root_zed.ts depends
  * on root_foo.
  *
- * @param leafSourceEdges
- * @param leafToParentId
+ * @param edges
+ * @param oldLeafToNewLeaf
  * @param zoomedRoot
  * @returns
  */
 export function rollupEdges(
-  leafSourceEdges: GVEdgeMapping,
-  leafToParentId: { [key: string]: ParentNode }
+  edges: GVEdgeMapping,
+  oldLeafToNewLeaf: { [key: string]: LeafNode }
 ): GVEdgeMapping {
-  const rolledUpEdges: GVEdgeMapping = {};
-  const innerDependencyCount: { [key: string]: number } = {};
+  const zoomedOutEdges: GVEdgeMapping = {};
 
-  Object.keys(leafSourceEdges).forEach((leafSource) => {
-    const leafDestEdges = leafSourceEdges[leafSource].destinations;
-
-    if (leafDestEdges === undefined) {
-      console.error(`leafDestEdges is undefined! from ${leafSource}`, leafSourceEdges[leafSource]);
-      throw new Error(`leafDestEdges is undefined! from ${leafSource}`);
-    }
-
-    const sourceParentNode: ParentNode | LeafNode =
-      leafToParentId[leafSource] || leafSourceEdges[leafSource].source;
-    const sourceParentId = sourceParentNode.id;
-    if (sourceParentId === undefined) {
-      console.error(
-        `sourceParentId is undefined. leafToParentId[${leafSource}] is `,
-        leafToParentId[leafSource]
-      );
-      throw new Error('rollupEdges: Source id should never be undefined');
-    }
-
-    if (rolledUpEdges[sourceParentId] === undefined) {
-      rolledUpEdges[sourceParentId] = {
-        source: sourceParentNode,
-        destinations: [],
-      };
-    }
-
-    leafDestEdges.forEach(({ destinationNode, dependencyWeight }) => {
-      if (
-        leafToParentId[destinationNode.id] === leafToParentId[leafSource] &&
-        leafToParentId[leafSource] !== undefined
-      ) {
-        if (!innerDependencyCount[sourceParentId]) innerDependencyCount[sourceParentId] = 0;
-        innerDependencyCount[sourceParentId]++;
-      }
-
-      const destinationParentNode = leafToParentId[destinationNode.id] || destinationNode;
-      const destinationParentId = destinationParentNode.id;
-
-      const rolledUpEdge = rolledUpEdges[sourceParentId].destinations.find(
-        ({ destinationNode }) => destinationNode.id === destinationParentId
-      );
-
-      if (!rolledUpEdge && sourceParentId != destinationParentId) {
-        rolledUpEdges[sourceParentId].destinations.push({
-          destinationNode: destinationParentNode,
-          dependencyWeight: dependencyWeight,
-        });
-      } else if (rolledUpEdge) {
-        rolledUpEdge.dependencyWeight += dependencyWeight || 0;
-      }
-    });
+  Object.values(edges).forEach((oldEdge) => {
+    zoomEdgeOut(edges, zoomedOutEdges, oldEdge, oldLeafToNewLeaf);
   });
 
-  return rolledUpEdges;
+  return zoomedOutEdges;
+}
+
+function zoomEdgeOut(
+  oldEdges: GVEdgeMapping,
+  zoomedOutEdges: GVEdgeMapping,
+  oldNodeEdges: NodeEdges,
+  oldLeafToNewLeaf: { [key: string]: LeafNode }
+) {
+  const oldLeaf = oldNodeEdges.node;
+  const oldOutgoingEdges = oldNodeEdges.outgoing;
+  const oldIncomingEdges = oldNodeEdges.incoming;
+
+  // If the edge wasn't deep enough in the tree to have been zoomed out, it won't be in oldLeafToNewLeaf.
+  const newLeaf: LeafNode = oldLeafToNewLeaf[oldLeaf.id] || oldEdges[oldLeaf.id].node;
+  const newLeafId = newLeaf.id;
+
+  if (zoomedOutEdges[newLeafId] === undefined) {
+    zoomedOutEdges[newLeafId] = {
+      node: newLeaf,
+      outgoing: [],
+      incoming: [],
+    };
+  }
+
+  oldOutgoingEdges.map(({ node, dependencyWeight }) => {
+    addOrUpdateConnection(
+      newLeaf,
+      node,
+      dependencyWeight,
+      oldLeafToNewLeaf,
+      zoomedOutEdges[newLeafId].outgoing
+    );
+  });
+
+  oldIncomingEdges.forEach(({ node, dependencyWeight }) => {
+    addOrUpdateConnection(
+      newLeaf,
+      node,
+      dependencyWeight,
+      oldLeafToNewLeaf,
+      zoomedOutEdges[newLeafId].incoming
+    );
+  });
+}
+
+function addOrUpdateConnection(
+  newLeaf: LeafNode,
+  oldConnection: LeafNode,
+  dependencyWeight: number,
+  oldLeafToNewLeaf: { [key: string]: LeafNode },
+  connections: Array<Edge>
+) {
+  const newConnection = oldLeafToNewLeaf[oldConnection.id] || oldConnection;
+
+  // The Edge is no longer an edge, since they rolled up to the same node. E.g. rolling up
+  // A/B -> A/C will become A -> A
+  if (newLeaf.id == newConnection.id) {
+    // We may eventually wish to track this number as an inner dependency count.
+    return;
+  }
+
+  const existingConnection = connections.find(({ node }) => node.id === newConnection.id);
+
+  if (existingConnection) {
+    existingConnection.dependencyWeight += dependencyWeight || 0;
+  } else {
+    connections.push({
+      node: newConnection,
+      dependencyWeight: dependencyWeight,
+    });
+  }
 }

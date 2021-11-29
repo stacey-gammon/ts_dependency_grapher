@@ -14,17 +14,18 @@ it.only('zoomOut', () => {
   };
   const edges: GVEdgeMapping = {
     root_foo: {
-      source: getNode('root/foo'),
-      destinations: [
+      node: getNode('root/foo'),
+      outgoing: [
         {
-          destinationNode: getNode('root/foo/zed'),
+          node: getNode('root/foo/zed'),
           dependencyWeight: 1,
         },
         {
-          destinationNode: getNode('root/foo/bar'),
+          node: getNode('root/foo/bar'),
           dependencyWeight: 1,
         },
       ],
+      incoming: [],
     },
   };
 
@@ -32,36 +33,24 @@ it.only('zoomOut', () => {
 
   expect(zoomedOutRoot).toMatchInlineSnapshot(`
     Object {
-      "afferentCoupling": 0,
       "children": Array [
         Object {
-          "afferentCoupling": 0,
           "children": undefined,
-          "complexityScore": 2,
-          "efferentCoupling": 0,
+          "complexityScore": 0,
           "filePath": "root/foo",
           "id": "root_foo",
-          "incomingDependencyCount": 0,
-          "innerNodeCount": 2,
-          "interDependencyCount": 0,
-          "intraDependencyCount": 0,
+          "innerNodeCount": 0,
           "label": "root/foo",
-          "maxSingleCoupleWeight": 0,
-          "orgScore": 0,
+          "parentNode": undefined,
           "publicAPICount": 0,
         },
       ],
       "complexityScore": 0,
-      "efferentCoupling": 0,
       "filePath": "root",
       "id": "root",
-      "incomingDependencyCount": 0,
       "innerNodeCount": 0,
-      "interDependencyCount": 0,
-      "intraDependencyCount": 0,
       "label": "root",
-      "maxSingleCoupleWeight": 0,
-      "orgScore": 0,
+      "parentNode": undefined,
       "publicAPICount": 0,
     }
   `);
@@ -69,22 +58,17 @@ it.only('zoomOut', () => {
   expect(zoomedOutEdges).toMatchInlineSnapshot(`
     Object {
       "root_foo": Object {
-        "destinations": Array [],
-        "source": Object {
-          "afferentCoupling": 0,
+        "incoming": Array [],
+        "node": Object {
           "complexityScore": 0,
-          "efferentCoupling": 0,
           "filePath": "root/foo",
           "id": "root_foo",
-          "incomingDependencyCount": 0,
           "innerNodeCount": 0,
-          "interDependencyCount": 0,
-          "intraDependencyCount": 0,
           "label": "root/foo",
-          "maxSingleCoupleWeight": 0,
-          "orgScore": 0,
+          "parentNode": undefined,
           "publicAPICount": 0,
         },
+        "outgoing": Array [],
       },
     }
   `);
@@ -117,28 +101,30 @@ function getTestEdgesAndRoot(): { edges: GVEdgeMapping; root: ParentNode } {
     ...getParentNode('root'),
     children: [rootFooParent, rootDaaNode],
   };
-  const edges = {
+  const edges: GVEdgeMapping = {
     [rootDaaNode.id]: {
-      source: rootDaaNode,
-      destinations: [
+      node: rootDaaNode,
+      outgoing: [
         {
-          destinationNode: rootFooBarLeeNode,
+          node: rootFooBarLeeNode,
           dependencyWeight: 1,
         },
         {
-          destinationNode: rootFooBarBedNode,
+          node: rootFooBarBedNode,
           dependencyWeight: 1,
         },
       ],
+      incoming: [],
     },
     [rootFooBarZedNode.id]: {
-      source: rootFooBarZedNode,
-      destinations: [
+      node: rootFooBarZedNode,
+      outgoing: [
         {
-          destinationNode: rootDaaNode,
+          node: rootDaaNode,
           dependencyWeight: 1,
         },
       ],
+      incoming: [],
     },
   };
   return { edges, root };
@@ -151,9 +137,9 @@ it('zoomOut with different length children, level 2', () => {
   const daaNodeId = getNode('root/daa.ts').id;
   const rootFooNodeId = getParentNode('root/foo').id;
   expect(zoomedOutEdges[daaNodeId]).toBeDefined();
-  expect(zoomedOutEdges[daaNodeId].destinations.length).toBe(1);
-  expect(zoomedOutEdges[daaNodeId].destinations[0].dependencyWeight).toBe(2);
-  expect(zoomedOutEdges[daaNodeId].destinations[0].destinationNode.id).toBe(rootFooNodeId);
+  expect(zoomedOutEdges[daaNodeId].outgoing.length).toBe(1);
+  expect(zoomedOutEdges[daaNodeId].outgoing[0].dependencyWeight).toBe(2);
+  expect(zoomedOutEdges[daaNodeId].outgoing[0].node.id).toBe(rootFooNodeId);
 
   expect(isLeafNode(zoomedOutRoot)).toBe(false);
   if (!isLeafNode(zoomedOutRoot)) {

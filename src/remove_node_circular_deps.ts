@@ -13,9 +13,7 @@ export function removeCircularDependencies(node: ParentNode | LeafNode): ParentN
 
 export function removeCircularDependenciesFromEdges(edges: GVEdgeMapping) {
   Object.values(edges).forEach((edge) => {
-    edge.source.parentNode = undefined;
-    edge.destinations.forEach(
-      (destination) => (destination.destinationNode.parentNode = undefined)
-    );
+    edge.node.parentNode = undefined;
+    edge.outgoing.forEach((destination) => (destination.node.parentNode = undefined));
   });
 }

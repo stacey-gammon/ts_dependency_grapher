@@ -104,9 +104,9 @@ label="${node.label}"
       }
       +'\n';
     });
-  }
 
-  text += '}\n';
+    text += '}\n';
+  }
 
   return text;
 }

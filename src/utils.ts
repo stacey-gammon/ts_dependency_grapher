@@ -46,3 +46,8 @@ export function getEmptyNodeCounts(): {
     complexityScore: 0,
   };
 }
+
+export function deCircularify(key: unknown, val: unknown | object) {
+  if (key === 'parentNode') return '';
+  return val;
+}

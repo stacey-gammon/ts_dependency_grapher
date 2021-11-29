@@ -18,7 +18,7 @@ it('fillNodeStats well organized', () => {
 
   expect(a3Source).toBeDefined();
   expect(a3Edge).toBeDefined();
-  expect(a3Edge.destinations.length).toBe(3);
+  expect(a3Edge.outgoing.length).toBe(3);
   expect(a3Source.intraDependencyCount).toBe(1);
   expect(a3Source.interDependencyCount).toBe(2);
   expect(a3Source.afferentCoupling).toBe(0);

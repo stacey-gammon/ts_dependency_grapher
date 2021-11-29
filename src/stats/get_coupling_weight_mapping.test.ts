@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { getNode, getParentNode } from '../node.mock';
 import { GVEdgeMapping } from '../types';
-import { getCouplingWeightMapping } from './get_coupling_weight_mapping';
+import { getSourceToDestinationParentMapping } from './get_source_to_destination_parent_mapping';
 
 it('getCouplingWeightMapping', () => {
   const aParent = getParentNode('A');
@@ -17,26 +17,27 @@ it('getCouplingWeightMapping', () => {
 
   const edges: GVEdgeMapping = {
     [aNode.id]: {
-      source: aNode,
-      destinations: [
+      node: aNode,
+      outgoing: [
         {
-          destinationNode: intraDest1,
+          node: intraDest1,
           dependencyWeight: 2,
         },
         {
-          destinationNode: intraDest2,
+          node: intraDest2,
           dependencyWeight: 3,
         },
         {
-          destinationNode: interDest1,
+          node: interDest1,
           dependencyWeight: 1,
         },
       ],
+      incoming: [],
     },
   };
 
   const weights = {};
-  const mapping = getCouplingWeightMapping(edges, weights);
+  const mapping = getSourceToDestinationParentMapping(edges, weights);
 
   console.log(mapping);
 

@@ -1,11 +1,16 @@
-import { BaseNode, GVEdgeMapping, ParentNode } from '../types';
+import { BaseNode, GVEdgeMapping, LeafNode, ParentNode } from '../types';
 
 /**
  * Map the destination key to each of it's incoming dependency source nodes, and how many times they
  * there is an edge between them.
  */
-export interface CouplingWeightMapping {
-  [node: string]: Array<{ parentNode: ParentNode; connectionWeight: number }>;
+export interface NodeToParentDependencies {
+  [node: string]: Array<ParentConnection>;
+}
+
+export interface ParentConnection {
+  parentNode: ParentNode;
+  connectionWeight: number;
 }
 
 export interface DependencyStatsMapping {
@@ -19,36 +24,64 @@ export interface DependencyStats {
   afferentCoupling: number;
 }
 
-export function getCouplingWeightMapping(
+export function getParentConnections(
+  node: LeafNode,
+  edges: GVEdgeMapping
+): Array<ParentConnection> {
+  if (edges[node.id] === undefined) return [];
+
+  const parentConnections: Array<ParentConnection> = [];
+  edges[node.id].incoming.forEach((connection) => {
+    if (connection.node.parentNode) {
+      addParentConnection(
+        parentConnections,
+        connection.node.parentNode,
+        connection.dependencyWeight
+      );
+    }
+  });
+  edges[node.id].outgoing.forEach((connection) => {
+    if (connection.node.parentNode) {
+      addParentConnection(
+        parentConnections,
+        connection.node.parentNode,
+        connection.dependencyWeight
+      );
+    }
+  });
+  console.log('parent connections are ', parentConnections);
+  return parentConnections;
+}
+
+function addParentConnection(
+  connections: Array<ParentConnection>,
+  parentNode: ParentNode,
+  connectionWeight: number
+) {
+  const existingConnection = connections.find((conn) => conn.parentNode.id === parentNode.id);
+
+  if (existingConnection) {
+    existingConnection.connectionWeight += connectionWeight;
+  } else {
+    connections.push({
+      parentNode,
+      connectionWeight,
+    });
+  }
+}
+
+export function getSourceToDestinationParentMapping(
   edges: GVEdgeMapping,
   stats: DependencyStatsMapping
-): CouplingWeightMapping {
-  const weights: CouplingWeightMapping = {};
+): NodeToParentDependencies {
+  const weights: NodeToParentDependencies = {};
 
   Object.keys(edges).forEach((sourceId) => {
-    const source = edges[sourceId].source;
-    // const sourceParent = source.parentNode;
-
-    edges[sourceId].destinations.forEach(({ destinationNode, dependencyWeight }) => {
-      // const destinationParent = destinationNode.parentNode;
-      //   // We only care about intra connections. If this node is in the same parent, skip it.
-      //   if (sourceParent && destinationParent && destinationParent.filePath === sourceParent.filePath)
-      //     return;
-
-      addConnection(weights, source, destinationNode, dependencyWeight, stats);
+    const source = edges[sourceId].node;
+    edges[sourceId].outgoing.forEach(({ node, dependencyWeight }) => {
+      addConnection(weights, source, node, dependencyWeight, stats);
     });
   });
-
-  //   console.log(
-  //     'weights is' +
-  //       JSON.stringify(
-  //         weights,
-  //         (key, val) => {
-  //           return key === 'parentNode' ? val.parentNode?.id : val;
-  //         },
-  //         2
-  //       )
-  //   );
   return weights;
 }
 
@@ -60,7 +93,7 @@ export function getCouplingWeightMapping(
  * @param dependencyWeight
  */
 function addConnection(
-  weights: CouplingWeightMapping,
+  weights: NodeToParentDependencies,
   source: BaseNode,
   dest: BaseNode,
   dependencyWeight: number,
@@ -108,7 +141,7 @@ function addConnection(
 }
 
 function addConnectionToParent(
-  weights: CouplingWeightMapping,
+  weights: NodeToParentDependencies,
   source: BaseNode,
   destinationParent: ParentNode,
   dependencyWeight: number

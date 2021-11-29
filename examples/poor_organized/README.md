@@ -1,12 +1,12 @@
+An example of poorly organized code that is tightly coupled with low to no cohesion.
+
+![organization graph](./org_graph.png)
+
+This is how it shows up using the following config settings:
+
+```
 {
     "repos": [
-        { 
-            "full_name": "stacey-gammon/ts_dependency_grapher",
-            "tsconfig": "./examples/simple_bad/tsconfig.json",
-            "source": "file",
-            "outputName": "simple_bad",
-            "refresh": true
-        },
         { 
             "full_name": "stacey-gammon/ts_dependency_grapher",
             "tsconfig": "./examples/poor_organized/tsconfig.json",
@@ -26,3 +26,4 @@
     "clearDotCache": false,
     "refreshParsing": false
 }
+```

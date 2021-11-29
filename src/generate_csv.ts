@@ -42,10 +42,10 @@ ${rowText.join('\n')}
 
   const edgeCSVColText = 'source, destination, weight';
 
-  const edgeRows = Object.values(edges).map(({ source, destinations }) => {
-    return destinations
-      .map(({ destinationNode, dependencyWeight }) => {
-        return `${source.id}, ${destinationNode.id}, ${dependencyWeight}`;
+  const edgeRows = Object.values(edges).map(({ node: source, outgoing }) => {
+    return outgoing
+      .map(({ node, dependencyWeight }) => {
+        return `${source.id}, ${node.id}, ${dependencyWeight}`;
       })
       .join('\n');
   });
