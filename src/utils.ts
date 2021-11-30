@@ -1,6 +1,6 @@
 import Path from 'path';
 import { SourceFile } from 'ts-morph';
-import nconf from 'nconf';
+import { LeafNode, ParentNode } from './types';
 
 export function getRootRelativePath(fullPath: string, repoRoot: string): string {
   if (!fullPath.startsWith(repoRoot)) {
@@ -48,6 +48,11 @@ export function getEmptyNodeCounts(): {
     innerNodeCount: 0,
     complexityScore: 0,
   };
+}
+
+export function deCircularifyEdges(key: unknown, val: unknown | object) {
+  if (key === 'node') return (val as LeafNode | ParentNode).id;
+  return val;
 }
 
 export function deCircularify(key: unknown, val: unknown | object) {

@@ -1,4 +1,3 @@
-import { RepoConfigSettings } from '../config';
 import { LeafNode, NodeStats, ParentNode } from '../types';
 import {
   convertConfigRelativePathToAbsolutePath,
@@ -6,10 +5,7 @@ import {
   getRootRelativePath,
 } from '../utils';
 import { isLeafNode } from '../zoom/zoom_out';
-import {
-  NodeToParentDependencies,
-  DependencyStatsMapping,
-} from './get_source_to_destination_parent_mapping';
+import { NodeToParentDependencies, DependencyStatsMapping } from './get_dependency_stats';
 import { RecommendationsByParent } from './types';
 import nconf from 'nconf';
 
@@ -42,6 +38,10 @@ export function getNodeStats(
   // }
   if (isLeafNode(node)) {
     let maxSingleCoupleWeight = 0;
+    if (!depStats[node.id]) {
+      console.error(`No entry for ${node.id} inside dependency stats`, depStats);
+      throw new Error(`No entry for ${node.id} inside dependency stats`);
+    }
     const interDependencyCount = depStats[node.id].interDependencyCount;
     if (weights[node.id]) {
       // interDependencyCount =

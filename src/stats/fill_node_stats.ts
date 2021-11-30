@@ -1,12 +1,10 @@
 import { LeafNode, NodeStats, ParentNode, GVEdgeMapping } from '../types';
 import { getNodeStats } from './get_node_stats';
 import { AllNodeStats, RecommendationsByParent, RecommendationsList } from './types';
-import {
-  getParentConnections,
-  getSourceToDestinationParentMapping,
-} from './get_source_to_destination_parent_mapping';
+import { getParentConnections, getDependencyStats } from './get_dependency_stats';
 import { moveNode } from './move_node';
 import { getTightestParentConnection } from './get_tightest_connection';
+import { getQuartile } from './calculate_percentiles';
 
 export function fillNodeStats(
   node: ParentNode | LeafNode,
@@ -29,7 +27,7 @@ export function fillNodeStats(
     recommendations = {};
     dependencyStats = {};
     stats = {};
-    const couplingWeights = getSourceToDestinationParentMapping(edges, dependencyStats);
+    const couplingWeights = getDependencyStats(edges, dependencyStats);
     getNodeStats(couplingWeights, node, dependencyStats, stats, recommendations);
     const totalOrgScore = Object.values(stats).reduce((sum, stat) => stat.orgScore + sum, 0);
     console.log(
@@ -43,7 +41,7 @@ export function fillNodeStats(
     }
   }
 
-  const couplingWeights = getSourceToDestinationParentMapping(edges, dependencyStats);
+  const couplingWeights = getDependencyStats(edges, dependencyStats);
   getNodeStats(couplingWeights, node, dependencyStats, stats, {});
 
   const statKeys: Array<keyof NodeStats> = [
@@ -106,16 +104,27 @@ function takeRecommendations(
 
       if (parentConnections.length > 0) {
         const newParent = getTightestParentConnection(parentConnections);
+        const threshold = getQuartile(
+          parentConnections.map((pc) => pc.connectionWeight),
+          0.8
+        );
 
         recommendations[key].splice(0, 1);
 
         // Given the last move, this move is now a no-op, to keep the tree even, stay with this parent before going on to next.
-        if (newParent.parentNode.id !== recommendation.node.parentNode?.id) {
+        if (
+          newParent.connectionWeight > threshold &&
+          newParent.parentNode.id !== recommendation.node.parentNode?.id
+        ) {
           console.log(`Moving ${recommendation.node.id} to ${newParent.parentNode.id}`);
           actualRecommendations.push(recommendation);
           moveNode(recommendation.node, newParent.parentNode);
           keepTakingForThisParent = false;
           break;
+        } else if (newParent.connectionWeight < threshold) {
+          console.log(
+            `${recommendation.node.id}'s connection with ${newParent.parentNode.id} with a weight of ${newParent.connectionWeight} falls below 80th percentile value of ${threshold}`
+          );
         }
       } else {
         keepTakingForThisParent = false;

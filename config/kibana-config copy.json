@@ -9,11 +9,7 @@
                 { "file": "../../Elastic/kibana/src/plugins/data/public/index.ts", "name": "data" },
                 { "file": "../../Elastic/kibana/src/plugins/data_views/public/index.ts", "name": "data_views" },
                 { "file": "../../Elastic/kibana/src/plugins/kibana_react/public/index.ts", "name": "kibana_react" },
-                { "file": "../../Elastic/kibana/src/plugins/expressions/public/index.ts", "name": "expressions" },
-                { "file": "../../Elastic/kibana/src/plugins/visualizations/public/index.ts", "name": "visualizations" },
-                { "file": "../../Elastic/kibana/src/plugins/presentation_util/public/index.ts", "name": "presentation_util" },
-                { "file": "../../Elastic/kibana/src/plugins/bfetch/public/index.ts", "name": "bfetch" },
-                { "file": "../../Elastic/kibana/src/plugins/kibana_utils/public/index.ts", "name": "kibana_utils" }
+                { "file": "../../Elastic/kibana/src/plugins/expressions/public/index.ts", "name": "expressions" }
             ],
             "showExternalNodesOnly": false,
             "outputName": "kibana",
@@ -26,7 +22,7 @@
                 "../../Elastic/kibana/src/plugins/**/*{.d.ts,.ts}",
                 "../../Elastic/kibana/packages/**/*{.d.ts,.ts}"
             ],
-            "zooms": [5]
+            "zooms": [6]
         }
     ],
     "outputFolder": "docs/kibana",

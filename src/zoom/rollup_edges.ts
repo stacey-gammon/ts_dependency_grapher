@@ -1,4 +1,5 @@
 import { Edge, GVEdgeMapping, LeafNode, NodeEdges } from '../types';
+import { deCircularify, deCircularifyEdges } from '../utils';
 
 /**
  *
@@ -17,10 +18,12 @@ export function rollupEdges(
 ): GVEdgeMapping {
   const zoomedOutEdges: GVEdgeMapping = {};
 
+  console.log(`Before zooming out there are ${Object.keys(edges).length} edges`);
   Object.values(edges).forEach((oldEdge) => {
     zoomEdgeOut(edges, zoomedOutEdges, oldEdge, oldLeafToNewLeaf);
   });
 
+  console.log(`After zooming out there are ${Object.keys(zoomedOutEdges).length} edges`);
   return zoomedOutEdges;
 }
 

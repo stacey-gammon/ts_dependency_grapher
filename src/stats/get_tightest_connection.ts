@@ -1,4 +1,4 @@
-import { ParentConnection } from './get_source_to_destination_parent_mapping';
+import { ParentConnection } from './get_dependency_stats';
 
 export function getTightestParentConnection(
   parentConnections: Array<ParentConnection>

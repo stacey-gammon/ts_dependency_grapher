@@ -70,7 +70,7 @@ function addParentConnection(
   }
 }
 
-export function getSourceToDestinationParentMapping(
+export function getDependencyStats(
   edges: GVEdgeMapping,
   stats: DependencyStatsMapping
 ): NodeToParentDependencies {
