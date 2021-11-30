@@ -10,7 +10,7 @@ import {
 } from '../config';
 import { AllNodeStats } from '../stats/types';
 import { getColorForLevel, getNodeProperties, getWeightedColor, getWeightedSize } from './styles';
-import { getSafeName } from './utils';
+import { getLabel, getSafeName } from './utils';
 import { isLeafNode } from '../zoom/zoom_out';
 
 export function getNodeText(node: LeafNode, stats: AllNodeStats): string {
@@ -46,24 +46,26 @@ export function getNodeText(node: LeafNode, stats: AllNodeStats): string {
   const colorByMaxVal = getCorrectVal(colorBy, matches, maxVals);
   const colorByMinVal = getCorrectVal(colorBy, matches, minVals);
 
-  const sizeByVal = getCorrectVal(sizeBy, matches, vals);
-  const sizeByMaxVal = getCorrectVal(sizeBy, matches, maxVals);
-  const sizeByMinVal = getCorrectVal(sizeBy, matches, minVals);
+  let scaledSize;
+  let fontSize;
+  if (sizeBy) {
+    const sizeByVal = getCorrectVal(sizeBy, matches, vals);
+    const sizeByMaxVal = getCorrectVal(sizeBy, matches, maxVals);
+    const sizeByMinVal = getCorrectVal(sizeBy, matches, minVals);
+    scaledSize = getWeightedSize(sizeByVal, sizeByMinVal, sizeByMaxVal, 1, 5);
+
+    // Such a crude way of scaling the font.
+    let minFontSize = node.label.length > 10 ? 10 : 12;
+    let maxFontSize = node.label.length > 10 ? 50 : 60;
+    minFontSize = node.label.length > 20 ? 9 : minFontSize;
+    maxFontSize = node.label.length > 20 ? 30 : maxFontSize;
+    fontSize = getWeightedSize(sizeByVal, sizeByMinVal, sizeByMaxVal, minFontSize, maxFontSize);
+  }
 
   const color = getWeightedColor(colorByVal, colorByMinVal, colorByMaxVal);
-  const scaledSize = getWeightedSize(sizeByVal, sizeByMinVal, sizeByMaxVal, 1, 5);
+  const properties = getNodeProperties(getLabel(node.label), color, scaledSize, fontSize);
 
-  // Such a crude way of scaling the font.
-  let minFontSize = node.label.length > 10 ? 10 : 12;
-  let maxFontSize = node.label.length > 10 ? 50 : 60;
-  minFontSize = node.label.length > 20 ? 9 : minFontSize;
-  maxFontSize = node.label.length > 20 ? 30 : maxFontSize;
-
-  const fontSize = getWeightedSize(sizeByVal, sizeByMinVal, sizeByMaxVal, minFontSize, maxFontSize);
-
-  const properties = getNodeProperties(node.label, color, scaledSize);
-
-  return `${getSafeName(node.id)} [${properties} fontsize="${fontSize}"]\n`;
+  return `${getSafeName(node.id)} [${properties}]\n`;
 }
 
 function getCorrectVal(configVal: string, matches: string[], vals: Array<number>): number {
@@ -86,14 +88,15 @@ export function getNodesText(node: ParentNode | LeafNode, stats: AllNodeStats, l
     console.error('no children in getNodesText', node);
     throw new Error('no children in gtNodesText');
   }
+  const color = getColorForLevel(level);
 
   if (node.children.length > 0) {
     text += `
 subgraph cluster_${getSafeName(node.id)} {
 style=filled
 fontsize="50"
-color="${getColorForLevel(level)}"  
-label="${node.label}"
+color="${color}"  
+label="${getLabel(node.label)}"
 `;
 
     node.children.forEach((child) => {

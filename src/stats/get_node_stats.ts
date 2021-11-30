@@ -1,10 +1,17 @@
+import { RepoConfigSettings } from '../config';
 import { LeafNode, NodeStats, ParentNode } from '../types';
-import { getEmptyNodeCounts } from '../utils';
+import {
+  convertConfigRelativePathToAbsolutePath,
+  getEmptyNodeCounts,
+  getRootRelativePath,
+} from '../utils';
 import { isLeafNode } from '../zoom/zoom_out';
 import {
   NodeToParentDependencies,
   DependencyStatsMapping,
 } from './get_source_to_destination_parent_mapping';
+import { RecommendationsByParent } from './types';
+import nconf from 'nconf';
 
 export interface CoupledConnection {
   parentNode: ParentNode;
@@ -24,8 +31,15 @@ export function getNodeStats(
   node: ParentNode | LeafNode,
   depStats: DependencyStatsMapping,
   nodeStats: { [key: string]: NodeStats },
-  recommendations: { [key: string]: Array<{ node: LeafNode; newParent: ParentNode }> }
+  recommendations: RecommendationsByParent
 ) {
+  // if (repoInfo.entry) {
+  //   const relativeEntryPath = getRootRelativePath(
+  //     convertConfigRelativePathToAbsolutePath(repoInfo.entry),
+  //     nconf.get('REPO_ROOT')
+  //   );
+  //   if (!node.filePath.startsWith(relativeEntryPath)) return;
+  // }
   if (isLeafNode(node)) {
     let maxSingleCoupleWeight = 0;
     const interDependencyCount = depStats[node.id].interDependencyCount;
@@ -58,9 +72,13 @@ export function getNodeStats(
       if (parentNode && orgScore < 0) {
         if (!recommendations[parentNode.id]) recommendations[parentNode.id] = [];
 
-        recommendations[parentNode.id].push({ node, newParent: parentNode });
+        recommendations[parentNode.id].push({
+          node,
+          originalParent: node.parentNode!,
+          newParent: parentNode,
+        });
         console.log(
-          `Consider moving ${node.filePath} to ${parentNode.filePath}, recommendations: ${recommendations.length}`
+          `Consider moving ${node.filePath} to ${parentNode.filePath}. Inter: ${interDependencyCount}, Max-Intra: ${maxSingleCoupleWeight}`
         );
       }
     }
@@ -82,10 +100,11 @@ export function getNodeStats(
   return recommendations;
 }
 
-// function findRecommendation(recommendations: {
-//   [key: string]: Array<{ node: LeafNode; newParent: ParentNode }>;
-//   node: LeafNode,
-//   dest: ParentNode,
-// }) {
+function isNodeEntryFile(entry: string, filePath: string) {
+  const relativeEntryPath = getRootRelativePath(
+    convertConfigRelativePathToAbsolutePath(entry),
+    nconf.get('REPO_ROOT')
+  );
 
-// }
+  return filePath === relativeEntryPath;
+}

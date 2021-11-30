@@ -3,7 +3,7 @@ import { getEmptyNodeCounts, getParentFolder } from '../utils';
 import { isLeafNode } from '../zoom/zoom_out';
 import { getSafeName } from '../graph_vis/utils';
 
-export function addNode(
+export function getOrCreateNode(
   filePath: string,
   node: ParentNode | LeafNode,
   complexityScore: number
@@ -47,12 +47,12 @@ export function addNode(
   // /root/src/foo | /root
   if (filePath.startsWith(node.filePath)) {
     // parentPath = /root/src, now will match above recursively.
-    const found = addNode(parentFolder, node, complexityScore);
+    const found = getOrCreateNode(parentFolder, node, complexityScore);
 
     if (found) {
       if (found.filePath === filePath) return found;
 
-      return addNode(filePath, found, complexityScore);
+      return getOrCreateNode(filePath, found, complexityScore);
     }
   }
 }

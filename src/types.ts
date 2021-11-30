@@ -1,3 +1,5 @@
+import { RepoConfigSettings } from './config';
+
 export interface GVEdgeMapping {
   [key: string]: NodeEdges;
 }
@@ -70,4 +72,20 @@ export interface BaseNode {
   filePath: string;
 
   parentNode?: ParentNode;
+}
+
+export interface OutputImage {
+  path: string;
+  entry?: string;
+  zoom?: string;
+  layoutEngine: string;
+}
+
+export interface OutputImageMapping {
+  [repoName: string]: ImagesForRepoConfig;
+}
+
+export interface ImagesForRepoConfig {
+  images: Array<OutputImage>;
+  repoInfo: RepoConfigSettings;
 }

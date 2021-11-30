@@ -3,6 +3,7 @@ import { getDiGraphText } from './build_digraph_text';
 import fs from 'fs';
 import nconf from 'nconf';
 import { AllNodeStats } from '../stats/types';
+import { RepoConfigSettings } from '../config';
 
 /**
  *
@@ -15,15 +16,15 @@ export async function buildDotFile(
   edges: GVEdgeMapping,
   root: ParentNode | LeafNode,
   path: string,
-  refresh: boolean,
+  repoInfo: RepoConfigSettings,
   stats: AllNodeStats
-): Promise<boolean> {
-  if (refresh || nconf.get('clearDotCache') || nconf.get('refresh') || !fs.existsSync(path)) {
+) {
+  if (repoInfo.clearCache || nconf.get('clearCache') || !fs.existsSync(path)) {
     const text = getDiGraphText(edges, root, stats);
     if (!text) {
       throw new Error('Text not generated');
     }
     fs.writeFileSync(path, text);
-    return true;
-  } else return false;
+    repoInfo.clearCache = true;
+  }
 }

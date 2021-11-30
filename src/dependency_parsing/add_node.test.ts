@@ -1,10 +1,10 @@
-import { addNode } from './add_node';
+import { getOrCreateNode } from './add_node';
 import { ParentNode } from '../types';
 import { getParentNode } from '../node.mock';
 
 it('addNode', () => {
   const root: ParentNode = getParentNode('');
-  const addedNode = addNode('/src/foo/bar', root, 0);
+  const addedNode = getOrCreateNode('/src/foo/bar', root, 0);
   expect(root).toMatchInlineSnapshot(`
     Object {
       "children": Array [

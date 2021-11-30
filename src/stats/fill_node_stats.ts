@@ -1,24 +1,29 @@
 import { LeafNode, NodeStats, ParentNode, GVEdgeMapping } from '../types';
 import { getNodeStats } from './get_node_stats';
-import { AllNodeStats } from './types';
+import { AllNodeStats, RecommendationsByParent, RecommendationsList } from './types';
 import {
   getParentConnections,
   getSourceToDestinationParentMapping,
 } from './get_source_to_destination_parent_mapping';
-import nconf from 'nconf';
 import { moveNode } from './move_node';
 import { getTightestParentConnection } from './get_tightest_connection';
 
-export function fillNodeStats(node: ParentNode | LeafNode, edges: GVEdgeMapping): AllNodeStats {
-  const takeRecommendationsSetting = nconf.get('takeRecommendations');
-  console.log(`fillNodeStats takeRecommendations is ${takeRecommendationsSetting}`);
+export function fillNodeStats(
+  node: ParentNode | LeafNode,
+  edges: GVEdgeMapping,
+  takeRecommendationsSetting = false
+): AllNodeStats {
   let iterations = 0;
   const MAX_ITERATIONS = 5;
   let stats: { [key: string]: NodeStats } = {};
   let dependencyStats = {};
 
   // Grouped by parent that has the node that should move. This is to help avoid one giant module. Do one move per parent at a time.
-  let recommendations: { [key: string]: Array<{ node: LeafNode; newParent: ParentNode }> } = {};
+  let recommendations: RecommendationsByParent = {};
+
+  // This is the list of recommendations that were actually taken. They will vary as each recommendation needs to be re-calculated to
+  // take into account earlier moves.
+  const actualRecommendations: RecommendationsList = [];
 
   while (iterations < MAX_ITERATIONS) {
     recommendations = {};
@@ -33,10 +38,13 @@ export function fillNodeStats(node: ParentNode | LeafNode, edges: GVEdgeMapping)
     if (Object.keys(recommendations).length === 0 || !takeRecommendationsSetting) {
       break;
     } else {
-      takeRecommendations(recommendations, edges);
+      takeRecommendations(recommendations, edges, actualRecommendations);
       iterations++;
     }
   }
+
+  const couplingWeights = getSourceToDestinationParentMapping(edges, dependencyStats);
+  getNodeStats(couplingWeights, node, dependencyStats, stats, {});
 
   const statKeys: Array<keyof NodeStats> = [
     'efferentCoupling',
@@ -58,7 +66,7 @@ export function fillNodeStats(node: ParentNode | LeafNode, edges: GVEdgeMapping)
     stats,
     maxes,
     mins,
-    recommendations,
+    recommendations: actualRecommendations,
   } as AllNodeStats;
 }
 
@@ -71,10 +79,9 @@ function findMinVal(stats: { [key: string]: NodeStats }, key: keyof NodeStats): 
 }
 
 function takeRecommendations(
-  recommendations: {
-    [key: string]: Array<{ node: LeafNode; newParent: ParentNode }>;
-  },
-  edges: GVEdgeMapping
+  recommendations: RecommendationsByParent,
+  edges: GVEdgeMapping,
+  actualRecommendations: RecommendationsList
 ) {
   const keys = Object.keys(recommendations);
   if (keys.length === 0) return;
@@ -105,6 +112,7 @@ function takeRecommendations(
         // Given the last move, this move is now a no-op, to keep the tree even, stay with this parent before going on to next.
         if (newParent.parentNode.id !== recommendation.node.parentNode?.id) {
           console.log(`Moving ${recommendation.node.id} to ${newParent.parentNode.id}`);
+          actualRecommendations.push(recommendation);
           moveNode(recommendation.node, newParent.parentNode);
           keepTakingForThisParent = false;
           break;

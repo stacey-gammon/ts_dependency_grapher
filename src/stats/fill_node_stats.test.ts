@@ -3,12 +3,21 @@ import Path from 'path';
 import { isLeafNode } from '../zoom/zoom_out';
 import { fillNodeStats } from '../stats/fill_node_stats';
 import { removeCircularDependenciesFromEdges } from '../remove_node_circular_deps';
+import { createAndAddLeafNode, getParentNode } from '../node.mock';
+import { GVEdgeMapping, LeafNode, ParentNode } from '../types';
+import { getTSMorphProject } from '../get_tsmorph_project';
+
+function getRepoInfo(tsconfigPath: string) {
+  const fullPath = Path.resolve(__dirname, tsconfigPath);
+  return { full_name: 'test', tsconfig: fullPath, clearCache: true, layoutEngines: [] };
+}
 
 it('fillNodeStats well organized', () => {
+  const repoInfo = getRepoInfo('../../examples/well_organized/tsconfig.json');
+  const project = getTSMorphProject(repoInfo);
   const { edges, root } = parseDependencies({
-    repo: 'test',
-    tsconfig: Path.resolve(__dirname, '../../examples/well_organized/tsconfig.json'),
-    refresh: true,
+    repoInfo,
+    project,
   });
 
   const stats = fillNodeStats(root, edges);
@@ -34,11 +43,89 @@ it('fillNodeStats well organized', () => {
 });
 
 it.only('fillNodeStats poor organized', () => {
+  const repoInfo = getRepoInfo('../../examples/poor_organized/tsconfig.json');
+  const project = getTSMorphProject(repoInfo);
   const { edges, root } = parseDependencies({
-    repo: 'test',
-    tsconfig: Path.resolve(__dirname, '../../examples/poor_organized/tsconfig.json'),
-    refresh: true,
+    repoInfo,
+    project,
   });
+
+  const stats = fillNodeStats(root, edges);
+
+  const threeSource = stats.stats['_B_3_ts'];
+
+  removeCircularDependenciesFromEdges(edges);
+  expect(threeSource.intraDependencyCount).toBe(3);
+  expect(threeSource.interDependencyCount).toBe(0);
+  expect(threeSource.afferentCoupling).toBe(0);
+  expect(threeSource.efferentCoupling).toBe(3);
+
+  expect(threeSource.maxSingleCoupleWeight).toBe(2);
+  expect(threeSource.orgScore).toBe(-2);
+
+  const cSix = stats.stats['_C_6_ts'];
+  expect(cSix.intraDependencyCount).toBe(4);
+  expect(cSix.interDependencyCount).toBe(0);
+  expect(cSix.afferentCoupling).toBe(1);
+  expect(cSix.efferentCoupling).toBe(3);
+
+  expect(isLeafNode(root)).toBe(false);
+  if (!isLeafNode(root)) {
+    const oneFolder = root.children.find((c) => c.id === '_A');
+    expect(oneFolder).toBeDefined();
+  }
+});
+
+it.only('fillNodeStats corner case check inter to see if should stay in self', () => {
+  const root: ParentNode = getParentNode('root');
+  const A: ParentNode = getParentNode('A', root);
+  const B: ParentNode = getParentNode('B', root);
+  const C: ParentNode = getParentNode('C', root);
+  root.children = [A, B, C];
+
+  const one: LeafNode = createAndAddLeafNode('1', A);
+  const two: LeafNode = createAndAddLeafNode('2', B);
+  const three: LeafNode = createAndAddLeafNode('3', B);
+  const four: LeafNode = createAndAddLeafNode('4', C);
+
+  // A/1 -> B/2 [3]
+  // B/2 -> B/3 [2]
+  // B/2 -> B/4 [4]
+
+  const edges: GVEdgeMapping = {
+    [one.id]: {
+      node: one,
+      incoming: [],
+      outgoing: [
+        {
+          node: two,
+          dependencyWeight: 3,
+        },
+      ],
+    },
+    [two.id]: {
+      node: two,
+      incoming: [],
+      outgoing: [
+        {
+          node: three,
+          dependencyWeight: 2,
+        },
+      ],
+    },
+    [three.id]: {
+      node: three,
+      incoming: [{ node: two, dependencyWeight: 2 }],
+      outgoing: [],
+    },
+    [four.id]: {
+      node: four,
+      incoming: [{ node: two, dependencyWeight: 4 }],
+      outgoing: [],
+    },
+  };
+
+  A.children = [];
 
   const stats = fillNodeStats(root, edges);
 

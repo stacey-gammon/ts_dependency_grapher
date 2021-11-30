@@ -9,6 +9,15 @@ export function getNode(filePath = 'foo', parentNode?: ParentNode): LeafNode {
   };
 }
 
+export function createAndAddLeafNode(filePath = 'foo', parentNode: ParentNode): LeafNode {
+  const child = {
+    ...getBaseNode(filePath, parentNode),
+    ...getEmptyNodeCounts(),
+  };
+  parentNode.children.push(child);
+  return child;
+}
+
 export function getParentNode(filePath = 'foo', parentNode?: ParentNode): ParentNode {
   return {
     ...getBaseNode(filePath, parentNode),

@@ -3,12 +3,19 @@ import fs from 'fs';
 import { getDiGraphText } from '../src/graph_vis/build_digraph_text';
 import { parseDependencies } from '../src/dependency_parsing/parse_dependencies';
 import { fillNodeStats } from '../src/stats/fill_node_stats';
+import { getTSMorphProject } from '../src/get_tsmorph_project';
+
+function getRepoInfo(tsconfigPath: string) {
+  const fullPath = Path.resolve(__dirname, tsconfigPath);
+  return { full_name: 'test', tsconfig: fullPath, clearCache: true, layoutEngines: [] };
+}
 
 it('create test png', () => {
+  const repoInfo = getRepoInfo('./__fixtures__/tsconfig.json');
+  const project = getTSMorphProject(repoInfo);
   const { edges, root } = parseDependencies({
-    repo: 'test',
-    tsconfig: Path.resolve(__dirname, './__fixtures__/tsconfig.json'),
-    refresh: true,
+    repoInfo,
+    project,
   });
   const maxes = fillNodeStats(root, edges);
   const text = getDiGraphText(edges, root, maxes);

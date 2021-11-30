@@ -6,33 +6,30 @@ import fs from 'fs';
 import os from 'os';
 import { excludeFile, getEmptyNodeCounts, getRootRelativePath } from '../utils';
 import { addEdges } from './add_edges';
-import { addNode } from './add_node';
+import { getOrCreateNode } from './add_node';
+import { EntryInfo, RepoConfigSettings } from '../config';
 
 export function parseDependencies({
   entry,
-  tsconfig,
-  repo,
+  repoInfo,
   outputNameForCache,
-  refresh,
+  project,
 }: {
-  repo: string;
-  entry?: string;
+  repoInfo: RepoConfigSettings;
+  entry?: EntryInfo;
+  project: Project;
   outputNameForCache?: string;
-  tsconfig: string;
-  refresh: boolean;
 }): { edges: GVEdgeMapping; root: ParentNode | LeafNode } {
-  const project = new Project({ tsConfigFilePath: tsconfig });
-  project.resolveSourceFileDependencies();
-
+  console.log('entry is ' + JSON.stringify(entry, null, 2));
   const files: SourceFile[] = entry
-    ? [project.getSourceFileOrThrow(entry)]
+    ? [project.getSourceFileOrThrow(entry.file)]
     : project.getSourceFiles();
 
-  const repoRoot = Path.resolve(tsconfig, '..');
+  const repoRoot = Path.resolve(repoInfo.tsconfig, '..');
 
   nconf.set('REPO_ROOT', repoRoot);
 
-  const { edges, root } = parseFiles(files, repoRoot, repo, refresh, outputNameForCache);
+  const { edges, root } = parseFiles(files, repoRoot, repoInfo, outputNameForCache);
 
   return { edges, root };
 }
@@ -40,20 +37,20 @@ export function parseDependencies({
 export function parseFiles(
   files: SourceFile[],
   repoRoot: string,
-  repo: string,
-  refresh: boolean,
+  repoInfo: RepoConfigSettings,
   outputNameForCache?: string
 ): { edges: GVEdgeMapping; root: ParentNode | LeafNode } {
+  const repo = repoInfo.full_name;
   const parsedRepoFilePathCache = outputNameForCache
     ? Path.resolve(os.tmpdir(), outputNameForCache.replace('/', '_') + 'ParsedRepo.json')
     : undefined;
 
   if (
     parsedRepoFilePathCache &&
-    !refresh &&
+    !repoInfo.clearCache &&
     fs.existsSync(parsedRepoFilePathCache) &&
     !nconf.get('refreshParsing') &&
-    !nconf.get('refresh')
+    !nconf.get('clearCache')
   ) {
     console.log(`Parsed info for ${repo} is cached.`);
     const { root, edges } = JSON.parse(
@@ -76,9 +73,11 @@ export function parseFiles(
     ...getEmptyNodeCounts(),
   };
 
+  const excludeFilesPaths = nconf.get('excludeFilePaths');
+
   files.forEach((file) => {
-    if (!excludeFile(file)) {
-      addNode(
+    if (!excludeFile(file, excludeFilesPaths)) {
+      getOrCreateNode(
         getRootRelativePath(file.getFilePath(), repoRoot),
         root,
         getComplexityScoreOfFile(file)
@@ -87,8 +86,8 @@ export function parseFiles(
   });
 
   files.forEach((file) => {
-    if (!excludeFile(file)) {
-      addEdges(file, edges, root, repoRoot);
+    if (!excludeFile(file, excludeFilesPaths)) {
+      addEdges(file, edges, root, repoRoot, repoInfo.showExternalNodesOnly);
     }
   });
 

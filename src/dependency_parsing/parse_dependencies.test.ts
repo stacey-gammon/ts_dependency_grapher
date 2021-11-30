@@ -1,16 +1,19 @@
 import { parseDependencies } from './parse_dependencies';
 import Path from 'path';
 import { isLeafNode } from '../zoom/zoom_out';
-import {
-  removeCircularDependencies,
-  removeCircularDependenciesFromEdges,
-} from '../remove_node_circular_deps';
+import { getTSMorphProject } from '../get_tsmorph_project';
+
+function getRepoInfo(tsconfigPath: string) {
+  const fullPath = Path.resolve(__dirname, tsconfigPath);
+  return { full_name: 'test', tsconfig: fullPath, clearCache: true, layoutEngines: [] };
+}
 
 it('parseDependencies simple', () => {
+  const repoInfo = getRepoInfo('../../examples/simple/tsconfig.json');
+  const project = getTSMorphProject(repoInfo);
   const { edges, root } = parseDependencies({
-    repo: 'test',
-    tsconfig: Path.resolve(__dirname, '../../examples/simple/tsconfig.json'),
-    refresh: true,
+    repoInfo,
+    project,
   });
 
   expect(isLeafNode(root)).toBe(false);
@@ -22,10 +25,11 @@ it('parseDependencies simple', () => {
 });
 
 it.only('parseDependencies well organized', () => {
+  const repoInfo = getRepoInfo('../../examples/well_organized/tsconfig.json');
+  const project = getTSMorphProject(repoInfo);
   const { edges, root } = parseDependencies({
-    repo: 'test',
-    tsconfig: Path.resolve(__dirname, '../../examples/well_organized/tsconfig.json'),
-    refresh: true,
+    repoInfo,
+    project,
   });
 
   expect(Object.keys(edges).length).toBe(9);
@@ -58,10 +62,11 @@ it.only('parseDependencies well organized', () => {
 });
 
 it('parseDependencies poor organized', () => {
+  const repoInfo = getRepoInfo('../../examples/poor_organized/tsconfig.json');
+  const project = getTSMorphProject(repoInfo);
   const { edges, root } = parseDependencies({
-    repo: 'test',
-    tsconfig: Path.resolve(__dirname, '../../examples/well_organized/tsconfig.json'),
-    refresh: true,
+    repoInfo,
+    project,
   });
 
   expect(Object.keys(edges).length).toBe(3);

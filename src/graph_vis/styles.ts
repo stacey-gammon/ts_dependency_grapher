@@ -6,8 +6,8 @@
  * Side Public License, v 1.
  */
 
-export const BLUE = ['#001A9A10', '#001A9A30', '#001A9A50', '#001A9A99', '#001A9A'];
-export const RED = ['#FF180110', '#FF180130', '#FF180150', '#FF180199', '#FF1801'];
+export const BLUE = ['#BFD1FF', '#95B2FF', '#5F8BFF', '#336BFF', '#0046FF'];
+export const RED = ['#FFC9C9', '#FF9393', '#FF5C5C', '#FF3131', '#FF0000'];
 export const SUNRISE_SCHEME = ['#FFBA08', '#F48C06', '#DC2F02', '#9D0208', '#370617'];
 export const LIME = ['#F4E04D', '#F2ED6F', '#CEE397', '#8DB1AB', '#587792'];
 export const MOSS = ['#EAE1DF', '#B79492', '#917C78', '#667761', '#545E56'];
@@ -29,6 +29,8 @@ export function regenerateColorScheme() {
 export function getFontColor(bgColor: string): string {
   return bgColor === getCurrColorScheme()[0] ||
     bgColor === getCurrColorScheme()[1] ||
+    bgColor === RED[0] ||
+    bgColor === RED[1] ||
     bgColor === 'white'
     ? getCurrColorScheme()[4]
     : 'white';
@@ -38,7 +40,12 @@ export function getColorForLevel(level: number) {
   return getCurrColorScheme()[level % 5];
 }
 
-export function getNodeProperties(label: string, color?: string, size?: number): string {
+export function getNodeProperties(
+  label: string,
+  color?: string,
+  size?: number,
+  fontSize?: number
+): string {
   if (!label) throw new Error('getNodeProperties: label not defined!');
   let colorTxt = undefined;
   let fontColor: string | undefined;
@@ -48,10 +55,14 @@ export function getNodeProperties(label: string, color?: string, size?: number):
     colorTxt = `fillcolor="${color}", style=filled`;
   }
 
-  const sizeAttr = size ? `fixedsize=true width=${size} height=${size}` : '';
+  const sizeAttr = size ? getSizePropertiesString(size) : '';
   const colorAttr = colorTxt ? `fillcolor="${color}", style=filled fontcolor="${fontColor}"` : '';
 
-  return `label="${label}" ${colorAttr} ${sizeAttr}`;
+  return `label="${label}" ${colorAttr} ${sizeAttr} ${fontSize ? `fontsize=${fontSize}` : ''}`;
+}
+
+export function getSizePropertiesString(size: number) {
+  return `fixedsize=true width=${size} height=${size}`;
 }
 
 export function getWeightedSize(

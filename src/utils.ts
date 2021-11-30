@@ -1,10 +1,13 @@
 import Path from 'path';
 import { SourceFile } from 'ts-morph';
 import nconf from 'nconf';
-import { LeafNode, NodeStats } from './types';
 
 export function getRootRelativePath(fullPath: string, repoRoot: string): string {
-  return fullPath.substring(repoRoot.length);
+  if (!fullPath.startsWith(repoRoot)) {
+    throw new Error(`Path "${fullPath}"" does not start with the repo root, "${repoRoot}".`);
+  } else {
+    return fullPath.substring(repoRoot.length);
+  }
 }
 
 export function getDepth(container: Container | unknown, currDepth = 0): number {
@@ -29,10 +32,10 @@ export function getParentFolder(filePath: string) {
   return filePath.substring(0, filePath.lastIndexOf(Path.sep));
 }
 
-export function excludeFile(file: SourceFile) {
-  return ((nconf.get('excludeFilePaths') || []) as string[]).find((path) =>
-    file.getFilePath().includes(path)
-  );
+export function excludeFile(file: SourceFile, excludeFilePaths?: string[]) {
+  if (!excludeFilePaths) return false;
+
+  return excludeFilePaths.find((path) => file.getFilePath().includes(path));
 }
 
 export function getEmptyNodeCounts(): {
@@ -50,4 +53,8 @@ export function getEmptyNodeCounts(): {
 export function deCircularify(key: unknown, val: unknown | object) {
   if (key === 'parentNode') return '';
   return val;
+}
+
+export function convertConfigRelativePathToAbsolutePath(path: string) {
+  return Path.resolve(__dirname, '..', '..', path);
 }

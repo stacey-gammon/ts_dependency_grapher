@@ -1,6 +1,26 @@
 {
     "repos": [
         { 
+            "full_name": "elastic/kibana",
+            "refresh": false,
+            "tsconfig": "../../Elastic/kibana/tsconfig.json",
+            "source": "file",
+            "entry": "../../Elastic/kibana/src/plugins/data/public/index.ts",
+            "showExternalNodesOnly": false,
+            "extraSourceFileGlobs": [
+                "../../Elastic/kibana/x-pack/plugins/**/*{.d.ts,.ts}",
+                "../../Elastic/kibana/src/plugins/**/*{.d.ts,.ts}",
+                "../../Elastic/kibana/packages/**/*{.d.ts,.ts}"
+            ]
+        },
+        { 
+            "full_name": "stacey-gammon/ts_dependency_grapher",
+            "tsconfig": "./examples/common_utilities/tsconfig.json",
+            "source": "file",
+            "outputName": "common_utilities",
+            "refresh": true
+        },
+        { 
             "full_name": "stacey-gammon/ts_dependency_grapher",
             "refresh": false,
             "tsconfig": "./tsconfig.json",

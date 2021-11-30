@@ -1,17 +1,18 @@
 import fs from 'fs';
 import Path from 'path';
 import nconf from 'nconf';
+import { ImagesForRepoConfig, OutputImage, OutputImageMapping } from './types';
+import { convertConfigRelativePathToAbsolutePath, getRootRelativePath } from './utils';
 
-export function buildDocsSite(repoImages: { [key: string]: { [key: string]: string } }) {
+export function buildDocsSite(allRepoImages: OutputImageMapping) {
   const text = `
-# Architecture art
+# Architecture art examples
 
 _Visualizing cohesion and coupling_
 
-${Object.keys(repoImages)
-  .map((repo) => buildDocSiteRepoSection(repo, repoImages[repo]))
+${Object.keys(allRepoImages)
+  .map((repo) => buildDocSiteRepoSection(repo, allRepoImages[repo]))
   .join('\n')}
-
 `;
 
   const indexFilePath = Path.resolve(nconf.get('outputFolder'), 'index.md');
@@ -19,24 +20,31 @@ ${Object.keys(repoImages)
   fs.writeFileSync(indexFilePath, text);
 }
 
-function buildDocSiteRepoSection(repo: string, zoomImages: { [key: string]: string }): string {
+function buildDocSiteRepoSection(repo: string, repoImages: ImagesForRepoConfig): string {
   return `
 
-## ${repo} dependency graphs
+Configuration:
+\`\`\`
+${JSON.stringify(repoImages.repoInfo, null, 2)}
+\`\`\`
 
-${Object.keys(zoomImages)
-  .map((zoom) => buildDocSiteZoomSection(repo, zoom, zoomImages[zoom]))
-  .join('\n')}
-
+${repoImages.images.map((image) => buildDocSiteZoomSection(repo, image)).join('\n')}
 `;
 }
 
-function buildDocSiteZoomSection(repo: string, zoomLevel: string, zoomImage: string): string {
+function buildDocSiteZoomSection(repo: string, image: OutputImage): string {
+  const relativeEntryFile = image.entry
+    ? getRootRelativePath(
+        convertConfigRelativePathToAbsolutePath(image.entry),
+        nconf.get('REPO_ROOT')
+      )
+    : undefined;
   return `
 
-### Zoom ${zoomLevel}
+ ${relativeEntryFile ? `Entry: ${relativeEntryFile}` : ''} 
+ ${image.zoom ? `Zoom level: ${image.zoom}` : ''} 
+ Layout engine: ${image.layoutEngine} 
 
-![${repo} dependency graph at zoom ${zoomLevel}](./${zoomImage})
-
+![${repo} dependency graph](./${image.path})
 `;
 }

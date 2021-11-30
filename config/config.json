@@ -2,27 +2,19 @@
     "repos": [
         { 
             "full_name": "stacey-gammon/ts_dependency_grapher",
-            "tsconfig": "./examples/simple_bad/tsconfig.json",
+            "tsconfig": "./examples/uses_index_files/tsconfig.json",
             "source": "file",
-            "outputName": "simple_bad",
-            "refresh": true
-        },
-        { 
-            "full_name": "stacey-gammon/ts_dependency_grapher",
-            "tsconfig": "./examples/poor_organized/tsconfig.json",
-            "source": "file",
-            "outputName": "poor_organized",
-            "refresh": true
+            "outputName": "uses_index_files"
         }
     ],
     "outputFolder": "docs",
     "excludeFilePaths" : ["_test_", ".test.ts"],
-    "maxImageSize": "14",
+    "maxImageSize": "200",
     "buildDocsSite": true,
     "unusedNodeColor": "white",
     "nodeColorWeight": "OrgScore",
-    "nodeSizeWeight": "PublicAPICount",
-    "zooms": [4],
+    "zooms": [],
     "clearDotCache": false,
-    "refreshParsing": false
+    "refreshParsing": false,
+    "takeRecommendations": false
 }

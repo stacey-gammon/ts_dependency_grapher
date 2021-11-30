@@ -1,3 +1,4 @@
+import { StringMappingType } from '@ts-morph/common/lib/typescript';
 import nconf from 'nconf';
 
 export const INCOMING_DEP_COUNT = 'IncomingDependencyCount';
@@ -21,13 +22,34 @@ export function validateConfig() {
 }
 
 function validateWeightOption(config: string) {
-  const weightNodeByColor = nconf.get(config);
+  const configVal = nconf.get(config);
 
-  if (!NODE_WEIGHT_OPTIONS.includes(weightNodeByColor)) {
-    console.error(`ERROR: ${SIZE_NODE_BY_CONFIG_KEY} must be one of:
+  if (configVal && !NODE_WEIGHT_OPTIONS.includes(configVal)) {
+    console.error(`ERROR: ${config} must be one of:
     ${NODE_WEIGHT_OPTIONS.join('\n')}    
         `);
 
     throw new Error('Invalid config');
   }
+}
+
+export interface EntryInfo {
+  name: string;
+  file: string;
+}
+
+export interface RepoConfigSettings {
+  full_name: string;
+  tsconfig: string;
+  clearCache?: boolean;
+  outputName?: string;
+  source?: string;
+  entries?: Array<EntryInfo>;
+  showExternalNodesOnly?: boolean;
+  extraSourceFileGlobs?: string[];
+  layoutEngines: Array<{
+    name: string;
+    scale: boolean;
+  }>;
+  zooms?: Array<number>;
 }

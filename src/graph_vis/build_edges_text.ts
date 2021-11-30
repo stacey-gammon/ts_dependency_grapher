@@ -21,7 +21,7 @@ export function getDependenciesText(edges: GVEdgeMapping) {
       const color = getWeightedColor(dependencyWeight, 0, maxWeight);
       const weight = getWeightedSize(dependencyWeight, 0, maxWeight, 1, 4);
       text += `${getSafeName(source)} -> ${getSafeName(node.id)} ${
-        dependencyWeight ? `[color="${color}" penwidth=${weight}]` : ''
+        dependencyWeight ? `[color="white:${color}:white" penwidth=${weight}]` : ''
       }\n`;
     });
   });

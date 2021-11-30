@@ -2,7 +2,6 @@ import { GVEdgeMapping, LeafNode, ParentNode } from '../types';
 import { rollupEdges } from './rollup_edges';
 import { getEmptyNodeCounts } from '../utils';
 import { NodeWithLeafChildren, NodeWithNonLeafChildren } from './types';
-import { ConditionalExpression } from 'ts-morph';
 
 export function zoomOut(node: ParentNode | LeafNode, edges: GVEdgeMapping, zoomLevel: number) {
   const oldLeafToNewLeaf: { [key: string]: LeafNode } = {};
@@ -44,10 +43,7 @@ function turnIntoLeafNode(
   oldLeafToNewLeaf: { [key: string]: LeafNode },
   parentIdToLeaf: { [key: string]: string[] }
 ): LeafNode {
-  console.log(`turnIntoLeafNode: node id is ${node.id}`);
-
   if (isLeafNode(node)) {
-    console.log('turnIntoLeafNode: is leaf node! returning self');
     return node;
   } else if (node.children.length === 0) {
     delete (node as any).children;
@@ -57,7 +53,6 @@ function turnIntoLeafNode(
   if (nodeHasOnlyLeafChildren(node)) {
     return turnNodeWithLeafsIntoLeafNode(node, oldLeafToNewLeaf, parentIdToLeaf);
   } else if (nodeHasParentChildren(node)) {
-    console.log(`Node has parent children, node id is ${node.id}`);
     const rolledUpChildren: Array<ParentNode | LeafNode> = [];
     node.children.forEach((child) => {
       const rolledUpChild = turnIntoLeafNode(child, oldLeafToNewLeaf, parentIdToLeaf);
@@ -74,8 +69,6 @@ function turnNodeWithLeafsIntoLeafNode(
   oldLeafToNewLeaf: { [key: string]: LeafNode },
   parentIdToLeafs: { [key: string]: string[] }
 ): LeafNode {
-  console.log(`turnNodeWithLeafsIntoLeafNode node id is ${node.id}`);
-
   const newLeaf: LeafNode = {
     ...node,
     ...getEmptyNodeCounts(),
@@ -101,7 +94,6 @@ function turnNodeWithLeafsIntoLeafNode(
 }
 
 export function nodeHasOnlyLeafChildren(node?: ParentNode): node is NodeWithLeafChildren {
-  console.log('nodeHasOnlyLeafChildren');
   if (!node || node.children.length === 0) {
     return false;
   } else {
@@ -115,8 +107,6 @@ export function nodeHasOnlyLeafChildren(node?: ParentNode): node is NodeWithLeaf
 function nodeHasParentChildren(
   node: NodeWithNonLeafChildren | ParentNode
 ): node is NodeWithNonLeafChildren {
-  console.log('nodeHasParentChildren');
-
   if (!node || node.children.length === 0) {
     return false;
   } else {

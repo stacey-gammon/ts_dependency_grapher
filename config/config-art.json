@@ -1,0 +1,27 @@
+{
+    "repos": [
+        { 
+            "full_name": "elastic/kibana",
+            "refresh": false,
+            "tsconfig": "../../Elastic/kibana/tsconfig.json",
+            "source": "file",
+            "entry": "../../Elastic/kibana/src/plugins/data/public/index.ts",
+            "showExternalNodesOnly": false,
+            "extraSourceFileGlobs": [
+                "../../Elastic/kibana/x-pack/plugins/**/*{.d.ts,.ts}",
+                "../../Elastic/kibana/src/plugins/**/*{.d.ts,.ts}",
+                "../../Elastic/kibana/packages/**/*{.d.ts,.ts}"
+            ],
+            "noscaling": true,
+            "layoutEngine": "sfdp"
+        }
+    ],
+    "outputFolder": "docs/examples",
+    "maxImageSize": "20",
+    "buildDocsSite": true,
+    "unusedNodeColor": "white",
+    "nodeColorWeight": "MaxCouplingScore",
+    "nodeSizeWeight": "PublicAPICount",
+    "clearDotCache": false,
+    "zooms": [2, 3, 4, 5]
+}
