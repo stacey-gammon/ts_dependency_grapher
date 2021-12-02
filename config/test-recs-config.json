@@ -1,0 +1,18 @@
+{
+    "repos": [
+        { 
+            "full_name": "stacey-gammon/ts_dependency_grapher",
+            "refresh": false,
+            "tsconfig": "./tsconfig.json",
+            "source": "file"
+        }
+    ],
+    "excludeFilePaths" : ["_test_", ".test.ts"],
+    "outputFolder": "docs/test",
+    "maxImageSize": "50",
+    "buildDocsSite": true,
+    "unusedNodeColor": "white",
+    "nodeColorWeight": "cluster",
+    "clearDotCache": false,
+    "zooms": [2, 3, 4, 5]
+}

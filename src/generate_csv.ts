@@ -1,4 +1,6 @@
-import { GVEdgeMapping, LeafNode, NodeStats, ParentNode } from './types';
+import { LeafNode, ParentNode } from './types/types';
+import { NodeStats } from './types/node_stats';
+import { GVEdgeMapping } from './types/edge_types';
 import fs from 'fs';
 import { isLeafNode } from './zoom/zoom_out';
 import nconf from 'nconf';
@@ -18,7 +20,9 @@ export function generateCSVs(
     'afferentCoupling',
     'efferentCoupling',
     'orgScore',
-    'maxSingleCoupleWeight',
+    'tightestConnectionWeight',
+    'tightestConnectionParentId',
+    'connections',
     'complexityScore',
   ];
 
@@ -64,6 +68,10 @@ function addRows(
   stats: AllNodeStats
 ) {
   if (isLeafNode(node)) {
+    if (!stats.stats[node.id]) {
+      console.error(`No stats found for ${node.id}`);
+      return;
+    }
     rows.push(
       columns.map((col) =>
         col === 'filePath' || col === 'complexityScore' ? node[col] : stats.stats[node.id][col]

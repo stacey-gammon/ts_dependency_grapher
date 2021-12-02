@@ -1,13 +1,15 @@
 import { ClassDeclaration, InterfaceDeclaration, Project, SourceFile } from 'ts-morph';
 import Path from 'path';
-import { GVEdgeMapping, LeafNode, ParentNode } from '../types';
+import { LeafNode, ParentNode } from '../types/types';
+import { GVEdgeMapping } from '../types/edge_types';
 import nconf from 'nconf';
 import fs from 'fs';
 import os from 'os';
 import { excludeFile, getEmptyNodeCounts, getRootRelativePath } from '../utils';
 import { addEdges } from './add_edges';
 import { getOrCreateNode } from './add_node';
-import { EntryInfo, RepoConfigSettings } from '../config';
+import { EntryInfo } from '../config';
+import { RepoConfigSettings } from '../types/repo_config_settings';
 
 export function parseDependencies({
   entry,

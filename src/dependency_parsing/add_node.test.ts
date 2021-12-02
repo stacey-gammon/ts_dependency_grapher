@@ -1,5 +1,5 @@
 import { getOrCreateNode } from './add_node';
-import { ParentNode } from '../types';
+import { ParentNode } from '../types/types';
 import { getParentNode } from '../node.mock';
 
 it('addNode', () => {

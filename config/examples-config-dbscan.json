@@ -1,0 +1,36 @@
+{
+    "repos": [
+        { 
+            "full_name": "stacey-gammon/ts_dependency_grapher",
+            "tsconfig": "./examples/well_organized/tsconfig.json",
+            "source": "file",
+            "outputName": "well_organized",
+            "clearCache": true
+        },
+        { 
+            "full_name": "stacey-gammon/ts_dependency_grapher",
+            "tsconfig": "./examples/poor_organized/tsconfig.json",
+            "source": "file",
+            "outputName": "poor_organized",
+            "clearCache": true
+        },
+        { 
+            "full_name": "stacey-gammon/ts_dependency_grapher",
+            "tsconfig": "./examples/simple_bad/tsconfig.json",
+            "source": "file",
+            "outputName": "simple_bad",
+            "clearCache": true
+        }
+    ],
+    "clusteringAlgo": "dbscan",
+    "outputFolder": "docs/examples-dbscan",
+    "excludeFilePaths" : ["_test_", ".test.ts"],
+    "maxImageSize": "15",
+    "buildDocsSite": true,
+    "unusedNodeColor": "white",
+    "nodeColorWeight": "cluster",
+    "zooms": [],
+    "clearDotCache": false,
+    "refreshParsing": false,
+    "takeRecommendations": true
+}

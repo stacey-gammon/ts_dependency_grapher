@@ -1,6 +1,7 @@
-import { ParentNode, LeafNode } from '../types';
+import { ParentNode, LeafNode } from '../types/types';
 import nconf from 'nconf';
 import {
+  COLOR_NODE_BY_CLUSTER,
   COLOR_NODE_BY_CONFIG_KEY,
   INCOMING_DEP_COUNT,
   MAX_COUPLING_SCORE,
@@ -9,9 +10,18 @@ import {
   SIZE_NODE_BY_CONFIG_KEY,
 } from '../config';
 import { AllNodeStats } from '../stats/types';
-import { getColorForLevel, getNodeProperties, getWeightedColor, getWeightedSize } from './styles';
+import {
+  CLUSTER_COLORS,
+  getColorForLevel,
+  getNodeProperties,
+  getWeightedColor,
+  getWeightedSize,
+} from './styles';
 import { getLabel, getSafeName } from './utils';
 import { isLeafNode } from '../zoom/zoom_out';
+
+const clusterToColorMap: { [key: string]: string } = {};
+let nextColorIndex = 0;
 
 export function getNodeText(node: LeafNode, stats: AllNodeStats): string {
   const colorBy = nconf.get(COLOR_NODE_BY_CONFIG_KEY);
@@ -26,26 +36,38 @@ export function getNodeText(node: LeafNode, stats: AllNodeStats): string {
   const vals = [
     stats.stats[node.id].orgScore,
     stats.stats[node.id].interDependencyCount,
-    stats.stats[node.id].maxSingleCoupleWeight,
+    stats.stats[node.id].tightestConnectionWeight,
     stats.stats[node.id].publicAPICount,
   ];
   const maxVals = [
     stats.maxes.orgScore,
     stats.maxes.interDependencyCount,
-    stats.maxes.maxSingleCoupleWeight,
+    stats.maxes.tightestConnectionWeight,
     stats.maxes.publicAPICount,
   ];
   const minVals = [
     stats.mins.orgScore,
     stats.mins.interDependencyCount,
-    stats.mins.maxSingleCoupleWeight,
+    stats.mins.tightestConnectionWeight,
     stats.mins.publicAPICount,
   ];
 
-  const colorByVal = getCorrectVal(colorBy, matches, vals);
-  const colorByMaxVal = getCorrectVal(colorBy, matches, maxVals);
-  const colorByMinVal = getCorrectVal(colorBy, matches, minVals);
-
+  let color = 'black';
+  if (colorBy === COLOR_NODE_BY_CLUSTER) {
+    if (node.parentNode) {
+      if (!clusterToColorMap[node.parentNode.id]) {
+        clusterToColorMap[node.parentNode.id] = CLUSTER_COLORS[nextColorIndex];
+        nextColorIndex++;
+        if (nextColorIndex >= CLUSTER_COLORS.length) nextColorIndex = 0;
+      }
+      color = clusterToColorMap[node.parentNode.id];
+    }
+  } else {
+    const colorByVal = getCorrectVal(colorBy, matches, vals);
+    const colorByMaxVal = getCorrectVal(colorBy, matches, maxVals);
+    const colorByMinVal = getCorrectVal(colorBy, matches, minVals);
+    color = getWeightedColor(colorByVal, colorByMinVal, colorByMaxVal);
+  }
   let scaledSize;
   let fontSize;
   if (sizeBy) {
@@ -62,7 +84,6 @@ export function getNodeText(node: LeafNode, stats: AllNodeStats): string {
     fontSize = getWeightedSize(sizeByVal, sizeByMinVal, sizeByMaxVal, minFontSize, maxFontSize);
   }
 
-  const color = getWeightedColor(colorByVal, colorByMinVal, colorByMaxVal);
   const properties = getNodeProperties(getLabel(node.label), color, scaledSize, fontSize);
 
   return `${getSafeName(node.id)} [${properties}]\n`;

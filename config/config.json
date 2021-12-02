@@ -7,7 +7,7 @@
             "outputName": "uses_index_files"
         }
     ],
-    "outputFolder": "docs",
+    "outputFolder": "docs/tst",
     "excludeFilePaths" : ["_test_", ".test.ts"],
     "maxImageSize": "200",
     "buildDocsSite": true,

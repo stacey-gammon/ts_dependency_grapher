@@ -1,4 +1,4 @@
-import { BaseNode, LeafNode, ParentNode } from '../types';
+import { BaseNode, LeafNode, ParentNode } from '../types/types';
 
 export interface NodeWithNonLeafChildren extends BaseNode {
   children: ParentNode[];

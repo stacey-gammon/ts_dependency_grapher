@@ -1,5 +1,5 @@
 import { getWeightedColor, getWeightedSize } from './styles';
-import { GVEdgeMapping } from '../types';
+import { GVEdgeMapping } from '../types/edge_types';
 import { getSafeName } from './utils';
 
 export function getDependenciesText(edges: GVEdgeMapping) {
@@ -21,7 +21,7 @@ export function getDependenciesText(edges: GVEdgeMapping) {
       const color = getWeightedColor(dependencyWeight, 0, maxWeight);
       const weight = getWeightedSize(dependencyWeight, 0, maxWeight, 1, 4);
       text += `${getSafeName(source)} -> ${getSafeName(node.id)} ${
-        dependencyWeight ? `[color="white:${color}:white" penwidth=${weight}]` : ''
+        dependencyWeight ? `[color="${color}:white" penwidth=${weight}]` : ''
       }\n`;
     });
   });

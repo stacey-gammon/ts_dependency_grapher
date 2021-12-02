@@ -1,15 +1,18 @@
-import { GVEdgeMapping, LeafNode, OutputImageMapping, ParentNode } from './types';
+import { LeafNode, ParentNode } from './types/types';
+import { GVEdgeMapping } from './types/edge_types';
+import { OutputImageMapping } from './types/image_types';
 import { zoomOut } from './zoom/zoom_out';
 import nconf from 'nconf';
-import { fillNodeStats } from './stats/fill_node_stats';
-import { saveRecommendationsToFile } from './stats/save_recommendations_to_file';
+import { getNodeStats } from './stats/get_node_stats';
 import Path from 'path';
 import { generateCSVs } from './generate_csv';
 import { buildDotFile } from './graph_vis/build_dot_file';
-import { EntryInfo, RepoConfigSettings } from './config';
+import { EntryInfo } from './config';
+import { RepoConfigSettings } from './types/repo_config_settings';
 import { buildPngs } from './build_pngs';
+import { recommendClustering } from './clustering/recommend_clustering';
 
-export async function runDependencyAlgorithms({
+export function runDependencyAlgorithms({
   zoom,
   root,
   edges,
@@ -36,14 +39,10 @@ export async function runDependencyAlgorithms({
   const beforeAndAfter = nconf.get('takeRecommendations') ? [false, true] : [undefined];
   for (const takeRecommendations of beforeAndAfter) {
     const outputId = getOutputFileName(name, takeRecommendations, zoom, entry);
-    const stats = fillNodeStats(root, edges, takeRecommendations);
+    const stats = getNodeStats(root, edges);
 
     if (takeRecommendations && stats.recommendations) {
-      saveRecommendationsToFile(
-        Path.resolve(nconf.get('outputFolder'), `${outputId}.md`),
-        stats.recommendations,
-        false
-      );
+      recommendClustering({ outputId, root, edges, stats });
     }
 
     generateCSVs(root, edges, outputId, stats);
@@ -52,9 +51,9 @@ export async function runDependencyAlgorithms({
 
     const dotOutputPath = Path.resolve(nconf.get('outputFolder'), `${outputId}.dot`);
 
-    await buildDotFile(edges, root, dotOutputPath, repoInfo, stats);
+    buildDotFile(edges, root, dotOutputPath, repoInfo, stats);
 
-    await buildPngs({ name: outputId, zoom, dotPath: dotOutputPath, repoInfo, repoImages, entry });
+    buildPngs({ name: outputId, zoom, dotPath: dotOutputPath, repoInfo, repoImages, entry });
   }
 }
 
@@ -70,7 +69,7 @@ function getOutputFileName(
     uniqueName += `_zoom${zoom}`;
   }
   if (takeRecommendations != undefined) {
-    uniqueName += `_${takeRecommendations ? 'after' : 'before'}_`;
+    uniqueName += `_${takeRecommendations ? 'after' : 'before'}`;
   }
   if (entry != undefined) {
     uniqueName += `_${entry.name}`;

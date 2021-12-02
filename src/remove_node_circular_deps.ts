@@ -1,4 +1,5 @@
-import { GVEdgeMapping, LeafNode, ParentNode } from './types';
+import { LeafNode, ParentNode } from './types/types';
+import { GVEdgeMapping } from './types/edge_types';
 import { isLeafNode } from './zoom/zoom_out';
 
 export function removeCircularDependencies(node: ParentNode | LeafNode): ParentNode | LeafNode {

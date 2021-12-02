@@ -1,7 +1,7 @@
 import fs from 'fs';
 import Path from 'path';
 import nconf from 'nconf';
-import { ImagesForRepoConfig, OutputImage, OutputImageMapping } from './types';
+import { ImagesForRepoConfig, OutputImage, OutputImageMapping } from './types/image_types';
 import { convertConfigRelativePathToAbsolutePath, getRootRelativePath } from './utils';
 
 export function buildDocsSite(allRepoImages: OutputImageMapping) {

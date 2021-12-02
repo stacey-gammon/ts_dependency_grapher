@@ -6,6 +6,7 @@ export function saveRecommendationsToFile(
   recommendations: RecommendationsList,
   csv = true
 ) {
+  console.log('writing rec file with ' + recommendations.length + ' to outputPath');
   let text = csv ? 'Node, New Parent\n' : '| Node | New Parent |\n|----|----|\n';
 
   recommendations.forEach((rec) => {

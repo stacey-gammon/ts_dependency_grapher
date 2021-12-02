@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { getNode, getParentNode } from '../node.mock';
-import { GVEdgeMapping } from '../types';
+import { GVEdgeMapping } from '../types/edge_types';
 import { getDependencyStats } from './get_dependency_stats';
 
 it('getDependencyStats', () => {

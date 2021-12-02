@@ -1,4 +1,5 @@
-import { Edge, GVEdgeMapping, LeafNode, NodeEdges } from '../types';
+import { LeafNode } from '../types/types';
+import { Edge, GVEdgeMapping, NodeEdges } from '../types/edge_types';
 import { deCircularify, deCircularifyEdges } from '../utils';
 
 /**

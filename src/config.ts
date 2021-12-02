@@ -13,20 +13,23 @@ export const NODE_WEIGHT_OPTIONS = [
   ORG_SCORE,
 ];
 
+export const COLOR_NODE_BY_CLUSTER = 'cluster';
+export const NODE_COLOR_WEIGHT_OPTIONS = [...NODE_WEIGHT_OPTIONS, COLOR_NODE_BY_CLUSTER];
+
 export const SIZE_NODE_BY_CONFIG_KEY = 'nodeSizeWeight';
 export const COLOR_NODE_BY_CONFIG_KEY = 'nodeColorWeight';
 
 export function validateConfig() {
-  validateWeightOption(SIZE_NODE_BY_CONFIG_KEY);
-  validateWeightOption(COLOR_NODE_BY_CONFIG_KEY);
+  validateWeightOption(SIZE_NODE_BY_CONFIG_KEY, NODE_WEIGHT_OPTIONS);
+  validateWeightOption(COLOR_NODE_BY_CONFIG_KEY, NODE_COLOR_WEIGHT_OPTIONS);
 }
 
-function validateWeightOption(config: string) {
+function validateWeightOption(config: string, options: string[]) {
   const configVal = nconf.get(config);
 
-  if (configVal && !NODE_WEIGHT_OPTIONS.includes(configVal)) {
+  if (configVal && !options.includes(configVal)) {
     console.error(`ERROR: ${config} must be one of:
-    ${NODE_WEIGHT_OPTIONS.join('\n')}    
+    ${options.join('\n')}    
         `);
 
     throw new Error('Invalid config');
@@ -38,18 +41,7 @@ export interface EntryInfo {
   file: string;
 }
 
-export interface RepoConfigSettings {
-  full_name: string;
-  tsconfig: string;
-  clearCache?: boolean;
-  outputName?: string;
-  source?: string;
-  entries?: Array<EntryInfo>;
-  showExternalNodesOnly?: boolean;
-  extraSourceFileGlobs?: string[];
-  layoutEngines: Array<{
-    name: string;
-    scale: boolean;
-  }>;
-  zooms?: Array<number>;
-}
+export const CLUSTER_OPTION_ORG_SCORE = 'orgScore';
+export const CLUSTER_OPTION_DBSCAN = 'dbscan';
+
+export const CLUSTERING_OPTIONS = [CLUSTER_OPTION_DBSCAN, CLUSTER_OPTION_ORG_SCORE];

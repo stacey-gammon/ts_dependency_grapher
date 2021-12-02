@@ -1,110 +1,53 @@
-import { LeafNode, NodeStats, ParentNode } from '../types';
-import {
-  convertConfigRelativePathToAbsolutePath,
-  getEmptyNodeCounts,
-  getRootRelativePath,
-} from '../utils';
-import { isLeafNode } from '../zoom/zoom_out';
-import { NodeToParentDependencies, DependencyStatsMapping } from './get_dependency_stats';
-import { RecommendationsByParent } from './types';
-import nconf from 'nconf';
+import { LeafNode, ParentNode } from '../types/types';
+import { NodeStats } from '../types/node_stats';
+import { GVEdgeMapping } from '../types/edge_types';
+import { AllNodeStats, RecommendationsList } from './types';
+import { getDependencyStats } from './get_dependency_stats';
+import { fillOrgScoreStats, OrgScoreStatsMapping } from './get_org_score';
+import { fillNodeStats } from './fill_node_stats';
 
-export interface CoupledConnection {
-  parentNode: ParentNode;
-  connectionWeight: number;
+export function getNodeStats(node: ParentNode | LeafNode, edges: GVEdgeMapping): AllNodeStats {
+  const orgStats: OrgScoreStatsMapping = {};
+  const nodeStats: { [key: string]: NodeStats } = {};
+  const dependencyStats = {};
+
+  // Grouped by parent that has the node that should move. This is to help avoid one giant module. Do one move per parent at a time.
+  const recommendations: RecommendationsList = [];
+  const couplingWeights = getDependencyStats(edges, dependencyStats);
+  fillOrgScoreStats(couplingWeights, node, orgStats, recommendations);
+  fillNodeStats(node, nodeStats, orgStats, dependencyStats);
+
+  const statKeys: Array<keyof NodeStats> = [
+    'efferentCoupling',
+    'afferentCoupling',
+    'interDependencyCount',
+    'intraDependencyCount',
+    'complexityScore',
+    'publicAPICount',
+    'orgScore',
+    'tightestConnectionWeight',
+    //  'innerNodeCount',
+  ];
+  const maxes: Partial<NodeStats> = {};
+  statKeys.forEach((stat) => ((maxes[stat] as any) = findMaxVal(nodeStats, stat)));
+
+  const mins: Partial<NodeStats> = {};
+  statKeys.forEach((stat) => ((mins[stat] as any) = findMinVal(nodeStats, stat)));
+
+  return {
+    stats: nodeStats,
+    maxes,
+    mins,
+    recommendations,
+  } as AllNodeStats;
 }
 
-/**
- * Returns whether or not modifications were made and scores should be re-calculated
- * @param weights
- * @param node
- * @param depStats
- * @param nodeStats
- * @param takeRecommendations
- */
-export function getNodeStats(
-  weights: NodeToParentDependencies,
-  node: ParentNode | LeafNode,
-  depStats: DependencyStatsMapping,
-  nodeStats: { [key: string]: NodeStats },
-  recommendations: RecommendationsByParent
-) {
-  // if (repoInfo.entry) {
-  //   const relativeEntryPath = getRootRelativePath(
-  //     convertConfigRelativePathToAbsolutePath(repoInfo.entry),
-  //     nconf.get('REPO_ROOT')
-  //   );
-  //   if (!node.filePath.startsWith(relativeEntryPath)) return;
-  // }
-  if (isLeafNode(node)) {
-    let maxSingleCoupleWeight = 0;
-    if (!depStats[node.id]) {
-      console.error(`No entry for ${node.id} inside dependency stats`, depStats);
-      throw new Error(`No entry for ${node.id} inside dependency stats`);
-    }
-    const interDependencyCount = depStats[node.id].interDependencyCount;
-    if (weights[node.id]) {
-      // interDependencyCount =
-      //   weights[node.id].find((weight) => {
-      //     console.log(`${weight.parentNode.id} === ${node.parentNode?.id};`);
-      //     return weight.parentNode.id === node.parentNode?.id;
-      //   })?.connectionWeight || 0;
-
-      const { connectionWeight, parentNode } = weights[node.id].reduce(
-        (max, curr) => {
-          // Skip inter counts
-          if (node.parentNode && curr.parentNode.id === node.parentNode.id) return max;
-
-          return curr.connectionWeight > max.connectionWeight ? curr : max;
-        },
-        { parentNode: undefined, connectionWeight: 0 } as {
-          parentNode?: ParentNode;
-          connectionWeight: number;
-        }
-      );
-
-      if (connectionWeight === undefined) {
-        console.error(`fillCouplingWeight: ConnectionWeight not found for ${node.id}.`, weights);
-        throw new Error('fillCouplingWeight: ConnectionWeight should be defined');
-      }
-      maxSingleCoupleWeight = connectionWeight;
-      const orgScore = interDependencyCount - maxSingleCoupleWeight;
-      if (parentNode && orgScore < 0) {
-        if (!recommendations[parentNode.id]) recommendations[parentNode.id] = [];
-
-        recommendations[parentNode.id].push({
-          node,
-          originalParent: node.parentNode!,
-          newParent: parentNode,
-        });
-        console.log(
-          `Consider moving ${node.filePath} to ${parentNode.filePath}. Inter: ${interDependencyCount}, Max-Intra: ${maxSingleCoupleWeight}`
-        );
-      }
-    }
-
-    nodeStats[node.id] = {
-      ...getEmptyNodeCounts(),
-      ...depStats[node.id],
-      interDependencyCount,
-      publicAPICount: node.publicAPICount,
-      complexityScore: node.complexityScore,
-      maxSingleCoupleWeight,
-      orgScore: depStats[node.id].interDependencyCount - maxSingleCoupleWeight,
-    };
-  } else {
-    node.children.forEach((child) =>
-      getNodeStats(weights, child, depStats, nodeStats, recommendations)
-    );
-  }
-  return recommendations;
+function findMaxVal(stats: { [key: string]: NodeStats }, key: keyof NodeStats): number {
+  return Object.values(stats).reduce((max, curr) => {
+    return Math.max(curr[key] as number, max);
+  }, -999);
 }
 
-function isNodeEntryFile(entry: string, filePath: string) {
-  const relativeEntryPath = getRootRelativePath(
-    convertConfigRelativePathToAbsolutePath(entry),
-    nconf.get('REPO_ROOT')
-  );
-
-  return filePath === relativeEntryPath;
+function findMinVal(stats: { [key: string]: NodeStats }, key: keyof NodeStats): number {
+  return Object.values(stats).reduce((max, curr) => Math.min(curr[key] as number, max), 999);
 }

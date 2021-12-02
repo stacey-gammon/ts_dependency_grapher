@@ -1,9 +1,10 @@
-import { GVEdgeMapping, LeafNode, ParentNode } from '../types';
+import { LeafNode, ParentNode } from '../types/types';
+import { GVEdgeMapping } from '../types/edge_types';
 import { getDiGraphText } from './build_digraph_text';
 import fs from 'fs';
 import nconf from 'nconf';
 import { AllNodeStats } from '../stats/types';
-import { RepoConfigSettings } from '../config';
+import { RepoConfigSettings } from '../types/repo_config_settings';
 
 /**
  *
@@ -12,7 +13,7 @@ import { RepoConfigSettings } from '../config';
  * @param path The file location the cached output should be stored
  * @returns Whether the dot file has changes and anything based on it should be rebuilt.
  */
-export async function buildDotFile(
+export function buildDotFile(
   edges: GVEdgeMapping,
   root: ParentNode | LeafNode,
   path: string,

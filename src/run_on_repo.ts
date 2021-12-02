@@ -1,4 +1,4 @@
-import { RepoConfigSettings } from './config';
+import { RepoConfigSettings } from './types/repo_config_settings';
 import { downloadRepo } from './download_repo';
 import { regenerateColorScheme } from './graph_vis/styles';
 import Path from 'path';
@@ -8,7 +8,7 @@ import { getTSMorphProject } from './get_tsmorph_project';
 import { parseDependencies } from './dependency_parsing/parse_dependencies';
 import nconf from 'nconf';
 import { runDependencyAlgorithms } from './run_dependency_algorithms';
-import { OutputImageMapping } from './types';
+import { OutputImageMapping } from './types/image_types';
 
 export async function runOnRepo(repoInfo: RepoConfigSettings, repoImages: OutputImageMapping) {
   const repo = repoInfo.full_name;
@@ -52,7 +52,7 @@ export async function runOnRepo(repoInfo: RepoConfigSettings, repoImages: Output
     const zoomLevels = repoInfo.zooms;
     // Running a single zoom level trumps running all of them.
     if (zoom) {
-      await runDependencyAlgorithms({
+      runDependencyAlgorithms({
         edges,
         root,
         name: outputName,
@@ -63,7 +63,7 @@ export async function runOnRepo(repoInfo: RepoConfigSettings, repoImages: Output
       });
     } else if (zoomLevels && zoomLevels.length > 0) {
       for (const zoom of zoomLevels) {
-        await runDependencyAlgorithms({
+        runDependencyAlgorithms({
           edges,
           root,
           name: outputName,
@@ -74,7 +74,7 @@ export async function runOnRepo(repoInfo: RepoConfigSettings, repoImages: Output
         });
       }
     } else {
-      await runDependencyAlgorithms({ edges, root, name: outputName, repoInfo, repoImages, entry });
+      runDependencyAlgorithms({ edges, root, name: outputName, repoInfo, repoImages, entry });
     }
   }
 }

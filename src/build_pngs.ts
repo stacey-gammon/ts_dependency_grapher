@@ -2,8 +2,9 @@ import { execSync } from 'child_process';
 import fs from 'fs';
 import Path from 'path';
 import nconf from 'nconf';
-import { OutputImageMapping } from './types';
-import { EntryInfo, RepoConfigSettings } from './config';
+import { OutputImageMapping } from './types/image_types';
+import { EntryInfo } from './config';
+import { RepoConfigSettings } from './types/repo_config_settings';
 
 export async function buildPngs({
   name,
@@ -18,22 +19,24 @@ export async function buildPngs({
   repoInfo: RepoConfigSettings;
   zoom?: number;
   entry?: EntryInfo;
-  repoImages: OutputImageMapping;
+  repoImages?: OutputImageMapping;
 }) {
   repoInfo.layoutEngines.forEach(async ({ name: layoutEngine, scale }) => {
     const outputIdWithEngine = `${name}_${layoutEngine}`;
     const dotPngPath = Path.resolve(nconf.get('outputFolder'), outputIdWithEngine + '.png');
 
-    if (!repoImages[repoInfo.full_name]) {
-      repoImages[repoInfo.full_name] = { images: [], repoInfo };
-    }
+    if (repoImages) {
+      if (!repoImages[repoInfo.full_name]) {
+        repoImages[repoInfo.full_name] = { images: [], repoInfo };
+      }
 
-    repoImages[repoInfo.full_name].images.push({
-      entry: entry?.file,
-      path: outputIdWithEngine + '.png',
-      layoutEngine,
-      zoom: zoom ? zoom.toString() : undefined,
-    });
+      repoImages[repoInfo.full_name].images.push({
+        entry: entry?.file,
+        path: outputIdWithEngine + '.png',
+        layoutEngine,
+        zoom: zoom ? zoom.toString() : undefined,
+      });
+    }
 
     if (repoInfo.clearCache || !fs.existsSync(dotPngPath) || nconf.get('clearCache')) {
       console.log(`Generating png for ${outputIdWithEngine} at zoom level ${zoom}`);

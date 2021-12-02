@@ -1,10 +1,11 @@
 import { parseDependencies } from '../dependency_parsing/parse_dependencies';
 import Path from 'path';
 import { isLeafNode } from '../zoom/zoom_out';
-import { fillNodeStats } from '../stats/fill_node_stats';
+import { getNodeStats } from './get_node_stats';
 import { removeCircularDependenciesFromEdges } from '../remove_node_circular_deps';
 import { createAndAddLeafNode, getParentNode } from '../node.mock';
-import { GVEdgeMapping, LeafNode, ParentNode } from '../types';
+import { LeafNode, ParentNode } from '../types/types';
+import { GVEdgeMapping } from '../types/edge_types';
 import { getTSMorphProject } from '../get_tsmorph_project';
 
 function getRepoInfo(tsconfigPath: string) {
@@ -20,7 +21,7 @@ it('fillNodeStats well organized', () => {
     project,
   });
 
-  const stats = fillNodeStats(root, edges);
+  const stats = getNodeStats(root, edges);
 
   const a3Edge = edges['_A_3_ts'];
   const a3Source = stats.stats['_A_3_ts'];
@@ -32,7 +33,7 @@ it('fillNodeStats well organized', () => {
   expect(a3Source.interDependencyCount).toBe(2);
   expect(a3Source.afferentCoupling).toBe(0);
   expect(a3Source.efferentCoupling).toBe(1);
-  expect(a3Source.maxSingleCoupleWeight).toBe(1);
+  expect(a3Source.tightestConnectionWeight).toBe(1);
   expect(a3Source.orgScore).toBe(1);
 
   const b6Stats = stats.stats['_B_6_ts'];
@@ -50,7 +51,7 @@ it.only('fillNodeStats poor organized', () => {
     project,
   });
 
-  const stats = fillNodeStats(root, edges);
+  const stats = getNodeStats(root, edges);
 
   const threeSource = stats.stats['_B_3_ts'];
 
@@ -60,7 +61,7 @@ it.only('fillNodeStats poor organized', () => {
   expect(threeSource.afferentCoupling).toBe(0);
   expect(threeSource.efferentCoupling).toBe(3);
 
-  expect(threeSource.maxSingleCoupleWeight).toBe(2);
+  expect(threeSource.tightestConnectionWeight).toBe(2);
   expect(threeSource.orgScore).toBe(-2);
 
   const cSix = stats.stats['_C_6_ts'];
@@ -127,7 +128,7 @@ it.only('fillNodeStats corner case check inter to see if should stay in self', (
 
   A.children = [];
 
-  const stats = fillNodeStats(root, edges);
+  const stats = getNodeStats(root, edges);
 
   const threeSource = stats.stats['_B_3_ts'];
 
@@ -137,7 +138,7 @@ it.only('fillNodeStats corner case check inter to see if should stay in self', (
   expect(threeSource.afferentCoupling).toBe(0);
   expect(threeSource.efferentCoupling).toBe(3);
 
-  expect(threeSource.maxSingleCoupleWeight).toBe(2);
+  expect(threeSource.tightestConnectionWeight).toBe(2);
   expect(threeSource.orgScore).toBe(-2);
 
   const cSix = stats.stats['_C_6_ts'];

@@ -1,4 +1,4 @@
-import { LeafNode, ParentNode } from '../types';
+import { LeafNode, ParentNode } from '../types/types';
 
 export function moveNode(node: LeafNode | ParentNode, parentNode: ParentNode) {
   if (node.parentNode) {

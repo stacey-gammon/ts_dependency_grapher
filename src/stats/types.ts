@@ -1,10 +1,11 @@
-import { LeafNode, NodeStats, ParentNode } from '../types';
+import { LeafNode, ParentNode } from '../types/types';
+import { NodeStats } from '../types/node_stats';
 
 export interface AllNodeStats {
   stats: { [key: string]: NodeStats };
   maxes: NodeStats;
   mins: NodeStats;
-  recommendations?: RecommendationsList;
+  recommendations: RecommendationsList;
 }
 
 export interface RecommendationsByParent {
@@ -14,7 +15,7 @@ export interface RecommendationsByParent {
 export interface Recommendation {
   node: LeafNode;
   newParent: ParentNode;
-  originalParent: ParentNode;
+  //originalParent: ParentNode;
 }
 
 export type RecommendationsList = Array<{ node: LeafNode; newParent: ParentNode }>;

@@ -5,24 +5,32 @@
             "tsconfig": "./examples/well_organized/tsconfig.json",
             "source": "file",
             "outputName": "well_organized",
-            "refresh": true
+            "clearCache": true
         },
         { 
             "full_name": "stacey-gammon/ts_dependency_grapher",
             "tsconfig": "./examples/poor_organized/tsconfig.json",
             "source": "file",
             "outputName": "poor_organized",
-            "refresh": true
+            "clearCache": true
+        },
+        { 
+            "full_name": "stacey-gammon/ts_dependency_grapher",
+            "tsconfig": "./examples/simple_bad/tsconfig.json",
+            "source": "file",
+            "outputName": "simple_bad",
+            "clearCache": true
         }
     ],
-    "outputFolder": "docs/examples",
+    "clusteringAlgo": "orgScore",
+    "outputFolder": "docs/examples-org",
     "excludeFilePaths" : ["_test_", ".test.ts"],
     "maxImageSize": "15",
     "buildDocsSite": true,
     "unusedNodeColor": "white",
-    "nodeColorWeight": "OrgScore",
+    "nodeColorWeight": "cluster",
     "zooms": [],
     "clearDotCache": false,
     "refreshParsing": false,
-    "takeRecommendations": false
+    "takeRecommendations": true
 }

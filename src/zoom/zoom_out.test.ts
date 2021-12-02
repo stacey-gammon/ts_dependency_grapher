@@ -1,5 +1,6 @@
 import { isLeafNode, zoomOut } from './zoom_out';
-import { GVEdgeMapping, ParentNode } from '../types';
+import { ParentNode } from '../types/types';
+import { GVEdgeMapping } from '../types/edge_types';
 import { getNode, getParentNode } from '../node.mock';
 
 it.only('zoomOut', () => {

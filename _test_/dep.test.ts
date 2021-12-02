@@ -2,7 +2,7 @@ import Path from 'path';
 import fs from 'fs';
 import { getDiGraphText } from '../src/graph_vis/build_digraph_text';
 import { parseDependencies } from '../src/dependency_parsing/parse_dependencies';
-import { fillNodeStats } from '../src/stats/fill_node_stats';
+import { getNodeStats } from '../src/stats/get_node_stats';
 import { getTSMorphProject } from '../src/get_tsmorph_project';
 
 function getRepoInfo(tsconfigPath: string) {
@@ -17,7 +17,7 @@ it('create test png', () => {
     repoInfo,
     project,
   });
-  const maxes = fillNodeStats(root, edges);
+  const maxes = getNodeStats(root, edges);
   const text = getDiGraphText(edges, root, maxes);
   expect(text).toBeDefined();
   expect(text?.indexOf('bar_zed_lag')).toBeLessThan(0);

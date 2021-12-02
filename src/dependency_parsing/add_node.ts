@@ -1,4 +1,4 @@
-import { LeafNode, ParentNode } from '../types';
+import { LeafNode, ParentNode } from '../types/types';
 import { getEmptyNodeCounts, getParentFolder } from '../utils';
 import { isLeafNode } from '../zoom/zoom_out';
 import { getSafeName } from '../graph_vis/utils';

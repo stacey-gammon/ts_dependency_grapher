@@ -1,4 +1,5 @@
-import { BaseNode, GVEdgeMapping, LeafNode, ParentNode } from '../types';
+import { BaseNode, LeafNode, ParentNode } from '../types/types';
+import { GVEdgeMapping } from '../types/edge_types';
 
 /**
  * Map the destination key to each of it's incoming dependency source nodes, and how many times they
@@ -49,7 +50,6 @@ export function getParentConnections(
       );
     }
   });
-  console.log('parent connections are ', parentConnections);
   return parentConnections;
 }
 

@@ -12,6 +12,21 @@ export const SUNRISE_SCHEME = ['#FFBA08', '#F48C06', '#DC2F02', '#9D0208', '#370
 export const LIME = ['#F4E04D', '#F2ED6F', '#CEE397', '#8DB1AB', '#587792'];
 export const MOSS = ['#EAE1DF', '#B79492', '#917C78', '#667761', '#545E56'];
 
+export const CLUSTER_COLORS = [
+  '#0046FF',
+  '#FF0000',
+  '#F2ED6F',
+  '#00ED6F',
+  '#99116F',
+  '#aa5500',
+  '#917C78',
+  '#007C78',
+  '#ff57ff',
+  '#ff570f',
+  '#00070f',
+  '#FF9393',
+];
+
 //export const COLOR_SCHEMES = [SUNRISE_SCHEME, BLUE, LIME, MOSS];
 export const COLOR_SCHEMES = [BLUE];
 

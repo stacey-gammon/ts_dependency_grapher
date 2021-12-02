@@ -1,4 +1,5 @@
-import { GVEdgeMapping, LeafNode, ParentNode } from '../types';
+import { LeafNode, ParentNode } from '../types/types';
+import { GVEdgeMapping } from '../types/edge_types';
 import { rollupEdges } from './rollup_edges';
 import { getEmptyNodeCounts } from '../utils';
 import { NodeWithLeafChildren, NodeWithNonLeafChildren } from './types';
