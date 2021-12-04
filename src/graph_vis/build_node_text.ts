@@ -10,7 +10,7 @@ import {
 } from './styles';
 import { getLabel, getSafeName } from './utils';
 import { isLeafNode } from '../zoom/zoom_out';
-import { NODE_COLOR_WEIGHT_OPTIONS, NODE_WEIGHT_OPTIONS } from '../config/node_weight_options';
+import { NODE_COLOR_WEIGHT_OPTIONS, NODE_SIZE_WEIGHT_OPTIONS } from '../config/node_weight_options';
 
 const clusterToColorMap: { [key: string]: string } = {};
 let nextColorIndex = 0;
@@ -21,10 +21,11 @@ export function getNodeText(node: LeafNode, stats: AllNodeStats): string {
   const sizeBy = config.nodeSizeWeight;
 
   const matches = [
-    NODE_WEIGHT_OPTIONS.ORG_SCORE,
-    NODE_WEIGHT_OPTIONS.INCOMING_DEP_COUNT,
-    NODE_WEIGHT_OPTIONS.MAX_COUPLING_SCORE,
-    NODE_WEIGHT_OPTIONS.PUBLIC_API_COUNT,
+    NODE_SIZE_WEIGHT_OPTIONS.ORG_SCORE,
+    NODE_SIZE_WEIGHT_OPTIONS.INTER_DEPENDENCIES,
+    NODE_SIZE_WEIGHT_OPTIONS.INTRA_DEPENDENCIES,
+    NODE_SIZE_WEIGHT_OPTIONS.MAX_COUPLING_SCORE,
+    NODE_SIZE_WEIGHT_OPTIONS.PUBLIC_API_COUNT,
   ];
 
   if (stats.stats[node.id].orgScore === undefined) {
@@ -35,18 +36,27 @@ export function getNodeText(node: LeafNode, stats: AllNodeStats): string {
   const vals = [
     stats.stats[node.id].orgScore,
     stats.stats[node.id].interDependencyCount,
+    stats.stats[node.id].intraDependencyCount,
+    stats.stats[node.id].efferentCoupling,
+    stats.stats[node.id].afferentCoupling,
     stats.stats[node.id].tightestConnectionWeight,
     stats.stats[node.id].publicAPICount,
   ];
   const maxVals = [
     stats.maxes.orgScore,
     stats.maxes.interDependencyCount,
+    stats.maxes.intraDependencyCount,
+    stats.maxes.efferentCoupling,
+    stats.maxes.afferentCoupling,
     stats.maxes.tightestConnectionWeight,
     stats.maxes.publicAPICount,
   ];
   const minVals = [
     stats.mins.orgScore,
     stats.mins.interDependencyCount,
+    stats.mins.intraDependencyCount,
+    stats.mins.efferentCoupling,
+    stats.mins.afferentCoupling,
     stats.mins.tightestConnectionWeight,
     stats.mins.publicAPICount,
   ];

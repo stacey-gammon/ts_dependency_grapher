@@ -33,12 +33,6 @@ export function getParentFolder(filePath: string) {
   return filePath.substring(0, filePath.lastIndexOf(Path.sep));
 }
 
-export function excludeFile(file: SourceFile, excludeFilePaths?: string[]) {
-  if (!excludeFilePaths) return false;
-
-  return excludeFilePaths.find((path) => file.getFilePath().includes(path));
-}
-
 export function getEmptyNodeCounts(): {
   publicAPICount: number;
   innerNodeCount: number;

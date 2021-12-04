@@ -6,8 +6,11 @@
  * Side Public License, v 1.
  */
 
+import { getConfig } from '../config';
+
 export const BLUE = ['#BFD1FF', '#95B2FF', '#5F8BFF', '#336BFF', '#0046FF'];
 export const RED = ['#FFC9C9', '#FF9393', '#FF5C5C', '#FF3131', '#FF0000'];
+
 export const SUNRISE_SCHEME = ['#FFBA08', '#F48C06', '#DC2F02', '#9D0208', '#370617'];
 export const LIME = ['#F4E04D', '#F2ED6F', '#CEE397', '#8DB1AB', '#587792'];
 export const MOSS = ['#EAE1DF', '#B79492', '#917C78', '#667761', '#545E56'];
@@ -25,16 +28,19 @@ export const CLUSTER_COLORS = [
   '#ff570f',
   '#00070f',
   '#FF9393',
+  '#22ffff',
+  '#a2af00',
+  '#550eef',
+  '#FFee00',
 ];
 
-//export const COLOR_SCHEMES = [SUNRISE_SCHEME, BLUE, LIME, MOSS];
-export const COLOR_SCHEMES = [BLUE];
+export const COLOR_SCHEMES = [SUNRISE_SCHEME, LIME, MOSS];
 
 let RANDOM_COLOR_INDEX = Math.floor(Math.random() * COLOR_SCHEMES.length);
 console.log('RANDOM_COLOR_INDEX', RANDOM_COLOR_INDEX);
 
 export function getCurrColorScheme() {
-  return COLOR_SCHEMES[RANDOM_COLOR_INDEX];
+  return getConfig().usefulColors ? BLUE : COLOR_SCHEMES[RANDOM_COLOR_INDEX];
 }
 
 export function regenerateColorScheme() {

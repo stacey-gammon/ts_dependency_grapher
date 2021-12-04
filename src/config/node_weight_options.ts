@@ -2,11 +2,15 @@
 // export const MAX_COUPLING_SCORE = 'MaxCouplingScore';
 // export const PUBLIC_API_COUNT = 'PublicAPICount';
 
-export enum NODE_WEIGHT_OPTIONS {
+export enum NODE_SIZE_WEIGHT_OPTIONS {
+  AFFERENT_COUPLING = 'afferent',
+  EFFERENT_COUPLING = 'efferent',
+  INTRA_DEPENDENCIES = 'intra',
+  INTER_DEPENDENCIES = 'inter',
+  ORG_SCORE = 'orgScore',
   INCOMING_DEP_COUNT = 'incomingDepCount',
   MAX_COUPLING_SCORE = 'maxCouplingScore',
   PUBLIC_API_COUNT = 'publicApiCount',
-  ORG_SCORE = 'orgScore',
 }
 
 export enum NODE_COLOR_WEIGHT_OPTIONS {

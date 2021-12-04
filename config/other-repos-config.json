@@ -1,0 +1,27 @@
+{
+    "repos": [
+        { 
+            "full_name": "microsoft/vscode",
+            "tsconfig": "./src/tsconfig.json",
+            "outputName": "vscode"
+        },
+        { 
+            "full_name": "angular/angular",
+            "tsconfig": "./packages/tsconfig.json",
+            "outputName": "angular"
+        },
+        { 
+            "full_name": "grafana/grafana",
+            "tsconfig": ".tsconfig.json",
+            "outputName": "grafana"
+        }
+    ],
+    "outputFolder": "docs/other-repos",
+    "excludeFilePaths" : ["_test_", ".test.ts"],
+    "maxImageSize": "10",
+    "buildDocsSite": true,
+    "nodeSizeWeight": "intra",
+    "nodeColorWeight": "cluster",
+    "takeRecommendations": true,
+    "clusteringAlgo": "orgScore"
+}

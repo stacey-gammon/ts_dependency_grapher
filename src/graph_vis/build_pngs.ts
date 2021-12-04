@@ -2,8 +2,8 @@ import { execSync } from 'child_process';
 import fs from 'fs';
 import Path from 'path';
 import nconf from 'nconf';
-import { OutputImageMapping } from './types/image_types';
-import { EntryInfo, RepoConfigSettings } from './config/repo_config_settings';
+import { OutputImageMapping } from '../types/image_types';
+import { EntryInfo, RepoConfigSettings } from '../config/repo_config_settings';
 
 export async function buildPngs({
   name,

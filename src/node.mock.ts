@@ -2,7 +2,7 @@ import { getSafeName } from './graph_vis/utils';
 import { LeafNode, ParentNode, BaseNode } from './types/types';
 import { getEmptyNodeCounts } from './utils';
 
-export function getNode(filePath = 'foo', parentNode?: ParentNode): LeafNode {
+export function getLeafNode(filePath = 'foo', parentNode?: ParentNode): LeafNode {
   return {
     ...getBaseNode(filePath, parentNode),
     ...getEmptyNodeCounts(),

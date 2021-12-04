@@ -6,6 +6,7 @@ import { isLeafNode } from './zoom/zoom_out';
 import nconf from 'nconf';
 import Path from 'path';
 import { AllNodeStats } from './stats/types';
+import { getConfig } from './config';
 
 export function generateCSVs(
   root: ParentNode | LeafNode,
@@ -42,7 +43,7 @@ export function generateCSVs(
 ${colText}
 ${rowText.join('\n')}
 `;
-  fs.writeFileSync(Path.resolve(nconf.get('outputFolder'), `${name}_nodes.csv`), csvText);
+  fs.writeFileSync(Path.resolve(getConfig().outputFolder, `${name}_nodes.csv`), csvText);
 
   const edgeCSVColText = 'source, destination, weight';
 
@@ -58,7 +59,7 @@ ${rowText.join('\n')}
 ${edgeCSVColText}
 ${edgeRows.join('\n')}
  `;
-  fs.writeFileSync(Path.resolve(nconf.get('outputFolder'), `${name}_edges.csv`), edgeCsvText);
+  fs.writeFileSync(Path.resolve(getConfig().outputFolder, `${name}_edges.csv`), edgeCsvText);
 }
 
 function addRows(

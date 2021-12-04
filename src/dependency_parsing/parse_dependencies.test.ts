@@ -1,4 +1,4 @@
-import { parseDependencies } from './parse_dependencies';
+import { parseDependences } from './parse_dependencies';
 import Path from 'path';
 import { isLeafNode } from '../zoom/zoom_out';
 import { getTSMorphProject } from '../get_tsmorph_project';
@@ -11,7 +11,7 @@ function getRepoInfo(tsconfigPath: string) {
 it('parseDependencies simple', () => {
   const repoInfo = getRepoInfo('../../examples/simple/tsconfig.json');
   const project = getTSMorphProject(repoInfo);
-  const { edges, root } = parseDependencies({
+  const { edges, root } = parseDependences({
     repoInfo,
     project,
   });
@@ -27,7 +27,7 @@ it('parseDependencies simple', () => {
 it.only('parseDependencies well organized', () => {
   const repoInfo = getRepoInfo('../../examples/well_organized/tsconfig.json');
   const project = getTSMorphProject(repoInfo);
-  const { edges, root } = parseDependencies({
+  const { edges, root } = parseDependences({
     repoInfo,
     project,
   });
@@ -64,7 +64,7 @@ it.only('parseDependencies well organized', () => {
 it('parseDependencies poor organized', () => {
   const repoInfo = getRepoInfo('../../examples/poor_organized/tsconfig.json');
   const project = getTSMorphProject(repoInfo);
-  const { edges, root } = parseDependencies({
+  const { edges, root } = parseDependences({
     repoInfo,
     project,
   });

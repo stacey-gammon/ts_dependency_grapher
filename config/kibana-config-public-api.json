@@ -26,11 +26,10 @@
     ],
     "outputFolder": "docs/kibana-public-api",
     "excludeFilePaths" : ["_test_", ".test.ts"],
-    "maxImageSize": 200,
     "buildDocsSite": true,
     "unusedNodeColor": "white",
-    "nodeColorWeight": "orgScore",
+    "nodeColorWeight": "cluster",
     "clearDotCache": false,
     "refreshParsing": false,
-    "takeRecommendations": false
+    "takeRecommendations": true
 }

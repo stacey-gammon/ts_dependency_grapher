@@ -8,7 +8,7 @@ import Path from 'path';
 import { generateCSVs } from './generate_csv';
 import { buildDotFile } from './graph_vis/build_dot_file';
 import { EntryInfo, RepoConfigSettings } from './config/repo_config_settings';
-import { buildPngs } from './build_pngs';
+import { buildPngs } from './graph_vis/build_pngs';
 import { recommendClustering } from './clustering/recommend_clustering';
 
 export function runDependencyAlgorithms({
@@ -64,15 +64,15 @@ function getOutputFileName(
   entry?: EntryInfo
 ) {
   let uniqueName = name;
-
+  if (entry != undefined) {
+    uniqueName += `_${entry.name}`;
+  }
   if (zoom !== undefined) {
     uniqueName += `_zoom${zoom}`;
   }
   if (takeRecommendations != undefined) {
     uniqueName += `_${takeRecommendations ? 'after' : 'before'}`;
   }
-  if (entry != undefined) {
-    uniqueName += `_${entry.name}`;
-  }
+
   return uniqueName;
 }

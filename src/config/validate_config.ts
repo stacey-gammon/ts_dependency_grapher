@@ -1,5 +1,5 @@
 import { ConfigOptions } from './config';
-import { NODE_WEIGHT_OPTIONS, NODE_COLOR_WEIGHT_OPTIONS } from './node_weight_options';
+import { NODE_SIZE_WEIGHT_OPTIONS, NODE_COLOR_WEIGHT_OPTIONS } from './node_weight_options';
 
 export function validateConfig(config: ConfigOptions) {
   if (!config.repos) {
@@ -10,7 +10,7 @@ export function validateConfig(config: ConfigOptions) {
   }
 
   if (config.nodeSizeWeight) {
-    throwIfNotOneOf(config.nodeSizeWeight, Object.values(NODE_WEIGHT_OPTIONS));
+    throwIfNotOneOf(config.nodeSizeWeight, Object.values(NODE_SIZE_WEIGHT_OPTIONS));
   }
   if (config.nodeColorWeight) {
     throwIfNotOneOf(config.nodeColorWeight, Object.values(NODE_COLOR_WEIGHT_OPTIONS));

@@ -1,11 +1,14 @@
 import { ExportedDeclarations, Node, SourceFile } from 'ts-morph';
 import { LeafNode, ParentNode } from '../types/types';
-import { Edge, GVEdgeMapping } from '../types/edge_types';
-import { excludeFile, getRootRelativePath } from '../utils';
+import { GVEdgeMapping } from '../types/edge_types';
+import { getRootRelativePath } from '../utils';
 import { isLeafNode } from '../zoom/zoom_out';
 import { getOrCreateNode } from './add_node';
 import { getFilePathForTsNode, getIdForNode } from './tsmorph_utils';
 import nconf from 'nconf';
+import { excludeFile } from './should_exclude_file';
+import { addEdge } from './add_edge';
+import { getNodeById } from './get_node_by_id';
 
 export function addEdges(
   file: SourceFile,
@@ -42,7 +45,7 @@ export function addEdges(
             ? [relativePath, ...globalExcludePaths]
             : [globalExcludePaths];
 
-          if (excludeFile(tsMSourceNode.getSourceFile(), excludeFilePaths)) {
+          if (excludeFile(tsMSourceNode.getSourceFile().getFilePath(), excludeFilePaths)) {
             console.log(`Skipping file ${tsMSourceNode.getSourceFile().getFilePath()}`);
             return;
           }
@@ -84,54 +87,11 @@ export function addEdges(
             throw new Error(`All connections should be leaf nodes. Node ${destNode.id} is not.`);
           }
 
-          if (!edges[sourceNodeId]) {
-            edges[sourceNodeId] = {
-              node: sourceNode,
-              outgoing: [],
-              incoming: [],
-            };
-          }
-          addConnection(destNode, edges[sourceNodeId].outgoing);
-
-          if (!edges[destNode.id]) {
-            edges[destNode.id] = {
-              node: destNode,
-              outgoing: [],
-              incoming: [],
-            };
-          }
-          addConnection(sourceNode, edges[destNode.id].incoming);
+          addEdge(edges, sourceNode, destNode);
         });
       }
     });
   });
-}
-
-function addConnection(node: LeafNode, connections: Edge[]) {
-  const connectionExists = connections.find((f) => f.node.id === node.id);
-
-  if (connectionExists) {
-    connectionExists.dependencyWeight++;
-  } else {
-    connections.push({
-      node,
-      dependencyWeight: 1,
-    });
-  }
-}
-
-function getNodeById(id: string, node: ParentNode | LeafNode): ParentNode | LeafNode | undefined {
-  if (node.id === id) {
-    return node;
-  }
-
-  if (!isLeafNode(node)) {
-    for (const child of node.children) {
-      const found = getNodeById(id, child);
-      if (found) return found;
-    }
-  }
-  return undefined;
 }
 
 function isTypeExport(node: ExportedDeclarations) {

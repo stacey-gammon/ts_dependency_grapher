@@ -29,7 +29,6 @@
     "buildDocsSite": true,
     "unusedNodeColor": "white",
     "nodeColorWeight": "cluster",
-    "zooms": [],
     "clearCache": true,
     "takeRecommendations": true,
     "excludeTypes": true

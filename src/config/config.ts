@@ -1,5 +1,5 @@
 import { RepoConfigSettings } from './repo_config_settings';
-import { NODE_WEIGHT_OPTIONS, NODE_COLOR_WEIGHT_OPTIONS } from './node_weight_options';
+import { NODE_SIZE_WEIGHT_OPTIONS, NODE_COLOR_WEIGHT_OPTIONS } from './node_weight_options';
 
 export interface RepoInfo {
   // Should be in the format owner/repo
@@ -20,9 +20,9 @@ export interface RepoInfo {
   outputName: string;
   // Will output an image for each layout option listed.
   layoutEngines: string | Array<{ name: string; scale?: boolean }>;
-  // Optionally give multiple "zoom out" levels. Each zoom out level will create a separate
-  // image and dot file. The higher the number the fewer nodes will be in the graph.
-  zooms?: Array<number>;
+  // Restrict the graph to a certain depth. Files that are nested deeper than the
+  // number will be "rolled up". It'll build data for each maxDepth level given.
+  maxDepths?: Array<number>;
 }
 
 export interface ConfigOptions {
@@ -38,10 +38,10 @@ export interface ConfigOptions {
   // Where the final images, dot files, and analysis files will be saved. If this
   // is for building the docs size, should be something within `docs`.
   outputFolder: string;
-  // Limit the size of the images to this value (in MB?). Using a small image size is helpful when
-  // building the docs site, but not so useful for analysis as often the images will be
+  // If given, limits the size of the images to this value in inches. Using a small image size
+  // is helpful when building the docs site, but not so useful for analysis as often the images will be
   // many hundreds of MBs.
-  maxImageSize: number;
+  maxImageSize?: number;
   // If true, an index.md page will be built that displays all the repos, images and
   // configuration files used to create them.
   buildDocsSite: boolean;
@@ -50,7 +50,7 @@ export interface ConfigOptions {
   unusedNodeColor?: string;
   // How the node will be sized. Leave as undefined to have the node size determined automatically
   // based on the text inside.
-  nodeSizeWeight?: NODE_WEIGHT_OPTIONS;
+  nodeSizeWeight?: NODE_SIZE_WEIGHT_OPTIONS;
   // How the node colors should be determined.
   nodeColorWeight: NODE_COLOR_WEIGHT_OPTIONS;
   // If true, two images will be created, a before and an after version. The after version will

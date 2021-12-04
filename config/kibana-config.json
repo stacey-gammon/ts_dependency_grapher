@@ -12,7 +12,8 @@
                 { "file": "../../Elastic/kibana/src/plugins/visualizations/public/index.ts", "name": "visualizations" },
                 { "file": "../../Elastic/kibana/src/plugins/presentation_util/public/index.ts", "name": "presentation_util" },
                 { "file": "../../Elastic/kibana/src/plugins/bfetch/public/index.ts", "name": "bfetch" },
-                { "file": "../../Elastic/kibana/src/plugins/kibana_utils/public/index.ts", "name": "kibana_utils" }
+                { "file": "../../Elastic/kibana/src/plugins/kibana_utils/public/index.ts", "name": "kibana_utils" },
+                { "file": "../../Elastic/kibana/src/plugins/management/public/index.ts", "name": "management" }
             ],
             "showExternalNodesOnly": false,
             "outputName": "kibana",
@@ -25,13 +26,16 @@
                 "../../Elastic/kibana/src/plugins/**/*{.d.ts,.ts}",
                 "../../Elastic/kibana/packages/**/*{.d.ts,.ts}"
             ],
-            "zooms": [0, 5]
+            "zooms": [3, 5]
         }
     ],
     "outputFolder": "docs/kibana",
     "excludeFilePaths" : ["_test_", ".test.ts"],
     "maxImageSize": "15",
     "buildDocsSite": true,
+    "nodeSizeWeight": "intra",
     "nodeColorWeight": "cluster",
-    "takeRecommendations": true
+    "takeRecommendations": true,
+    "usefulColors": true,
+    "clusteringAlgo": "orgScore"
 }

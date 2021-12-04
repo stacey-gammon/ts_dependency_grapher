@@ -4,7 +4,8 @@
             "full_name": "stacey-gammon/ts_dependency_grapher",
             "clearCache": true,
             "tsconfig": "./tsconfig.json",
-            "source": "file"
+            "source": "file",
+            "zooms": [2, 3, 4]
         }
     ],
     "excludeFilePaths" : ["_test_", ".test.ts"],

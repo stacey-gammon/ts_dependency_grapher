@@ -5,7 +5,7 @@ import Path from 'path';
 import { convertConfigRelativePathToAbsolutePath } from './utils';
 import fs from 'fs';
 import { getTSMorphProject } from './get_tsmorph_project';
-import { parseDependencies } from './dependency_parsing/parse_dependencies';
+import { parseDependences } from './dependency_parsing/parse_dependencies';
 import nconf from 'nconf';
 import { runDependencyAlgorithms } from './run_dependency_algorithms';
 import { OutputImageMapping } from './types/image_types';
@@ -39,7 +39,7 @@ export async function runOnRepo(repoInfo: RepoConfigSettings, repoImages: Output
   const entries = repoInfo.entries || [undefined];
 
   for (const entry of entries) {
-    const { edges, root } = parseDependencies({
+    const { edges, root } = parseDependences({
       repoInfo,
       project,
       entry,
@@ -59,6 +59,7 @@ export async function runOnRepo(repoInfo: RepoConfigSettings, repoImages: Output
         entry,
       });
     } else if (zoomLevels && zoomLevels.length > 0) {
+      zoomLevels.sort((a, b) => b - a);
       for (const zoom of zoomLevels) {
         runDependencyAlgorithms({
           edges,
