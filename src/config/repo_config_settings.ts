@@ -1,4 +1,7 @@
-import { EntryInfo } from '../config';
+export interface EntryInfo {
+  name: string;
+  file: string;
+}
 
 export interface RepoConfigSettings {
   full_name: string;

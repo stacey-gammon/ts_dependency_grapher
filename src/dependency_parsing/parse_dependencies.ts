@@ -1,28 +1,22 @@
-import { ClassDeclaration, InterfaceDeclaration, Project, SourceFile } from 'ts-morph';
+import { Project, SourceFile } from 'ts-morph';
 import Path from 'path';
 import { LeafNode, ParentNode } from '../types/types';
 import { GVEdgeMapping } from '../types/edge_types';
 import nconf from 'nconf';
-import fs from 'fs';
-import os from 'os';
-import { excludeFile, getEmptyNodeCounts, getRootRelativePath } from '../utils';
-import { addEdges } from './add_edges';
-import { getOrCreateNode } from './add_node';
-import { EntryInfo } from '../config';
-import { RepoConfigSettings } from '../types/repo_config_settings';
+import { getEmptyNodeCounts } from '../utils';
+import { EntryInfo, RepoConfigSettings } from '../config/repo_config_settings';
+import { addNodesFromFiles } from './add_nodes_from_files';
+import { addEdgesFromFiles } from './add_edges_from_files';
 
 export function parseDependencies({
   entry,
   repoInfo,
-  outputNameForCache,
   project,
 }: {
   repoInfo: RepoConfigSettings;
   entry?: EntryInfo;
   project: Project;
-  outputNameForCache?: string;
 }): { edges: GVEdgeMapping; root: ParentNode | LeafNode } {
-  console.log('entry is ' + JSON.stringify(entry, null, 2));
   const files: SourceFile[] = entry
     ? [project.getSourceFileOrThrow(entry.file)]
     : project.getSourceFiles();
@@ -31,7 +25,7 @@ export function parseDependencies({
 
   nconf.set('REPO_ROOT', repoRoot);
 
-  const { edges, root } = parseFiles(files, repoRoot, repoInfo, outputNameForCache);
+  const { edges, root } = parseFiles(files, repoRoot, repoInfo);
 
   return { edges, root };
 }
@@ -39,32 +33,8 @@ export function parseDependencies({
 export function parseFiles(
   files: SourceFile[],
   repoRoot: string,
-  repoInfo: RepoConfigSettings,
-  outputNameForCache?: string
+  repoInfo: RepoConfigSettings
 ): { edges: GVEdgeMapping; root: ParentNode | LeafNode } {
-  const repo = repoInfo.full_name;
-  const parsedRepoFilePathCache = outputNameForCache
-    ? Path.resolve(os.tmpdir(), outputNameForCache.replace('/', '_') + 'ParsedRepo.json')
-    : undefined;
-
-  if (
-    parsedRepoFilePathCache &&
-    !repoInfo.clearCache &&
-    fs.existsSync(parsedRepoFilePathCache) &&
-    !nconf.get('refreshParsing') &&
-    !nconf.get('clearCache')
-  ) {
-    console.log(`Parsed info for ${repo} is cached.`);
-    const { root, edges } = JSON.parse(
-      fs.readFileSync(parsedRepoFilePathCache, { encoding: 'utf-8' })
-    );
-    if (!root || !edges || typeof edges !== 'object' || typeof root != 'object') {
-      fs.rmSync(parsedRepoFilePathCache);
-      throw new Error(`Parsed repo cache for ${repo} contains unexpected data. Deleting cache.`);
-    }
-    return { edges, root };
-  }
-  console.log(`Parsed info for ${repo} is not cached.`);
   const edges: GVEdgeMapping = {};
 
   const root: ParentNode = {
@@ -77,40 +47,15 @@ export function parseFiles(
 
   const excludeFilesPaths = nconf.get('excludeFilePaths');
 
-  files.forEach((file) => {
-    if (!excludeFile(file, excludeFilesPaths)) {
-      getOrCreateNode(
-        getRootRelativePath(file.getFilePath(), repoRoot),
-        root,
-        getComplexityScoreOfFile(file)
-      );
-    }
-  });
+  addNodesFromFiles(root, repoRoot, files, excludeFilesPaths);
+  addEdgesFromFiles(
+    root,
+    edges,
+    files,
+    repoRoot,
+    !!repoInfo.showExternalNodesOnly,
+    excludeFilesPaths
+  );
 
-  files.forEach((file) => {
-    if (!excludeFile(file, excludeFilesPaths)) {
-      addEdges(file, edges, root, repoRoot, repoInfo.showExternalNodesOnly);
-    }
-  });
-
-  if (parsedRepoFilePathCache) {
-    //  fs.writeFileSync(parsedRepoFilePathCache, JSON.stringify({ root, edges }));
-  }
   return { edges, root };
-}
-
-function getComplexityScoreOfFile(file: SourceFile): number {
-  return (
-    getComplexityScoreOfClasses(file.getClasses()) +
-    file.getFunctions().length +
-    getComplexityScoreOfClasses(file.getInterfaces()) +
-    file.getExportedDeclarations().size +
-    file.getTypeAliases().length
-  );
-}
-
-function getComplexityScoreOfClasses(node: Array<ClassDeclaration | InterfaceDeclaration>) {
-  return (
-    1 + node.reduce((sum, cls) => sum + cls.getMembers().length + cls.getProperties().length, 0)
-  );
 }

@@ -30,7 +30,6 @@
     "unusedNodeColor": "white",
     "nodeColorWeight": "cluster",
     "zooms": [],
-    "clearDotCache": false,
-    "refreshParsing": false,
+    "clearCache": true,
     "takeRecommendations": true
 }

@@ -1,5 +1,5 @@
 import { Project } from 'ts-morph';
-import { RepoConfigSettings } from './types/repo_config_settings';
+import { RepoConfigSettings } from './config/repo_config_settings';
 import Path from 'path';
 
 export function getTSMorphProject(repoInfo: RepoConfigSettings): Project {

@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { addEdge } from '../dependency_parsing/add_edge';
 import { getNode, getParentNode } from '../node.mock';
 import { GVEdgeMapping } from '../types/edge_types';
-import { getDependencyStats } from './get_dependency_stats';
+import { DependencyStatsMapping, fillDependencyStats } from './get_dependency_stats';
 
 it('getDependencyStats', () => {
   const aParent = getParentNode('A');
@@ -15,36 +16,26 @@ it('getDependencyStats', () => {
   const intraDest2 = getNode('B/1.ts', bParent);
   bParent.children.push(intraDest2);
 
-  const edges: GVEdgeMapping = {
-    [aNode.id]: {
-      node: aNode,
-      outgoing: [
-        {
-          node: intraDest1,
-          dependencyWeight: 2,
-        },
-        {
-          node: intraDest2,
-          dependencyWeight: 3,
-        },
-        {
-          node: interDest1,
-          dependencyWeight: 1,
-        },
-      ],
-      incoming: [],
-    },
-  };
+  const edges: GVEdgeMapping = {};
 
-  const weights = {};
-  const mapping = getDependencyStats(edges, weights);
+  addEdge(edges, aNode, interDest1);
+  addEdge(edges, interDest1, aNode);
 
-  console.log(mapping);
+  // Adding multiple times will increase dependency weight.
+  addEdge(edges, aNode, intraDest2);
+  addEdge(edges, aNode, intraDest2);
+  addEdge(edges, aNode, intraDest2);
+  addEdge(edges, intraDest2, aNode);
 
-  // Only tracks intra connections.
-  expect(mapping[aNode.id].length).toBe(1);
-  const intraConn = mapping[aNode.id].find(
-    (conn) => conn.parentNode.id === intraDest1.parentNode!.id
-  );
-  expect(intraConn?.connectionWeight).toBe(5);
+  const weights: DependencyStatsMapping = {};
+  fillDependencyStats(edges, weights);
+
+  // A -> Inter, Inter -> A
+  expect(weights[aNode.id].interDependencyCount).toBe(2);
+
+  expect(weights[aNode.id].intraDependencyCount).toBe(4);
+  // Efferent = outgoing intra dependency counts.
+  expect(weights[aNode.id].efferentCoupling).toBe(3);
+  // Afferent = incoming intra dependency counts.
+  expect(weights[aNode.id].afferentCoupling).toBe(1);
 });

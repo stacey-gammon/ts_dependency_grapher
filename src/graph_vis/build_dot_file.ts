@@ -4,7 +4,7 @@ import { getDiGraphText } from './build_digraph_text';
 import fs from 'fs';
 import nconf from 'nconf';
 import { AllNodeStats } from '../stats/types';
-import { RepoConfigSettings } from '../types/repo_config_settings';
+import { RepoConfigSettings } from '../config/repo_config_settings';
 
 /**
  *

@@ -1,14 +1,5 @@
 import { ParentNode, LeafNode } from '../types/types';
-import nconf from 'nconf';
-import {
-  COLOR_NODE_BY_CLUSTER,
-  COLOR_NODE_BY_CONFIG_KEY,
-  INCOMING_DEP_COUNT,
-  MAX_COUPLING_SCORE,
-  ORG_SCORE,
-  PUBLIC_API_COUNT,
-  SIZE_NODE_BY_CONFIG_KEY,
-} from '../config';
+import { getConfig } from '../config';
 import { AllNodeStats } from '../stats/types';
 import {
   CLUSTER_COLORS,
@@ -19,15 +10,23 @@ import {
 } from './styles';
 import { getLabel, getSafeName } from './utils';
 import { isLeafNode } from '../zoom/zoom_out';
+import { NODE_COLOR_WEIGHT_OPTIONS, NODE_WEIGHT_OPTIONS } from '../config/node_weight_options';
 
 const clusterToColorMap: { [key: string]: string } = {};
 let nextColorIndex = 0;
 
 export function getNodeText(node: LeafNode, stats: AllNodeStats): string {
-  const colorBy = nconf.get(COLOR_NODE_BY_CONFIG_KEY);
-  const sizeBy = nconf.get(SIZE_NODE_BY_CONFIG_KEY);
+  const config = getConfig();
+  const colorBy = config.nodeColorWeight;
+  const sizeBy = config.nodeSizeWeight;
 
-  const matches = [ORG_SCORE, INCOMING_DEP_COUNT, MAX_COUPLING_SCORE, PUBLIC_API_COUNT];
+  const matches = [
+    NODE_WEIGHT_OPTIONS.ORG_SCORE,
+    NODE_WEIGHT_OPTIONS.INCOMING_DEP_COUNT,
+    NODE_WEIGHT_OPTIONS.MAX_COUPLING_SCORE,
+    NODE_WEIGHT_OPTIONS.PUBLIC_API_COUNT,
+  ];
+
   if (stats.stats[node.id].orgScore === undefined) {
     console.error(node);
     throw new Error('org score undefined');
@@ -53,7 +52,7 @@ export function getNodeText(node: LeafNode, stats: AllNodeStats): string {
   ];
 
   let color = 'black';
-  if (colorBy === COLOR_NODE_BY_CLUSTER) {
+  if (colorBy === NODE_COLOR_WEIGHT_OPTIONS.COLOR_BY_CLUSTER) {
     if (node.parentNode) {
       if (!clusterToColorMap[node.parentNode.id]) {
         clusterToColorMap[node.parentNode.id] = CLUSTER_COLORS[nextColorIndex];
@@ -103,16 +102,12 @@ export function getNodesText(node: ParentNode | LeafNode, stats: AllNodeStats, l
   let text = '';
 
   if (isLeafNode(node)) {
-    console.error('GVNode in getNodesText', node);
-    throw new Error('GVNode in gtNodesText');
-  } else if (!node.children) {
-    console.error('no children in getNodesText', node);
-    throw new Error('no children in gtNodesText');
-  }
-  const color = getColorForLevel(level);
+    text += getNodeText(node, stats) + '\n';
+  } else {
+    const color = getColorForLevel(level);
 
-  if (node.children.length > 0) {
-    text += `
+    if (node.children.length > 0) {
+      text += `
 subgraph cluster_${getSafeName(node.id)} {
 style=filled
 fontsize="50"
@@ -120,16 +115,17 @@ color="${color}"
 label="${getLabel(node.label)}"
 `;
 
-    node.children.forEach((child) => {
-      if (isLeafNode(child)) {
-        text += getNodeText(child, stats);
-      } else {
-        text += getNodesText(child, stats, level + 1);
-      }
-      +'\n';
-    });
+      node.children.forEach((child) => {
+        if (isLeafNode(child)) {
+          text += getNodeText(child, stats);
+        } else {
+          text += getNodesText(child, stats, level + 1);
+        }
+        +'\n';
+      });
 
-    text += '}\n';
+      text += '}\n';
+    }
   }
 
   return text;

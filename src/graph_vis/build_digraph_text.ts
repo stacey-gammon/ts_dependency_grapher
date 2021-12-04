@@ -4,7 +4,6 @@ import { getDependenciesText } from './build_edges_text';
 import { getNodesText } from './build_node_text';
 import nconf from 'nconf';
 import { AllNodeStats } from '../stats/types';
-import { deCircularify } from '../utils';
 
 export function getDiGraphText(
   edges: GVEdgeMapping,

@@ -1,6 +1,5 @@
 import nconf from 'nconf';
-import { CLUSTER_OPTION_ORG_SCORE } from '../config';
-import { saveRecommendationsToFile } from '../stats/save_recommendations_to_file';
+import { saveRecommendationsToFile } from './save_recommendations_to_file';
 import Path from 'path';
 import { AllNodeStats } from '../stats/types';
 import { LeafNode, ParentNode } from '../types/types';
@@ -8,9 +7,11 @@ import { dbScanRecluster } from './db_scan_recluster';
 import { GVEdgeMapping } from '../types/edge_types';
 import { isLeafNode } from '../zoom/zoom_out';
 import { getParentNode } from '../node.mock';
-import { moveNode } from '../stats/move_node';
+import { moveNode } from './move_node';
 import { deCircularify } from '../utils';
-import { orgScoreClustering } from './org_score_clustering';
+import { Move, orgScoreClustering } from './org_score_clustering';
+import { CLUSTERING_ALGOS } from '../config/config';
+import { getConfig } from '../config';
 
 export function recommendClustering({
   outputId,
@@ -23,15 +24,16 @@ export function recommendClustering({
   root: ParentNode | LeafNode;
   edges: GVEdgeMapping;
 }) {
-  const clusteringMethod = nconf.get('clusteringAlgo') || CLUSTER_OPTION_ORG_SCORE;
+  const clusteringMethod = getConfig().clusteringAlgo;
 
-  if (clusteringMethod === CLUSTER_OPTION_ORG_SCORE) {
-    orgScoreClustering(root, edges, stats.recommendations);
+  if (clusteringMethod === CLUSTERING_ALGOS.ORG_SCORE) {
+    const movesMade: Array<Move> = [];
+    orgScoreClustering(root, edges, movesMade);
 
     saveRecommendationsToFile(
       Path.resolve(nconf.get('outputFolder'), `${outputId}_org_score_recommendations.md`),
-      stats.recommendations,
-      false
+      movesMade,
+      nconf.get('recommendationFileType') === 'csv'
     );
   } else {
     const newClusters: Array<Array<LeafNode>> = [];

@@ -1,4 +1,4 @@
-import { OrgScoreStats } from '../stats/get_org_score';
+import { OrgScoreStats } from '../stats/fill_org_score_stats';
 
 export interface NodeStats extends OrgScoreStats {
   // An indication of cohesion within this node.

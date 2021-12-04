@@ -1,5 +1,5 @@
-import { BaseNode, LeafNode, ParentNode } from '../types/types';
-import { GVEdgeMapping } from '../types/edge_types';
+import { BaseNode, ParentNode } from '../types/types';
+import { Edge, GVEdgeMapping } from '../types/edge_types';
 
 /**
  * Map the destination key to each of it's incoming dependency source nodes, and how many times they
@@ -12,6 +12,7 @@ export interface NodeToParentDependencies {
 export interface ParentConnection {
   parentNode: ParentNode;
   connectionWeight: number;
+  childConnections: Array<Edge>;
 }
 
 export interface DependencyStatsMapping {
@@ -25,64 +26,15 @@ export interface DependencyStats {
   afferentCoupling: number;
 }
 
-export function getParentConnections(
-  node: LeafNode,
-  edges: GVEdgeMapping
-): Array<ParentConnection> {
-  if (edges[node.id] === undefined) return [];
-
-  const parentConnections: Array<ParentConnection> = [];
-  edges[node.id].incoming.forEach((connection) => {
-    if (connection.node.parentNode) {
-      addParentConnection(
-        parentConnections,
-        connection.node.parentNode,
-        connection.dependencyWeight
-      );
-    }
-  });
-  edges[node.id].outgoing.forEach((connection) => {
-    if (connection.node.parentNode) {
-      addParentConnection(
-        parentConnections,
-        connection.node.parentNode,
-        connection.dependencyWeight
-      );
-    }
-  });
-  return parentConnections;
-}
-
-function addParentConnection(
-  connections: Array<ParentConnection>,
-  parentNode: ParentNode,
-  connectionWeight: number
-) {
-  const existingConnection = connections.find((conn) => conn.parentNode.id === parentNode.id);
-
-  if (existingConnection) {
-    existingConnection.connectionWeight += connectionWeight;
-  } else {
-    connections.push({
-      parentNode,
-      connectionWeight,
-    });
-  }
-}
-
-export function getDependencyStats(
-  edges: GVEdgeMapping,
-  stats: DependencyStatsMapping
-): NodeToParentDependencies {
-  const weights: NodeToParentDependencies = {};
-
-  Object.keys(edges).forEach((sourceId) => {
-    const source = edges[sourceId].node;
-    edges[sourceId].outgoing.forEach(({ node, dependencyWeight }) => {
-      addConnection(weights, source, node, dependencyWeight, stats);
+export function fillDependencyStats(edges: GVEdgeMapping, stats: DependencyStatsMapping) {
+  Object.keys(edges).forEach((edge) => {
+    const source = edges[edge].node;
+    // Only need to look at one direction, if we look at both we'll end up double
+    // counting.
+    edges[edge].outgoing.forEach(({ node, dependencyWeight }) => {
+      getStatsForSourceAndDestNode(source, node, dependencyWeight, stats);
     });
   });
-  return weights;
 }
 
 /**
@@ -92,8 +44,7 @@ export function getDependencyStats(
  * @param dest
  * @param dependencyWeight
  */
-function addConnection(
-  weights: NodeToParentDependencies,
+function getStatsForSourceAndDestNode(
   source: BaseNode,
   dest: BaseNode,
   dependencyWeight: number,
@@ -102,21 +53,11 @@ function addConnection(
   if (!dest.parentNode || !source.parentNode) return;
 
   if (!stats[dest.id]) {
-    stats[dest.id] = {
-      interDependencyCount: 0,
-      intraDependencyCount: 0,
-      efferentCoupling: 0,
-      afferentCoupling: 0,
-    };
+    stats[dest.id] = initializeStats();
   }
 
   if (!stats[source.id]) {
-    stats[source.id] = {
-      interDependencyCount: 0,
-      intraDependencyCount: 0,
-      efferentCoupling: 0,
-      afferentCoupling: 0,
-    };
+    stats[source.id] = initializeStats();
   }
 
   const isInterDependency =
@@ -131,35 +72,11 @@ function addConnection(
     stats[dest.id].afferentCoupling += dependencyWeight;
     stats[source.id].efferentCoupling += dependencyWeight;
   }
-
-  if (dest.parentNode) {
-    addConnectionToParent(weights, source, dest.parentNode, dependencyWeight);
-  }
-  if (source.parentNode) {
-    addConnectionToParent(weights, dest, source.parentNode, dependencyWeight);
-  }
 }
 
-function addConnectionToParent(
-  weights: NodeToParentDependencies,
-  source: BaseNode,
-  destinationParent: ParentNode,
-  dependencyWeight: number
-) {
-  if (!weights[source.id]) {
-    weights[source.id] = [];
-  }
-
-  const existingConnection = weights[source.id].find(
-    (f) => f.parentNode && f.parentNode.id === destinationParent.id
-  );
-
-  if (!existingConnection) {
-    weights[source.id].push({
-      parentNode: destinationParent,
-      connectionWeight: dependencyWeight,
-    });
-  } else if (existingConnection) {
-    existingConnection.connectionWeight += dependencyWeight;
-  }
-}
+const initializeStats = () => ({
+  interDependencyCount: 0,
+  intraDependencyCount: 0,
+  efferentCoupling: 0,
+  afferentCoupling: 0,
+});

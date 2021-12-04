@@ -2,7 +2,6 @@
     "repos": [
         { 
             "full_name": "elastic/kibana",
-            "refresh": false,
             "tsconfig": "../../Elastic/kibana/tsconfig.json",
             "source": "file",
             "entries": [
@@ -26,16 +25,13 @@
                 "../../Elastic/kibana/src/plugins/**/*{.d.ts,.ts}",
                 "../../Elastic/kibana/packages/**/*{.d.ts,.ts}"
             ],
-            "zooms": [5]
+            "zooms": [0, 5]
         }
     ],
     "outputFolder": "docs/kibana",
     "excludeFilePaths" : ["_test_", ".test.ts"],
     "maxImageSize": "15",
     "buildDocsSite": true,
-    "unusedNodeColor": "white",
-    "nodeColorWeight": "OrgScore",
-    "clearDotCache": false,
-    "refreshParsing": false,
-    "takeRecommendations": false
+    "nodeColorWeight": "cluster",
+    "takeRecommendations": true
 }

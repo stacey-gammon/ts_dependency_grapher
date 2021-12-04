@@ -1,0 +1,27 @@
+{
+    "repos": [
+        { 
+            "full_name": "elastic/kibana",
+            "refresh": false,
+            "tsconfig": "../../Elastic/kibana/src/plugins/data_views/tsconfig.json",
+            "source": "file",
+            "showExternalNodesOnly": false,
+            "outputName": "data_views",
+            "layoutEngines": [
+                { "name": "fdp" },
+                { "name": "sfdp" }
+            ]
+        }
+    ],
+    "excludeFilePaths" : ["_test_", ".test.ts"],
+    "outputFolder": "docs/kibana-data-views-dbscan",
+    "maxImageSize": "200",
+    "buildDocsSite": true,
+    "unusedNodeColor": "white",
+    "nodeColorWeight": "cluster",
+    "takeRecommendations": true,
+    "clusteringAlgo": "dbscan",
+    "orgScoreMoveThreshold": "8",
+    "excludeTypes": true,
+    "recommendationFileType": "csv"
+}

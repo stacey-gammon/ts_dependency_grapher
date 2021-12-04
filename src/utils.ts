@@ -2,8 +2,9 @@ import Path from 'path';
 import { SourceFile } from 'ts-morph';
 import { LeafNode, ParentNode } from './types/types';
 
-export function getRootRelativePath(fullPath: string, repoRoot: string): string {
+export function getRootRelativePath(fullPath: string, repoRoot: string): string | undefined {
   if (!fullPath.startsWith(repoRoot)) {
+    return undefined;
     throw new Error(`Path "${fullPath}"" does not start with the repo root, "${repoRoot}".`);
   } else {
     return fullPath.substring(repoRoot.length);

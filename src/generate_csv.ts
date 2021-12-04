@@ -73,9 +73,12 @@ function addRows(
       return;
     }
     rows.push(
-      columns.map((col) =>
-        col === 'filePath' || col === 'complexityScore' ? node[col] : stats.stats[node.id][col]
-      )
+      columns.map((col) => {
+        if (col === 'connections') return `"${stats.stats[node.id].connections}"`;
+        return col === 'filePath' || col === 'complexityScore'
+          ? node[col]
+          : stats.stats[node.id][col];
+      })
     );
   }
 

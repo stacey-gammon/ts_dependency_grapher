@@ -1,4 +1,4 @@
-import { RepoConfigSettings } from './types/repo_config_settings';
+import { RepoConfigSettings } from './config/repo_config_settings';
 import { downloadRepo } from './download_repo';
 import { regenerateColorScheme } from './graph_vis/styles';
 import Path from 'path';
@@ -12,7 +12,8 @@ import { OutputImageMapping } from './types/image_types';
 
 export async function runOnRepo(repoInfo: RepoConfigSettings, repoImages: OutputImageMapping) {
   const repo = repoInfo.full_name;
-  console.log('Looping through ' + repo);
+  console.log('Running on repo ' + repo);
+
   regenerateColorScheme();
 
   let tsconfig;
@@ -31,9 +32,6 @@ export async function runOnRepo(repoInfo: RepoConfigSettings, repoImages: Output
     return;
   }
 
-  const id = repo + '/' + (repoInfo.tsconfig || 'tsconfig.json');
-  console.log(`Collecting stats for ${id}`);
-
   const outputName = (repoInfo.outputName || repo).replace('/', '_');
 
   const project = getTSMorphProject(repoInfo);
@@ -43,7 +41,6 @@ export async function runOnRepo(repoInfo: RepoConfigSettings, repoImages: Output
   for (const entry of entries) {
     const { edges, root } = parseDependencies({
       repoInfo,
-      outputNameForCache: outputName,
       project,
       entry,
     });

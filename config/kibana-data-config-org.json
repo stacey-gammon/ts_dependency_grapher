@@ -1,0 +1,26 @@
+{
+    "repos": [
+        { 
+            "full_name": "elastic/kibana",
+            "refresh": false,
+            "tsconfig": "../../Elastic/kibana/src/plugins/data/tsconfig.json",
+            "source": "file",
+            "showExternalNodesOnly": false,
+            "outputName": "data",
+            "layoutEngines": [
+                { "name": "fdp" },
+                { "name": "sfdp" }
+            ]
+        }
+    ],
+    "excludeFilePaths" : ["_test_", ".test.ts"],
+    "outputFolder": "docs/kibana-data-org",
+    "maxImageSize": "50",
+    "buildDocsSite": true,
+    "unusedNodeColor": "white",
+    "nodeColorWeight": "cluster",
+    "takeRecommendations": true,
+    "clusteringAlgo": "orgScore",
+    "orgScoreMoveThreshold": "5",
+    "excludeTypes": true
+}

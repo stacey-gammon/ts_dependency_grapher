@@ -2,9 +2,9 @@ import { LeafNode, ParentNode } from '../types/types';
 import { NodeStats } from '../types/node_stats';
 import { GVEdgeMapping } from '../types/edge_types';
 import { AllNodeStats, RecommendationsList } from './types';
-import { getDependencyStats } from './get_dependency_stats';
-import { fillOrgScoreStats, OrgScoreStatsMapping } from './get_org_score';
+import { fillDependencyStats } from './get_dependency_stats';
 import { fillNodeStats } from './fill_node_stats';
+import { fillOrgScoreStats, OrgScoreStatsMapping } from './fill_org_score_stats';
 
 export function getNodeStats(node: ParentNode | LeafNode, edges: GVEdgeMapping): AllNodeStats {
   const orgStats: OrgScoreStatsMapping = {};
@@ -13,8 +13,8 @@ export function getNodeStats(node: ParentNode | LeafNode, edges: GVEdgeMapping):
 
   // Grouped by parent that has the node that should move. This is to help avoid one giant module. Do one move per parent at a time.
   const recommendations: RecommendationsList = [];
-  const couplingWeights = getDependencyStats(edges, dependencyStats);
-  fillOrgScoreStats(couplingWeights, node, orgStats, recommendations);
+  fillDependencyStats(edges, dependencyStats);
+  fillOrgScoreStats(edges, node, orgStats);
   fillNodeStats(node, nodeStats, orgStats, dependencyStats);
 
   const statKeys: Array<keyof NodeStats> = [

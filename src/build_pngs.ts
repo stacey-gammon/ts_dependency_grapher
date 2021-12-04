@@ -3,8 +3,7 @@ import fs from 'fs';
 import Path from 'path';
 import nconf from 'nconf';
 import { OutputImageMapping } from './types/image_types';
-import { EntryInfo } from './config';
-import { RepoConfigSettings } from './types/repo_config_settings';
+import { EntryInfo, RepoConfigSettings } from './config/repo_config_settings';
 
 export async function buildPngs({
   name,

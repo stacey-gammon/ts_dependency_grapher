@@ -1,4 +1,4 @@
-import { RepoConfigSettings } from './repo_config_settings';
+import { RepoConfigSettings } from '../config/repo_config_settings';
 
 export interface OutputImage {
   path: string;

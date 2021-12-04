@@ -3,6 +3,9 @@
 // import { Edge, GVEdgeMapping } from '../types/edge_types';
 // import nconf from 'nconf';
 
+import { GVEdgeMapping } from '../types/edge_types';
+import { LeafNode, ParentNode } from '../types/types';
+
 // import { Graph, SpectralClustering, Node } from 'spectral-clustering-js';
 
 // // at this point, each node in the graph has an integer cluster property
@@ -46,3 +49,10 @@
 //     connectedNodes: edges[]
 //   };
 // }
+
+/**
+ * See https://cdn.substack.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fbucketeer-e05bbc84-baa3-437e-9518-adb32be77984.s3.amazonaws.com%2Fpublic%2Fimages%2Fcc159549-97fe-4b04-9817-86736a3e1d96_2150x688.png
+ */
+function createLaplacianMatrix(nodes: LeafNode | ParentNode, edges: GVEdgeMapping) {
+  const lMatrix: [][] = [];
+}

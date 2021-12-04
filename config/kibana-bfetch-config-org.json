@@ -1,0 +1,26 @@
+{
+    "repos": [
+        { 
+            "full_name": "elastic/kibana",
+            "refresh": false,
+            "tsconfig": "../../Elastic/kibana/src/plugins/bfetch/tsconfig.json",
+            "source": "file",
+            "showExternalNodesOnly": false,
+            "outputName": "bfetch",
+            "layoutEngines": [
+                { "name": "fdp" },
+                { "name": "sfdp" }
+            ]
+        }
+    ],
+    "excludeFilePaths" : ["_test_", ".test.ts"],
+    "outputFolder": "docs/kibana-bfetch-org",
+    "maxImageSize": "50",
+    "buildDocsSite": true,
+    "unusedNodeColor": "white",
+    "nodeColorWeight": "cluster",
+    "takeRecommendations": true,
+    "clusteringAlgo": "orgScore",
+    "orgScoreMoveThreshold": "5",
+    "excludeTypes": true
+}

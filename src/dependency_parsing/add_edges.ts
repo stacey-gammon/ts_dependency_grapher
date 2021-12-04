@@ -1,4 +1,4 @@
-import { Node, SourceFile } from 'ts-morph';
+import { ExportedDeclarations, Node, SourceFile } from 'ts-morph';
 import { LeafNode, ParentNode } from '../types/types';
 import { Edge, GVEdgeMapping } from '../types/edge_types';
 import { excludeFile, getRootRelativePath } from '../utils';
@@ -14,6 +14,7 @@ export function addEdges(
   repoRoot: string,
   showExternalNodesOnly?: boolean
 ) {
+  const excludeTypes = nconf.get('excludeTypes');
   const globalExcludePaths = nconf.get('excludePaths');
   const exports = file.getExportedDeclarations();
   console.log(`${exports.size} exports found from file ${file.getSourceFile().getFilePath()}`);
@@ -21,26 +22,29 @@ export function addEdges(
   exports.forEach((val) => {
     val.forEach((destNode) => {
       if (Node.isReferenceFindableNode(destNode)) {
+        if (excludeTypes && isTypeExport(destNode)) {
+          return;
+        }
         const destFilePath = getFilePathForTsNode(destNode, repoRoot);
         const refNodes = destNode.findReferencesAsNodes();
-        console.log(
-          `Found ${
-            refNodes.length
-          } references to node ${destNode.getName()} defined in file ${destFilePath}`
-        );
+        if (destNode.getName) {
+          console.log(
+            `Found ${
+              refNodes.length
+            } references to node ${destNode.getName()} defined in file ${destFilePath}`
+          );
+        }
         refNodes.forEach((tsMSourceNode) => {
+          const relativePath = getRootRelativePath(file.getFilePath(), repoRoot);
+          if (!relativePath) return;
+
           const excludeFilePaths = showExternalNodesOnly
-            ? [getRootRelativePath(file.getFilePath(), repoRoot), ...globalExcludePaths]
+            ? [relativePath, ...globalExcludePaths]
             : [globalExcludePaths];
+
           if (excludeFile(tsMSourceNode.getSourceFile(), excludeFilePaths)) {
             console.log(`Skipping file ${tsMSourceNode.getSourceFile().getFilePath()}`);
             return;
-          } else {
-            console.log(
-              `Adding reference to ${destNode.getName()}  from file ${tsMSourceNode
-                .getSourceFile()
-                .getFilePath()}`
-            );
           }
 
           const sourceNodeId = getIdForNode(tsMSourceNode, repoRoot);
@@ -69,15 +73,15 @@ export function addEdges(
             throw new Error(`addEdges: Source node id by ${sourceNodeId} is not a leaf node.`);
           }
 
-          const node = getOrCreateNode(destFilePath, root, 0);
-          if (!node) {
+          const destNode = getOrCreateNode(destFilePath, root, 0);
+          if (!destNode) {
             console.error(`Did not find node for path ${destFilePath} in root tree`, root);
             throw new Error(`Did not find node for path ${destFilePath} in root tree`);
           }
 
-          if (!isLeafNode(node)) {
-            console.error('All connections should be leaf nodes', node);
-            throw new Error(`All connections should be leaf nodes. Node ${node.id} is not.`);
+          if (!isLeafNode(destNode)) {
+            console.error('All connections should be leaf nodes', destNode);
+            throw new Error(`All connections should be leaf nodes. Node ${destNode.id} is not.`);
           }
 
           if (!edges[sourceNodeId]) {
@@ -87,16 +91,16 @@ export function addEdges(
               incoming: [],
             };
           }
-          addConnection(node, edges[sourceNodeId].outgoing);
+          addConnection(destNode, edges[sourceNodeId].outgoing);
 
-          if (!edges[node.id]) {
-            edges[node.id] = {
-              node: node,
+          if (!edges[destNode.id]) {
+            edges[destNode.id] = {
+              node: destNode,
               outgoing: [],
               incoming: [],
             };
           }
-          addConnection(sourceNode, edges[node.id].incoming);
+          addConnection(sourceNode, edges[destNode.id].incoming);
         });
       }
     });
@@ -128,4 +132,8 @@ function getNodeById(id: string, node: ParentNode | LeafNode): ParentNode | Leaf
     }
   }
   return undefined;
+}
+
+function isTypeExport(node: ExportedDeclarations) {
+  return Node.isTypeAliasDeclaration(node) || Node.isInterfaceDeclaration(node);
 }

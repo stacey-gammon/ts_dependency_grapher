@@ -7,8 +7,7 @@ import { getNodeStats } from './stats/get_node_stats';
 import Path from 'path';
 import { generateCSVs } from './generate_csv';
 import { buildDotFile } from './graph_vis/build_dot_file';
-import { EntryInfo } from './config';
-import { RepoConfigSettings } from './types/repo_config_settings';
+import { EntryInfo, RepoConfigSettings } from './config/repo_config_settings';
 import { buildPngs } from './build_pngs';
 import { recommendClustering } from './clustering/recommend_clustering';
 
@@ -39,10 +38,11 @@ export function runDependencyAlgorithms({
   const beforeAndAfter = nconf.get('takeRecommendations') ? [false, true] : [undefined];
   for (const takeRecommendations of beforeAndAfter) {
     const outputId = getOutputFileName(name, takeRecommendations, zoom, entry);
-    const stats = getNodeStats(root, edges);
+    let stats = getNodeStats(root, edges);
 
     if (takeRecommendations && stats.recommendations) {
       recommendClustering({ outputId, root, edges, stats });
+      stats = getNodeStats(root, edges);
     }
 
     generateCSVs(root, edges, outputId, stats);
