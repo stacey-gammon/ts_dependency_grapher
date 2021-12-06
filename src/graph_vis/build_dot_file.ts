@@ -4,7 +4,7 @@ import { getDiGraphText } from './build_digraph_text';
 import fs from 'fs';
 import nconf from 'nconf';
 import { AllNodeStats } from '../stats/types';
-import { RepoConfigSettings } from '../config/repo_config_settings';
+import { RepoInfo } from '../config/repo_config_settings';
 
 /**
  *
@@ -17,7 +17,7 @@ export function buildDotFile(
   edges: GVEdgeMapping,
   root: ParentNode | LeafNode,
   path: string,
-  repoInfo: RepoConfigSettings,
+  repoInfo: RepoInfo,
   stats: AllNodeStats
 ) {
   if (repoInfo.clearCache || nconf.get('clearCache') || !fs.existsSync(path)) {

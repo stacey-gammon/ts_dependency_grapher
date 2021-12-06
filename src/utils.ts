@@ -1,5 +1,4 @@
 import Path from 'path';
-import { SourceFile } from 'ts-morph';
 import { LeafNode, ParentNode } from './types/types';
 
 export function getRootRelativePath(fullPath: string, repoRoot: string): string | undefined {
@@ -56,5 +55,5 @@ export function deCircularify(key: unknown, val: unknown | object) {
 }
 
 export function convertConfigRelativePathToAbsolutePath(path: string) {
-  return Path.resolve(__dirname, '..', '..', path);
+  return Path.resolve(__dirname, 'config', '..', '..', path);
 }

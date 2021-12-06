@@ -1,5 +1,5 @@
 import { SourceFile } from 'ts-morph';
-import { RepoConfigSettings } from '../config/repo_config_settings';
+import { RepoInfo } from '../config/repo_config_settings';
 import { GVEdgeMapping } from '../types/edge_types';
 import { LeafNode, ParentNode } from '../types/types';
 import { getEmptyNodeCounts } from '../utils';
@@ -9,7 +9,7 @@ import { addNodesFromFiles } from './add_nodes_from_files';
 export function parseFiles(
   files: SourceFile[],
   repoRoot: string,
-  repoInfo: RepoConfigSettings,
+  repoInfo: RepoInfo,
   excludeFilesPaths?: Array<string>
 ): { edges: GVEdgeMapping; root: ParentNode | LeafNode } {
   const edges: GVEdgeMapping = {};

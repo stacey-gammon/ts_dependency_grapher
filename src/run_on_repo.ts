@@ -1,17 +1,16 @@
-import { RepoConfigSettings } from './config/repo_config_settings';
+import { RepoInfo } from './config/repo_config_settings';
 import { downloadRepo } from './download_repo';
 import { regenerateColorScheme } from './graph_vis/styles';
 import Path from 'path';
 import { convertConfigRelativePathToAbsolutePath } from './utils';
 import fs from 'fs';
 import { getTSMorphProject } from './get_tsmorph_project';
-import { parseDependences } from './dependency_parsing/parse_dependencies';
-import nconf from 'nconf';
+import { parseDependences as parseDependencies } from './dependency_parsing/parse_dependencies';
 import { runDependencyAlgorithms } from './run_dependency_algorithms';
 import { OutputImageMapping } from './types/image_types';
 
-export async function runOnRepo(repoInfo: RepoConfigSettings, repoImages: OutputImageMapping) {
-  const repo = repoInfo.full_name;
+export async function runOnRepo(repoInfo: RepoInfo, repoImages: OutputImageMapping) {
+  const repo = repoInfo.fullName;
   console.log('Running on repo ' + repo);
 
   regenerateColorScheme();
@@ -19,7 +18,7 @@ export async function runOnRepo(repoInfo: RepoConfigSettings, repoImages: Output
   let tsconfig;
   if (repoInfo.source !== 'file') {
     const { dir, newData } = await downloadRepo(repo, repoInfo.clearCache);
-    repoInfo.tsconfig = Path.resolve(dir, repoInfo.tsconfig);
+    repoInfo.tsconfig = Path.resolve(__dirname, dir, repoInfo.tsconfig);
     if (newData) {
       repoInfo.clearCache = true;
     }
@@ -36,43 +35,23 @@ export async function runOnRepo(repoInfo: RepoConfigSettings, repoImages: Output
 
   const project = getTSMorphProject(repoInfo);
 
-  const entries = repoInfo.entries || [undefined];
+  const entries = repoInfo.entries;
 
-  for (const entry of entries) {
-    const { edges, root } = parseDependences({
+  // 0 Means don't restrict.
+  const maxDepths = repoInfo.maxDepths || [0];
+  for (const zoom of maxDepths) {
+    const { edges, root } = parseDependencies({
       repoInfo,
       project,
-      entry,
+      entries,
     });
-
-    const zoom = nconf.get('zoom');
-    const zoomLevels = repoInfo.zooms;
-    // Running a single zoom level trumps running all of them.
-    if (zoom) {
-      runDependencyAlgorithms({
-        edges,
-        root,
-        name: outputName,
-        zoom,
-        repoInfo,
-        repoImages,
-        entry,
-      });
-    } else if (zoomLevels && zoomLevels.length > 0) {
-      zoomLevels.sort((a, b) => b - a);
-      for (const zoom of zoomLevels) {
-        runDependencyAlgorithms({
-          edges,
-          root,
-          name: outputName,
-          zoom,
-          repoInfo,
-          repoImages,
-          entry,
-        });
-      }
-    } else {
-      runDependencyAlgorithms({ edges, root, name: outputName, repoInfo, repoImages, entry });
-    }
+    runDependencyAlgorithms({
+      edges,
+      root,
+      name: outputName,
+      zoom,
+      repoInfo,
+      repoImages,
+    });
   }
 }

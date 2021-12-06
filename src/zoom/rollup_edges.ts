@@ -39,6 +39,11 @@ function zoomEdgeOut(
 
   // If the edge wasn't deep enough in the tree to have been zoomed out, it won't be in oldLeafToNewLeaf.
   const newLeaf: LeafNode = oldLeafToNewLeaf[oldLeaf.id] || oldEdges[oldLeaf.id].node;
+
+  if (!oldLeafToNewLeaf[oldLeaf.id]) {
+    console.log(`${oldLeaf.id} was not rolled up, and does not exist in `, oldLeafToNewLeaf);
+  }
+
   const newLeafId = newLeaf.id;
 
   if (zoomedOutEdges[newLeafId] === undefined) {

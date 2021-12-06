@@ -7,7 +7,7 @@ import { getNodeStats } from './stats/get_node_stats';
 import Path from 'path';
 import { generateCSVs } from './generate_csv';
 import { buildDotFile } from './graph_vis/build_dot_file';
-import { EntryInfo, RepoConfigSettings } from './config/repo_config_settings';
+import { EntryInfo, RepoInfo } from './config/repo_config_settings';
 import { buildPngs } from './graph_vis/build_pngs';
 import { recommendClustering } from './clustering/recommend_clustering';
 
@@ -18,15 +18,13 @@ export function runDependencyAlgorithms({
   name,
   repoInfo,
   repoImages,
-  entry,
 }: {
   zoom?: number;
   root: ParentNode | LeafNode;
   edges: GVEdgeMapping;
   name: string;
-  repoInfo: RepoConfigSettings;
+  repoInfo: RepoInfo;
   repoImages: OutputImageMapping;
-  entry?: EntryInfo;
 }) {
   if (zoom) {
     console.log(`Zooming out to level ${zoom}`);
@@ -37,7 +35,7 @@ export function runDependencyAlgorithms({
 
   const beforeAndAfter = nconf.get('takeRecommendations') ? [false, true] : [undefined];
   for (const takeRecommendations of beforeAndAfter) {
-    const outputId = getOutputFileName(name, takeRecommendations, zoom, entry);
+    const outputId = getOutputFileName(name, takeRecommendations, zoom);
     let stats = getNodeStats(root, edges);
 
     if (takeRecommendations && stats.recommendations) {
@@ -53,7 +51,14 @@ export function runDependencyAlgorithms({
 
     buildDotFile(edges, root, dotOutputPath, repoInfo, stats);
 
-    buildPngs({ name: outputId, zoom, dotPath: dotOutputPath, repoInfo, repoImages, entry });
+    buildPngs({
+      name: outputId,
+      zoom,
+      dotPath: dotOutputPath,
+      repoInfo,
+      repoImages,
+      moveRecommendationsCount: stats.recommendations.length,
+    });
   }
 }
 

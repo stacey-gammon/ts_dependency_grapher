@@ -7,7 +7,7 @@ import { getTSMorphProject } from '../src/get_tsmorph_project';
 
 function getRepoInfo(tsconfigPath: string) {
   const fullPath = Path.resolve(__dirname, tsconfigPath);
-  return { full_name: 'test', tsconfig: fullPath, clearCache: true, layoutEngines: [] };
+  return { fullName: 'test', tsconfig: fullPath, clearCache: true, layoutEngines: [] };
 }
 
 it('create test png', () => {

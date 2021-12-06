@@ -63,8 +63,12 @@ function getTestEdgesAndRoot(): { edges: GVEdgeMapping; root: ParentNode } {
 
 it('zoomOut with different length children, level 2', () => {
   const { edges, root } = getTestEdgesAndRoot();
+
+  expect(edges['root_a_1_c_ts']).toBeDefined();
+
   const { zoomedOutRoot, zoomedOutEdges } = zoomOut(root, edges, 2);
 
+  expect(zoomedOutEdges['root_a_1_c_ts']).toBeUndefined();
   expect(zoomedOutEdges['root_a_1']).toBeDefined();
   expect(zoomedOutEdges['root_a_1'].outgoing.length).toBe(1);
   expect(zoomedOutEdges['root_a_1'].outgoing[0].dependencyWeight).toBe(2);

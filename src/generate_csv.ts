@@ -3,7 +3,6 @@ import { NodeStats } from './types/node_stats';
 import { GVEdgeMapping } from './types/edge_types';
 import fs from 'fs';
 import { isLeafNode } from './zoom/zoom_out';
-import nconf from 'nconf';
 import Path from 'path';
 import { AllNodeStats } from './stats/types';
 import { getConfig } from './config';

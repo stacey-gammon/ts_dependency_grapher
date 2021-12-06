@@ -5,9 +5,8 @@
             "tsconfig": "../../Elastic/kibana/tsconfig.json",
             "source": "file",
             "entries": [
-                "../../Elastic/kibana/src/plugins/**/*/public/index.ts",
-                "../../Elastic/kibana/src/plugins/**/*/common/index.ts",
-                "../../Elastic/kibana/src/plugins/**/*/server/index.ts"],
+                { "file": "../../Elastic/kibana/src/plugins/data_views/public/index.ts", "name": "data_views" }
+            ],
             "showExternalNodesOnly": false,
             "outputName": "kibana",
             "layoutEngines": [
@@ -15,11 +14,9 @@
                 { "name": "sfdp" }
             ],
             "extraSourceFileGlobs": [
-                "../../Elastic/kibana/x-pack/plugins/**/*{.d.ts,.ts}",
-                "../../Elastic/kibana/src/plugins/**/*{.d.ts,.ts}",
-                "../../Elastic/kibana/packages/**/*{.d.ts,.ts}"
+                "../../Elastic/kibana/src/plugins/**/*{.d.ts,.ts}"
             ],
-            "maxDepths": [0, 5]
+            "maxDepths": [3, 5]
         }
     ],
     "outputFolder": "docs/kibana",

@@ -24,15 +24,16 @@
   "dependencies": {
     "@octokit/rest": "^18.12.0",
     "command-line-args": "^5.2.0",
+    "glob": "^7.2.0",
     "nconf": "^0.11.3",
     "octokit": "^1.7.0",
     "prettier": "^2.4.1",
     "sharp": "^0.29.3",
-    "spectral-clustering-js": "^1.0.0",
     "ts-morph": "^12.2.0"
   },
   "devDependencies": {
     "@types/command-line-args": "^5.2.0",
+    "@types/glob": "^7.2.0",
     "@types/jest": "^27.0.2",
     "@types/nconf": "^0.10.1",
     "@types/sharp": "^0.29.4",

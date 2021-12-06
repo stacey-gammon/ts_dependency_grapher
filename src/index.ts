@@ -1,6 +1,6 @@
 import nconf from 'nconf';
 import { buildDocsSite } from './build_docs_site';
-import { RepoConfigSettings } from './config/repo_config_settings';
+import { RepoInfo } from './config/repo_config_settings';
 import { runOnRepo } from './run_on_repo';
 import { OutputImageMapping } from './types/image_types';
 import fs from 'fs';
@@ -22,7 +22,7 @@ export async function main() {
   validateConfig(config);
 
   const repoImages: OutputImageMapping = {};
-  const repos: Array<RepoConfigSettings> = config.repos;
+  const repos: Array<RepoInfo> = config.repos;
 
   for (const repoInfo of repos) {
     repoInfo.layoutEngines = repoInfo.layoutEngines || [{ name: 'sfdp' }, { name: 'fdp' }];

@@ -1,10 +1,11 @@
-import { RepoConfigSettings } from '../config/repo_config_settings';
+import { RepoInfo } from '../config/repo_config_settings';
 
 export interface OutputImage {
   path: string;
   entry?: string;
   zoom?: string;
   layoutEngine: string;
+  moveRecommendationsCount: number;
 }
 
 export interface OutputImageMapping {
@@ -13,5 +14,5 @@ export interface OutputImageMapping {
 
 export interface ImagesForRepoConfig {
   images: Array<OutputImage>;
-  repoInfo: RepoConfigSettings;
+  repoInfo: RepoInfo;
 }

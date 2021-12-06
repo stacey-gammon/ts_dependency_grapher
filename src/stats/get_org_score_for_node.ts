@@ -17,20 +17,16 @@ import {
 export function getOrgScoreForNode(node: LeafNode, allEdges: GVEdgeMapping): OrgScoreStats {
   const nodeParent = node.parentNode;
   if (!nodeParent || !allEdges[node.id]) {
-    return {
-      orgScore: 0,
-      tightestConnectionParentId: '',
-      tightestConnectionWeight: 0,
-      connections: '',
-      intraDependencyCount: 0,
-      interDependencyCount: 0,
-    };
+    return getEmptyCounts();
   }
   const nodeEdges = allEdges[node.id];
   const edges = [...nodeEdges.incoming, ...nodeEdges.outgoing];
 
   const tightestConnection = getTightestParentConnection(edges);
-  if (!tightestConnection) throw new Error('tightestConnection Should be defined');
+  if (!tightestConnection) {
+    console.warn(`tightestConnection was not defined with edges ${edges.length}`);
+    return getEmptyCounts();
+  }
 
   const tightestIntraConnection = getTightestParentConnection(edges, nodeParent.id);
   const interConnectionWeight = getDependencyWeightForParent(edges, nodeParent.id);
@@ -48,5 +44,16 @@ export function getOrgScoreForNode(node: LeafNode, allEdges: GVEdgeMapping): Org
     orgScore,
     interDependencyCount: interConnectionWeight,
     intraDependencyCount: getSumOfConnections(edges, nodeParent.id),
+  };
+}
+
+function getEmptyCounts() {
+  return {
+    orgScore: 0,
+    tightestConnectionParentId: '',
+    tightestConnectionWeight: 0,
+    connections: '',
+    intraDependencyCount: 0,
+    interDependencyCount: 0,
   };
 }

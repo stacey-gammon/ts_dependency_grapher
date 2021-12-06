@@ -5,10 +5,10 @@ import { getRootRelativePath } from '../utils';
 import { isLeafNode } from '../zoom/zoom_out';
 import { getOrCreateNode } from './add_node';
 import { getFilePathForTsNode, getIdForNode } from './tsmorph_utils';
-import nconf from 'nconf';
 import { excludeFile } from './should_exclude_file';
 import { addEdge } from './add_edge';
 import { getNodeById } from './get_node_by_id';
+import { getConfig } from '../config';
 
 export function addEdges(
   file: SourceFile,
@@ -17,8 +17,9 @@ export function addEdges(
   repoRoot: string,
   showExternalNodesOnly?: boolean
 ) {
-  const excludeTypes = nconf.get('excludeTypes');
-  const globalExcludePaths = nconf.get('excludePaths');
+  const config = getConfig();
+  const excludeTypes = config.excludeTypes;
+  const globalExcludePaths = config.excludeFilePaths;
   const exports = file.getExportedDeclarations();
   console.log(`${exports.size} exports found from file ${file.getSourceFile().getFilePath()}`);
 
@@ -43,7 +44,7 @@ export function addEdges(
 
           const excludeFilePaths = showExternalNodesOnly
             ? [relativePath, ...globalExcludePaths]
-            : [globalExcludePaths];
+            : [...globalExcludePaths];
 
           if (excludeFile(tsMSourceNode.getSourceFile().getFilePath(), excludeFilePaths)) {
             console.log(`Skipping file ${tsMSourceNode.getSourceFile().getFilePath()}`);

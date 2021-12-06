@@ -1,8 +1,8 @@
 import { Project } from 'ts-morph';
-import { RepoConfigSettings } from './config/repo_config_settings';
+import { RepoInfo } from './config/repo_config_settings';
 import Path from 'path';
 
-export function getTSMorphProject(repoInfo: RepoConfigSettings): Project {
+export function getTSMorphProject(repoInfo: RepoInfo): Project {
   const project = new Project({ tsConfigFilePath: repoInfo.tsconfig });
 
   // For some reason tsMorph won't pick up all files if just relyign on the tsconfig. Like, only a couple thousand.

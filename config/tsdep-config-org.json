@@ -1,11 +1,11 @@
 {
     "repos": [
         { 
-            "full_name": "stacey-gammon/ts_dependency_grapher",
+            "fullName": "stacey-gammon/ts_dependency_grapher",
             "clearCache": true,
             "tsconfig": "./tsconfig.json",
             "source": "file",
-            "zooms": [2, 3, 4]
+            "zooms": [0]
         }
     ],
     "excludeFilePaths" : ["_test_", ".test.ts"],

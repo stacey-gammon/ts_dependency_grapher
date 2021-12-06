@@ -2,10 +2,11 @@ import { parseDependences } from './parse_dependencies';
 import Path from 'path';
 import { isLeafNode } from '../zoom/zoom_out';
 import { getTSMorphProject } from '../get_tsmorph_project';
+import { RepoInfo } from '../config/repo_config_settings';
 
-function getRepoInfo(tsconfigPath: string) {
+function getRepoInfo(tsconfigPath: string): RepoInfo {
   const fullPath = Path.resolve(__dirname, tsconfigPath);
-  return { full_name: 'test', tsconfig: fullPath, clearCache: true, layoutEngines: [] };
+  return { fullName: 'test', tsconfig: fullPath, clearCache: true, layoutEngines: [] };
 }
 
 it('parseDependencies simple', () => {

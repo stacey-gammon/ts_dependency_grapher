@@ -1,37 +1,17 @@
-import { RepoConfigSettings } from './repo_config_settings';
+import { RepoInfo } from './repo_config_settings';
 import { NODE_SIZE_WEIGHT_OPTIONS, NODE_COLOR_WEIGHT_OPTIONS } from './node_weight_options';
 
-export interface RepoInfo {
-  // Should be in the format owner/repo
-  fullName: string;
-  // If you want to clear the cache files and recompute everything from scratch.
-  refresh: boolean;
-  // Path to the repo's tsconfig file. If none given, will look for 'tsconfig.json' in the
-  // repo root.
-  tsconfig?: '../../Elastic/kibana/src/plugins/bfetch/tsconfig.json';
-  // If you want to point to a local folder, user "file", otherwise it'll download the
-  // repo from GitHub and clone to the cache folder.
-  source: 'file' | 'github';
-  // Only relevant if you use entry files. If you do, and this is true, it will
-  // exclude all internal usages of the exports. This is useful for highlighting public
-  // API usage.
-  showExternalNodesOnly: boolean;
-  // An optional name to the output files for this repo
-  outputName: string;
-  // Will output an image for each layout option listed.
-  layoutEngines: string | Array<{ name: string; scale?: boolean }>;
-  // Restrict the graph to a certain depth. Files that are nested deeper than the
-  // number will be "rolled up". It'll build data for each maxDepth level given.
-  maxDepths?: Array<number>;
-}
-
 export interface ConfigOptions {
+  // The folder the repos being downloaded will be saved in.
+  repoCacheFolder: string;
+  // If true will delete all the cache files.
+  clearCache?: boolean;
   // If true, only a useful color scheme will be used. If false, a color scheme will be chosen at
   // random. Having it false makes for prettier graphs, but it'll be harder to distinguish what
   // the colors indicate.
   usefulColors: boolean;
   // Array of repos you would like to analyze.
-  repos: Array<RepoConfigSettings>;
+  repos: Array<RepoInfo>;
   // File glob path patterns you wish to skip over. Useful, for example, if you wish to
   // exclude test files and folders.
   excludeFilePaths: Array<string>;
