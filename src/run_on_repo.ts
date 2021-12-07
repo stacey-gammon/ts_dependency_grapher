@@ -14,8 +14,6 @@ export async function runOnRepo(repoInfo: RepoInfo, repoImages: OutputImageMappi
   console.log('Running on repo ' + repo);
 
   regenerateColorScheme();
-
-  let tsconfig;
   if (repoInfo.source !== 'file') {
     const { dir, newData } = await downloadRepo(repo, repoInfo.clearCache);
     repoInfo.tsconfig = Path.resolve(__dirname, dir, repoInfo.tsconfig);
@@ -27,7 +25,7 @@ export async function runOnRepo(repoInfo: RepoInfo, repoImages: OutputImageMappi
   }
 
   if (!fs.existsSync(repoInfo.tsconfig)) {
-    console.warn(`${repo} does not have a root tsconfig.json file at ${tsconfig}`);
+    console.warn(`${repo} does not have a root tsconfig.json file at ${repoInfo.tsconfig}`);
     return;
   }
 

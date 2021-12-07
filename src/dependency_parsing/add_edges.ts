@@ -21,7 +21,6 @@ export function addEdges(
   const excludeTypes = config.excludeTypes;
   const globalExcludePaths = config.excludeFilePaths;
   const exports = file.getExportedDeclarations();
-  console.log(`${exports.size} exports found from file ${file.getSourceFile().getFilePath()}`);
 
   exports.forEach((val) => {
     val.forEach((destNode) => {
@@ -31,13 +30,6 @@ export function addEdges(
         }
         const destFilePath = getFilePathForTsNode(destNode, repoRoot);
         const refNodes = destNode.findReferencesAsNodes();
-        if (destNode.getName) {
-          console.log(
-            `Found ${
-              refNodes.length
-            } references to node ${destNode.getName()} defined in file ${destFilePath}`
-          );
-        }
         refNodes.forEach((tsMSourceNode) => {
           const relativePath = getRootRelativePath(file.getFilePath(), repoRoot);
           if (!relativePath) return;
@@ -47,7 +39,6 @@ export function addEdges(
             : [...globalExcludePaths];
 
           if (excludeFile(tsMSourceNode.getSourceFile().getFilePath(), excludeFilePaths)) {
-            console.log(`Skipping file ${tsMSourceNode.getSourceFile().getFilePath()}`);
             return;
           }
 

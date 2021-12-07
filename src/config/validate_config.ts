@@ -15,6 +15,10 @@ export function validateConfig(config: ConfigOptions) {
   if (config.nodeColorWeight) {
     throwIfNotOneOf(config.nodeColorWeight, Object.values(NODE_COLOR_WEIGHT_OPTIONS));
   }
+
+  if (typeof config.excludeTypes !== 'boolean') {
+    throw new Error(`excludeTypes must be of type boolean, instead it is ${config.excludeTypes}`);
+  }
 }
 
 function throwIfNotOneOf(key: string, options: string[]) {

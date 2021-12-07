@@ -1,0 +1,28 @@
+{
+    "repos": [
+        { 
+            "fullName": "elastic/kibana",
+            "tsconfig": "../../../Elastic/kibana/tsconfig.json",
+            "source": "file",
+            "outputName": "kibana",
+            "excludeTypes": true,
+            "layoutEngines": [
+                { "name": "fdp" },
+                { "name": "sfdp" }
+            ],
+            "extraSourceFileGlobs": [
+                "../../../Elastic/kibana/x-pack/plugins/**/*{.d.ts,.ts}",
+                "../../../Elastic/kibana/src/plugins/**/*{.d.ts,.ts}",
+                "../../../Elastic/kibana/packages/**/*{.d.ts,.ts}"
+            ],
+            "maxDepths": [0, 5]
+        }
+    ],
+    "outputFolder": "docs/kibana-overview",
+    "excludeFilePaths" : ["_test_", ".test.ts", "target/types"],
+    "buildDocsSite": true,
+    "nodeSizeWeight": "intra",
+    "nodeColorWeight": "cluster",
+    "takeRecommendations": false,
+    "usefulColors": true
+}

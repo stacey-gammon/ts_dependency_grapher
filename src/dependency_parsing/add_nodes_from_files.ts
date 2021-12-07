@@ -11,7 +11,10 @@ export function addNodesFromFiles(
   files: SourceFile[],
   excludeFilePaths?: Array<string>
 ) {
+  let i = 0;
   files.forEach((file) => {
+    console.log(`Adding nodes from file ${i}/${files.length}`);
+    i++;
     const filePath = file.getFilePath();
     const relativePath = getRootRelativePath(filePath, repoRoot);
     // Skip any files that aren't within the repo root.

@@ -3,17 +3,20 @@
         { 
             "fullName": "microsoft/vscode",
             "tsconfig": "./src/tsconfig.json",
-            "outputName": "vscode"
+            "outputName": "vscode",
+            "maxDepths": [0,3,4]
         },
         { 
             "fullName": "angular/angular",
             "tsconfig": "./packages/tsconfig.json",
-            "outputName": "angular"
+            "outputName": "angular",
+            "maxDepths": [0,2,3]
         },
         { 
             "fullName": "grafana/grafana",
             "tsconfig": "./tsconfig.json",
-            "outputName": "grafana"
+            "outputName": "grafana",
+            "maxDepths": [0,4,5,6]
         }
     ],
     "repoCacheFolder": "../../repo-stats/.repo_cache",

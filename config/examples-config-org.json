@@ -1,29 +1,29 @@
 {
     "repos": [
         { 
-            "full_name": "stacey-gammon/ts_dependency_grapher",
-            "tsconfig": "./examples/well_organized/tsconfig.json",
+            "fullName": "stacey-gammon/ts_dependency_grapher",
+            "tsconfig": "../examples/well_organized/tsconfig.json",
             "source": "file",
             "outputName": "well_organized",
             "clearCache": true
         },
         { 
-            "full_name": "stacey-gammon/ts_dependency_grapher",
-            "tsconfig": "./examples/poor_organized/tsconfig.json",
+            "fullName": "stacey-gammon/ts_dependency_grapher",
+            "tsconfig": "../examples/poor_organized/tsconfig.json",
             "source": "file",
             "outputName": "poor_organized",
             "clearCache": true
         },
         { 
-            "full_name": "stacey-gammon/ts_dependency_grapher",
-            "tsconfig": "./examples/simple_bad/tsconfig.json",
+            "fullName": "stacey-gammon/ts_dependency_grapher",
+            "tsconfig": "../examples/simple_bad/tsconfig.json",
             "source": "file",
             "outputName": "simple_bad",
             "clearCache": true
         }
     ],
     "clusteringAlgo": "orgScore",
-    "outputFolder": "docs/examples-org",
+    "outputFolder": "docs/examples",
     "excludeFilePaths" : ["_test_", ".test.ts"],
     "maxImageSize": "15",
     "buildDocsSite": true,

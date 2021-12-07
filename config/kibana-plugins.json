@@ -1,0 +1,73 @@
+{
+    "repos": [
+        { 
+            "full_name": "elastic/kibana",
+            "tsconfig": "../../../Elastic/kibana/src/plugins/data/tsconfig.json",
+            "source": "file",
+            "showExternalNodesOnly": false,
+            "outputName": "data",
+            "layoutEngines": [
+                { "name": "fdp" },
+                { "name": "sfdp" }
+            ],
+            "maxDepths": [0, 3, 4]
+        },
+        { 
+            "full_name": "elastic/kibana",
+            "tsconfig": "../../../Elastic/kibana/src/plugins/data_views/tsconfig.json",
+            "source": "file",
+            "showExternalNodesOnly": false,
+            "outputName": "data_views",
+            "layoutEngines": [
+                { "name": "fdp" },
+                { "name": "sfdp" }
+            ],
+            "maxDepths": [0, 3, 4]
+        },
+        { 
+            "full_name": "elastic/kibana",
+            "tsconfig": "../../../Elastic/kibana/src/plugins/dashboard/tsconfig.json",
+            "source": "file",
+            "showExternalNodesOnly": false,
+            "outputName": "dashboard",
+            "layoutEngines": [
+                { "name": "fdp" },
+                { "name": "sfdp" }
+            ],
+            "maxDepths": [0, 3, 4]
+        },
+        { 
+            "full_name": "elastic/kibana",
+            "tsconfig": "../../../Elastic/kibana/src/plugins/embeddable/tsconfig.json",
+            "source": "file",
+            "showExternalNodesOnly": false,
+            "outputName": "embeddable",
+            "layoutEngines": [
+                { "name": "fdp" },
+                { "name": "sfdp" }
+            ],
+            "maxDepths": [0, 3, 4]
+        },
+        { 
+            "full_name": "elastic/kibana",
+            "tsconfig": "../../../Elastic/kibana/src/plugins/management/tsconfig.json",
+            "source": "file",
+            "showExternalNodesOnly": false,
+            "outputName": "management",
+            "layoutEngines": [
+                { "name": "fdp" },
+                { "name": "sfdp" }
+            ],
+            "maxDepths": [0, 3, 4]
+        }
+    ],
+    "outputFolder": "docs/kibana-plugins",
+    "excludeFilePaths" : ["_test_", ".test.ts"],
+    "buildDocsSite": true,
+    "unusedNodeColor": "white",
+    "nodeSizeWeight": "intra",
+    "nodeColorWeight": "cluster",
+    "clearDotCache": false,
+    "refreshParsing": false,
+    "takeRecommendations": true
+}

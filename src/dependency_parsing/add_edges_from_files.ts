@@ -13,7 +13,10 @@ export function addEdgesFromFiles(
   showExternalNodesOnly: boolean,
   excludeFilePaths?: Array<string>
 ) {
+  let i = 0;
   files.forEach((file) => {
+    console.log(`Adding edges from file ${i}/${files.length}`);
+    i++;
     const filePath = file.getFilePath();
     const relativePath = getRootRelativePath(filePath, repoRoot);
     if (relativePath && !excludeFile(filePath, excludeFilePaths)) {
