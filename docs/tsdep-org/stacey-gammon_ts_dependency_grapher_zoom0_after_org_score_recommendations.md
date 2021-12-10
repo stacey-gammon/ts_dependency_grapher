@@ -1,0 +1,5 @@
+| Node | Old parent | New parent | description | 
+|----|----|
+| _src_generate_csv_ts | _src | _src_config | Connections with new parent, (_src_config:_src_config_get_config_ts:6), is strong than with current parent (2), and subtracting the sum of all other parent connections, (_src:_src_run_dependency_algorithms_ts:2)(_src_zoom:_src_zoom_zoom_out_ts:3), exceeds move threshold of 0. 6 - 5 > 0  |
+| _src_graph_vis_build_pngs_ts | _src_graph_vis | _src_config | Connections with new parent, (_src_config:_src_config_get_config_ts:4), is strong than with current parent (0), and subtracting the sum of all other parent connections, (_src:_src_run_dependency_algorithms_ts:2), exceeds move threshold of 0. 4 - 2 > 0  |
+| _src_index_ts | _src | _src_config | Connections with new parent, (_src_config:_src_config_defaults_ts:2)(_src_config:_src_config_get_config_ts:4)(_src_config:_src_config_validate_config_ts:2), is strong than with current parent (6), and subtracting the sum of all other parent connections, (_src:_src_index_ts:1)(_src:_src_build_docs_site_ts:2)(_src:_src_index_ts:1)(_src:_src_run_on_repo_ts:2), exceeds move threshold of 0. 8 - 6 > 0  |
