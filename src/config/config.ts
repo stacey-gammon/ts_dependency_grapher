@@ -53,6 +53,7 @@ export interface ConfigOptions {
   // more prolifically than actual functionality so this can minimize noise and seemed to offer some
   // better suggestions.
   excludeTypes: boolean;
+  recommendationFileType: 'csv' | 'md';
 }
 
 export enum CLUSTERING_ALGOS {

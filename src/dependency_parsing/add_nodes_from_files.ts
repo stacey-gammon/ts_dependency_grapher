@@ -13,6 +13,7 @@ export function addNodesFromFiles(
 ) {
   let i = 0;
   files.forEach((file) => {
+    file.fixUnusedIdentifiers();
     console.log(`Adding nodes from file ${i}/${files.length}`);
     i++;
     const filePath = file.getFilePath();

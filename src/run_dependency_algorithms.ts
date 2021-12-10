@@ -2,7 +2,6 @@ import { LeafNode, ParentNode } from './types/types';
 import { GVEdgeMapping } from './types/edge_types';
 import { OutputImageMapping } from './types/image_types';
 import { zoomOut } from './zoom/zoom_out';
-import nconf from 'nconf';
 import { getNodeStats } from './stats/get_node_stats';
 import Path from 'path';
 import { generateCSVs } from './generate_csv';
@@ -10,6 +9,7 @@ import { buildDotFile } from './graph_vis/build_dot_file';
 import { EntryInfo, RepoInfo } from './config/repo_config_settings';
 import { buildPngs } from './graph_vis/build_pngs';
 import { recommendClustering } from './clustering/recommend_clustering';
+import { getConfig } from './config';
 
 export function runDependencyAlgorithms({
   zoom,
@@ -33,13 +33,14 @@ export function runDependencyAlgorithms({
     root = zoomedOutRoot;
   }
 
-  const beforeAndAfter = nconf.get('takeRecommendations') ? [false, true] : [undefined];
+  const config = getConfig();
+  const beforeAndAfter = config.takeRecommendations ? [false, true] : [undefined];
   for (const takeRecommendations of beforeAndAfter) {
     const outputId = getOutputFileName(name, takeRecommendations, zoom);
     let stats = getNodeStats(root, edges);
 
     if (takeRecommendations && stats.recommendations) {
-      recommendClustering({ outputId, root, edges, stats });
+      recommendClustering({ outputId, root, edges });
       stats = getNodeStats(root, edges);
     }
 
@@ -47,7 +48,7 @@ export function runDependencyAlgorithms({
 
     console.log(`Generating dot file for ${outputId} at zoom level ${zoom}`);
 
-    const dotOutputPath = Path.resolve(nconf.get('outputFolder'), `${outputId}.dot`);
+    const dotOutputPath = Path.resolve(config.outputFolder, `${outputId}.dot`);
 
     buildDotFile(edges, root, dotOutputPath, repoInfo, stats);
 

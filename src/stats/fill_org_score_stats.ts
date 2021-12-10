@@ -1,6 +1,5 @@
 import { LeafNode, ParentNode } from '../types/types';
 import { isLeafNode } from '../zoom/zoom_out';
-import { RecommendationsList } from './types';
 import { GVEdgeMapping } from '../types/edge_types';
 import { getOrgScoreForNode } from './get_org_score_for_node';
 

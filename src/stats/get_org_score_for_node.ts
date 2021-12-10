@@ -1,7 +1,7 @@
 import { GVEdgeMapping } from '../types/edge_types';
 import { LeafNode } from '../types/types';
 import { OrgScoreStats } from './fill_org_score_stats';
-import { getSumOfConnections } from './get_sum_of_connections_except';
+import { getSumOfConnections } from './get_sum_of_connections';
 import {
   getDependencyWeightForParent,
   getTightestParentConnection,

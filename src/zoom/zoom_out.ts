@@ -34,8 +34,6 @@ export function zoomOutInner(
     return turnIntoLeafNode(node, oldLeafToNewLeaf, parentIdToLeaf);
   } else {
     return node;
-    // console.log(node);
-    // throw new Error('Failed to fall into expected return');
   }
 }
 

@@ -29,10 +29,10 @@ export function getNodeStats(node: ParentNode | LeafNode, edges: GVEdgeMapping):
     //  'innerNodeCount',
   ];
   const maxes: Partial<NodeStats> = {};
-  statKeys.forEach((stat) => ((maxes[stat] as any) = findMaxVal(nodeStats, stat)));
+  statKeys.forEach((stat) => ((maxes[stat] as number) = findMaxVal(nodeStats, stat)));
 
   const mins: Partial<NodeStats> = {};
-  statKeys.forEach((stat) => ((mins[stat] as any) = findMinVal(nodeStats, stat)));
+  statKeys.forEach((stat) => ((mins[stat] as number) = findMinVal(nodeStats, stat)));
 
   return {
     stats: nodeStats,

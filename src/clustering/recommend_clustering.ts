@@ -1,7 +1,5 @@
-import nconf from 'nconf';
 import { saveRecommendationsToFile } from './save_recommendations_to_file';
 import Path from 'path';
-import { AllNodeStats } from '../stats/types';
 import { LeafNode, ParentNode } from '../types/types';
 import { dbScanRecluster } from './db_scan_recluster';
 import { GVEdgeMapping } from '../types/edge_types';
@@ -15,25 +13,23 @@ import { getConfig } from '../config';
 
 export function recommendClustering({
   outputId,
-  stats,
   root,
   edges,
 }: {
   outputId: string;
-  stats: AllNodeStats;
   root: ParentNode | LeafNode;
   edges: GVEdgeMapping;
 }) {
   const clusteringMethod = getConfig().clusteringAlgo;
-
+  const config = getConfig();
   if (clusteringMethod === CLUSTERING_ALGOS.ORG_SCORE) {
     const movesMade: Array<Move> = [];
     orgScoreClustering(root, edges, movesMade);
 
     saveRecommendationsToFile(
-      Path.resolve(nconf.get('outputFolder'), `${outputId}_org_score_recommendations.md`),
+      Path.resolve(config.outputFolder, `${outputId}_org_score_recommendations.md`),
       movesMade,
-      nconf.get('recommendationFileType') === 'csv'
+      config.recommendationFileType === 'csv'
     );
   } else {
     const newClusters: Array<Array<LeafNode>> = [];

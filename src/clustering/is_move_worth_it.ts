@@ -1,5 +1,5 @@
 import { ParentConnection } from '../stats/get_dependency_stats';
-import { getSumOfConnections } from '../stats/get_sum_of_connections_except';
+import { getSumOfConnections } from '../stats/get_sum_of_connections';
 import { Edge } from '../types/edge_types';
 import { LeafNode } from '../types/types';
 import { groupEdgesByParent } from './group_edges_by_parent';
