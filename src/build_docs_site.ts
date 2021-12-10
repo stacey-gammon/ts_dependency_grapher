@@ -6,6 +6,11 @@ import { convertConfigRelativePathToAbsolutePath, getRootRelativePath } from './
 
 export function buildDocsSite(allRepoImages: OutputImageMapping) {
   const text = `
+---
+title: Architecture art
+author: Stacey Gammon
+---
+
 # Architecture art examples
 
 _Visualizing cohesion and coupling_
