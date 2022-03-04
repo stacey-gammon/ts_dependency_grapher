@@ -1,7 +1,6 @@
 import { ParentConnection } from '../stats/get_dependency_stats';
 import { getSumOfConnections } from '../stats/get_sum_of_connections';
-import { Edge } from '../types/edge_types';
-import { LeafNode } from '../types/types';
+import { LeafNode, Edge, ApiItemMap } from '../types';
 import { groupEdgesByParent } from './group_edges_by_parent';
 
 /**
@@ -14,15 +13,18 @@ import { groupEdgesByParent } from './group_edges_by_parent';
  */
 export function isMoveWorthIt(
   node: LeafNode,
+  items: ApiItemMap,
   newParent: ParentConnection,
   edges: Array<Edge>,
   currentParentWeight: number,
   moveThreshold: number
 ) {
-  const origParent = node.parentNode;
-  if (!origParent) return { isWorthIt: false, description: 'Node has no parent' };
+  const origParentId = node.parentId;
+  if (!origParentId) return { isWorthIt: false, description: 'Node has no parent' };
 
   const edgesByParent = groupEdgesByParent(edges);
+
+  const newParentItem = items[newParent.parentId];
 
   // If this node has no connection with it's own parent and only has a connection with one
   // other parent, move it there. We don't automatically move if it has connections with multiple parents
@@ -30,7 +32,7 @@ export function isMoveWorthIt(
   if (currentParentWeight === 0 && Object.keys(edgesByParent).length === 1) {
     return {
       isWorthIt: true,
-      description: `Node's only connections are with nodes within ${newParent.parentNode.id}.`,
+      description: `Node's only connections are with nodes within ${newParentItem.id}.`,
     };
   }
 
@@ -39,15 +41,15 @@ export function isMoveWorthIt(
     return { isMoveWorthIt: false, description: 'Strong connection with current parent' };
   }
 
-  const sumOfOtherConnections = getSumOfConnections(edges, newParent.parentNode.id);
+  const sumOfOtherConnections = getSumOfConnections(edges, items, newParentItem.id);
   let otherConnectionsDescription = '';
   let newParentConnectionsDescription = '';
 
   edges.forEach((edge) => {
-    if (edge.node.parentNode && edge.node.parentNode.id != newParent.parentNode.id) {
-      otherConnectionsDescription += `(${edge.node.parentNode.id}:${edge.node.id}:${edge.dependencyWeight})`;
-    } else if (edge.node.parentNode) {
-      newParentConnectionsDescription += `(${edge.node.parentNode.id}:${edge.node.id}:${edge.dependencyWeight})`;
+    if (edge.node.parentId && edge.node.parentId != newParentItem.id) {
+      otherConnectionsDescription += `(${edge.node.parentId}:${edge.node.id}:${edge.dependencyWeight})`;
+    } else if (edge.node.parentId) {
+      newParentConnectionsDescription += `(${edge.node.parentId}:${edge.node.id}:${edge.dependencyWeight})`;
     }
   });
 
@@ -59,7 +61,7 @@ export function isMoveWorthIt(
     `move threshold of ${moveThreshold}. ${newParentDepWeight} - ${sumOfOtherConnections} > ${moveThreshold}`;
   if (veryTightConnectionToIt) {
     console.log(
-      `Moving node from ${origParent.id} to ${newParent.parentNode.id} because ${newParentDepWeight} - ${sumOfOtherConnections} > ${moveThreshold}`
+      `Moving node from ${origParentId} to ${newParent.parentId} because ${newParentDepWeight} - ${sumOfOtherConnections} > ${moveThreshold}`
     );
   }
   return { isWorthIt: veryTightConnectionToIt, description };

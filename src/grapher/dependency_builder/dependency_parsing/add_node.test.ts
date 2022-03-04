@@ -1,10 +1,11 @@
 import { getOrCreateNode } from './add_node';
-import { ParentNode } from '../../../types/types';
 import { getParentNode } from '../../../test/node.mock';
+import { ApiItemMap, ParentNode } from '../types';
 
 it('addNode', () => {
-  const root: ParentNode = getParentNode('');
-  const addedNode = getOrCreateNode('/src/foo/bar', root, 0);
+  const items: ApiItemMap = {};
+  const root: ParentNode = getParentNode('', items);
+  const addedNode = getOrCreateNode('/src/foo/bar', root, 0, items);
   expect(root).toMatchInlineSnapshot(`
     Object {
       "children": Array [
@@ -50,5 +51,8 @@ it('addNode', () => {
     }
   `);
 
-  expect(addedNode?.filePath).toBe('/src/foo/bar');
+  expect(addedNode).toBeDefined();
+  if (addedNode) {
+    expect(items[addedNode.id]?.filePath).toBe('/src/foo/bar');
+  }
 });

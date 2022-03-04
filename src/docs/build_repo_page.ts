@@ -16,7 +16,7 @@ export function buildRepoPage(repo: ImagesForRepoConfig, headerItems: Array<Repo
     
     _Visualizing cohesion and coupling_
     
-    ${buildMdTabs(repo.repoInfo.outputName, headerItems)}
+    ${buildMdTabs(repo.repoInfo.outputName || '', headerItems)}
     
     ${buildDocSiteRepoSection(repo)}`;
 

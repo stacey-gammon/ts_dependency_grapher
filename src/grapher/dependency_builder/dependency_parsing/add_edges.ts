@@ -1,7 +1,7 @@
 import { ExportedDeclarations, Node, SourceFile } from 'ts-morph';
 import { LeafNode, ParentNode, GVEdgeMapping } from '../types';
 import { getRootRelativePath } from '../../../utils';
-import { isLeafNode } from '../utils';
+import { isLeafNode, isParentNode } from '../utils';
 import { getOrCreateNode } from './add_node';
 import { getFilePathForTsNode, getIdForNode } from './tsmorph_utils';
 import { excludeFile } from './should_exclude_file';
@@ -75,7 +75,7 @@ export function addEdges(
             throw new Error(`Did not find node for path ${destFilePath} in root tree`);
           }
 
-          if (!isLeafNode(destNode)) {
+          if (isParentNode(destNode)) {
             console.error('All connections should be leaf nodes', destNode);
             throw new Error(`All connections should be leaf nodes. Node ${destNode.id} is not.`);
           }

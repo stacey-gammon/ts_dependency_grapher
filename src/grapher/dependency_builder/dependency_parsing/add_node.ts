@@ -1,6 +1,6 @@
 import { LeafNode, ParentNode } from '../types';
 import { getEmptyNodeCounts, getParentFolder } from '../../../utils';
-import { isLeafNode } from '../utils';
+import { isParentNode } from '../utils';
 import { getSafeName } from '../../graph_vis/utils';
 import { ApiItem, ApiItemMap } from '../types/node_types';
 
@@ -49,7 +49,7 @@ export function getOrCreateNode(
       newChild.parentId = node.id;
 
       return newChild;
-    } else if (!isLeafNode(node)) {
+    } else if (isParentNode(node)) {
       for (const child of node.children) {
         if (apiItems[child.id].filePath === filePath) return child;
       }

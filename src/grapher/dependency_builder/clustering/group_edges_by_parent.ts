@@ -4,13 +4,13 @@ export function groupEdgesByParent(edges: Array<Edge>): { [key: string]: Array<E
   const edgesByParent: { [key: string]: Array<Edge> } = {};
 
   edges.forEach((edge) => {
-    const parentNode = edge.node.parentNode;
-    if (!parentNode) return;
+    const parentId = edge.node.parentId;
+    if (!parentId) return;
 
-    if (!edgesByParent[parentNode.id]) {
-      edgesByParent[parentNode.id] = [];
+    if (!edgesByParent[parentId]) {
+      edgesByParent[parentId] = [];
     }
-    edgesByParent[parentNode.id].push(edge);
+    edgesByParent[parentId].push(edge);
   });
   return edgesByParent;
 }

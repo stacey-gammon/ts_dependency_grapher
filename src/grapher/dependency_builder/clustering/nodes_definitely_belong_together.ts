@@ -1,5 +1,4 @@
-import { Edge, GVEdgeMapping } from '../types/edge_types';
-import { LeafNode } from '../types/types';
+import { Edge, GVEdgeMapping, LeafNode } from '../types';
 
 export function nodesDefinitelyBelongTogether(
   node1: LeafNode,

@@ -5,6 +5,7 @@ import { getTSMorphProject } from '../../../get_tsmorph_project';
 import { RepoConfig } from '../../../config/repo_config';
 import { resolveRepoConfigInput } from '../../repo';
 import { getConfig } from '../../../config';
+import { isParentNode } from '../utils';
 
 function getRepoInfo(tsconfigPath: string): RepoConfig {
   const fullPath = Path.resolve(__dirname, tsconfigPath);
@@ -65,7 +66,7 @@ it.only('parseDependencies well organized', () => {
   expect(edges['_B_6_ts'].outgoing.length).toBe(3);
 
   expect(isLeafNode(root)).toBe(false);
-  if (!isLeafNode(root)) {
+  if (isParentNode(root)) {
     const aFolder = root.children.find((c) => c.id === '_A');
     expect(aFolder).toBeDefined();
   }
@@ -89,7 +90,7 @@ it('parseDependencies poor organized', () => {
   expect(aThreeEdge.outgoing.length).toBe(3);
   expect(edges['_B_6_ts'].outgoing.length).toBe(3);
   expect(isLeafNode(root)).toBe(false);
-  if (!isLeafNode(root)) {
+  if (isParentNode(root)) {
     const oneFolder = root.children.find((c) => c.id === '_A');
     expect(oneFolder).toBeDefined();
   }

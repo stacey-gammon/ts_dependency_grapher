@@ -4,7 +4,7 @@
 // import nconf from 'nconf';
 
 import { GVEdgeMapping } from '../types/edge_types';
-import { LeafNode, ParentNode } from '../types/types';
+import { LeafNode, ParentNode } from '../types';
 
 // import { Graph, SpectralClustering, Node } from 'spectral-clustering-js';
 

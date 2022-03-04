@@ -1,4 +1,4 @@
-import { LeafNode, ParentNode } from '../types/types';
+import { ApiItemMap, LeafNode, ParentNode } from '../types';
 import { GVEdgeMapping } from '../types/edge_types';
 import { getLeafNodes } from './get_leaf_nodes';
 import { getOrgScoreForNode } from '../stats/get_org_score_for_node';
@@ -14,6 +14,7 @@ export interface Move {
 
 export function orgScoreClustering(
   root: ParentNode | LeafNode,
+  items: ApiItemMap,
   edges: GVEdgeMapping,
   movesMade: Array<Move>
 ) {
@@ -38,14 +39,17 @@ export function orgScoreClustering(
             delete leafNodesByParent[parentId];
             break;
           }
-          const madeAMove = maybeMove(node, edges, moveThreshold, movesMade);
+          const madeAMove = maybeMove(node, items, edges, moveThreshold, movesMade, root);
           visitedNodes[node.id] = true;
           keepTakingForThisParent = !madeAMove;
         }
       });
       parentIds = Object.keys(leafNodesByParent);
     }
-    const totalOrgScore = leafNodes.reduce((s, n) => s + getOrgScoreForNode(n, edges).orgScore, 0);
+    const totalOrgScore = leafNodes.reduce(
+      (s, n) => s + getOrgScoreForNode(n, items, edges).orgScore,
+      0
+    );
     console.log(`${i}: Total org score: ${totalOrgScore} after ${movesMade.length} moves made`);
   }
 }
@@ -64,13 +68,13 @@ function groupByParent(nodes: Array<LeafNode>): { [key: string]: Array<LeafNode>
   const nodesByParent: { [key: string]: Array<LeafNode> } = {};
 
   nodes.forEach((node) => {
-    const parentNode = node.parentNode;
-    if (!parentNode) return;
+    const parentNodeId = node.parentId;
+    if (!parentNodeId) return;
 
-    if (!nodesByParent[parentNode.id]) {
-      nodesByParent[parentNode.id] = [];
+    if (!nodesByParent[parentNodeId]) {
+      nodesByParent[parentNodeId] = [];
     }
-    nodesByParent[parentNode.id].push(node);
+    nodesByParent[parentNodeId].push(node);
   });
   return nodesByParent;
 }

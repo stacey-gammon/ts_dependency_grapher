@@ -1,19 +1,21 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { addEdge } from '../dependency_parsing/add_edge';
-import { getLeafNode, getParentNode } from '../node.mock';
+import { getLeafNode, getParentNode } from '../../../test/node.mock';
 import { GVEdgeMapping } from '../types/edge_types';
 import { DependencyStatsMapping, fillDependencyStats } from './get_dependency_stats';
+import { ApiItemMap } from '../types';
 
 it('getDependencyStats', () => {
-  const aParent = getParentNode('A');
-  const bParent = getParentNode('B');
-  const aNode = getLeafNode('A/1.ts', aParent);
+  const items: ApiItemMap = {};
+  const aParent = getParentNode('A', items);
+  const bParent = getParentNode('B', items);
+  const aNode = getLeafNode('A/1.ts', items, aParent);
   aParent.children.push(aNode);
-  const interDest1 = getLeafNode('A/2.ts', aParent);
+  const interDest1 = getLeafNode('A/2.ts', items, aParent);
   aParent.children.push(interDest1);
-  const intraDest1 = getLeafNode('B/1.ts', bParent);
+  const intraDest1 = getLeafNode('B/1.ts', items, bParent);
   bParent.children.push(intraDest1);
-  const intraDest2 = getLeafNode('B/1.ts', bParent);
+  const intraDest2 = getLeafNode('B/1.ts', items, bParent);
   bParent.children.push(intraDest2);
 
   const edges: GVEdgeMapping = {};

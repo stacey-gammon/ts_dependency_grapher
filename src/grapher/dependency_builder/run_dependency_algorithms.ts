@@ -43,11 +43,11 @@ export async function runDependencyAlgorithms({
 
   for (const takeRecommendations of beforeAndAfter) {
     const outputId = getOutputFileName(fileNamePrefix, takeRecommendations, zoom);
-    let stats = getNodeStats(root, edges);
+    let stats = getNodeStats(root, items, edges);
 
     if (takeRecommendations && stats.recommendations) {
-      recommendClustering({ outputId, root, edges });
-      stats = getNodeStats(root, edges);
+      recommendClustering({ outputId, root, edges, items });
+      stats = getNodeStats(root, items, edges);
     }
 
     console.log(`Building graphs for ${outputId} at zoom level ${zoom}`);

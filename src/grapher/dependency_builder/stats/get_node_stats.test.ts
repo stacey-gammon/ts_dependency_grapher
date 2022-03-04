@@ -1,9 +1,9 @@
 import { parseDependencies } from '../dependency_parsing/parse_dependencies';
 import Path from 'path';
-import { isLeafNode } from '../utils';
+import { isLeafNode, isParentNode } from '../utils';
 import { getNodeStats } from './get_node_stats';
 import { createAndAddLeafNode, getParentNode } from '../../../test/node.mock';
-import { LeafNode, ParentNode, GVEdgeMapping } from '../types';
+import { LeafNode, ParentNode, GVEdgeMapping, ApiItemMap } from '../types';
 import { getTSMorphProject } from '../../../get_tsmorph_project';
 import { resolveRepoConfigInput } from '../../repo';
 import { getConfig } from '../../../config';
@@ -48,17 +48,16 @@ it('fillNodeStats well organized', () => {
 
 it.only('fillNodeStats poor organized', () => {
   const repoInfo = getRepoInfo('../../examples/poor_organized/tsconfig.json');
-  const project = getTSMorphProject(repoInfo);
-  const { edges, root } = parseDependences({
+  const project = getTSMorphProject(repoInfo.tsconfig);
+  const { edges, items, root } = parseDependencies({
     repoInfo,
     project,
   });
 
-  const stats = getNodeStats(root, edges);
+  const stats = getNodeStats(root, items, edges);
 
   const threeSource = stats.stats['_B_3_ts'];
 
-  removeCircularDependenciesFromEdges(edges);
   expect(threeSource.intraDependencyCount).toBe(3);
   expect(threeSource.interDependencyCount).toBe(0);
   expect(threeSource.afferentCoupling).toBe(0);
@@ -73,24 +72,25 @@ it.only('fillNodeStats poor organized', () => {
   expect(cSix.afferentCoupling).toBe(1);
   expect(cSix.efferentCoupling).toBe(3);
 
-  expect(isLeafNode(root)).toBe(false);
-  if (!isLeafNode(root)) {
+  expect(!isParentNode(root)).toBe(false);
+  if (isParentNode(root)) {
     const oneFolder = root.children.find((c) => c.id === '_A');
     expect(oneFolder).toBeDefined();
   }
 });
 
 it.only('fillNodeStats corner case check inter to see if should stay in self', () => {
-  const root: ParentNode = getParentNode('root');
-  const A: ParentNode = getParentNode('A', root);
-  const B: ParentNode = getParentNode('B', root);
-  const C: ParentNode = getParentNode('C', root);
+  const items: ApiItemMap = {};
+  const root: ParentNode = getParentNode('root', items);
+  const A: ParentNode = getParentNode('A', items, root);
+  const B: ParentNode = getParentNode('B', items, root);
+  const C: ParentNode = getParentNode('C', items, root);
   root.children = [A, B, C];
 
-  const one: LeafNode = createAndAddLeafNode('1', A);
-  const two: LeafNode = createAndAddLeafNode('2', B);
-  const three: LeafNode = createAndAddLeafNode('3', B);
-  const four: LeafNode = createAndAddLeafNode('4', C);
+  const one: LeafNode = createAndAddLeafNode('1', items, A);
+  const two: LeafNode = createAndAddLeafNode('2', items, B);
+  const three: LeafNode = createAndAddLeafNode('3', items, B);
+  const four: LeafNode = createAndAddLeafNode('4', items, C);
 
   // A/1 -> B/2 [3]
   // B/2 -> B/3 [2]
@@ -131,11 +131,10 @@ it.only('fillNodeStats corner case check inter to see if should stay in self', (
 
   A.children = [];
 
-  const stats = getNodeStats(root, edges);
+  const stats = getNodeStats(root, items, edges);
 
   const threeSource = stats.stats['_B_3_ts'];
 
-  removeCircularDependenciesFromEdges(edges);
   expect(threeSource.intraDependencyCount).toBe(3);
   expect(threeSource.interDependencyCount).toBe(0);
   expect(threeSource.afferentCoupling).toBe(0);
@@ -151,7 +150,7 @@ it.only('fillNodeStats corner case check inter to see if should stay in self', (
   expect(cSix.efferentCoupling).toBe(3);
 
   expect(isLeafNode(root)).toBe(false);
-  if (!isLeafNode(root)) {
+  if (isParentNode(root)) {
     const oneFolder = root.children.find((c) => c.id === '_A');
     expect(oneFolder).toBeDefined();
   }

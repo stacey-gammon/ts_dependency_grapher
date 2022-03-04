@@ -1,4 +1,4 @@
-import { isLeafNode } from '../utils';
+import { isLeafNode, isParentNode } from '../utils';
 import { LeafNode, ParentNode, Edge, GVEdgeMapping } from '../types';
 import nconf from 'nconf';
 
@@ -67,7 +67,7 @@ function dbScanReclusterInner(
       .join(',')}`
   );
 
-  if (isLeafNode(node)) {
+  if (!isParentNode(node)) {
     console.log(`\n----Building cluster ${cluster.currClusterIndex}----\n`);
 
     reClusterInner(

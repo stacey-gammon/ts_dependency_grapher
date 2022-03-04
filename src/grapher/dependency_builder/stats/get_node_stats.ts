@@ -1,4 +1,4 @@
-import { LeafNode, ParentNode } from '../types/types';
+import { LeafNode, ParentNode } from '../types';
 import { NodeStats } from '../types/node_stats';
 import { GVEdgeMapping } from '../types/edge_types';
 import { AllNodeStats, RecommendationsList } from './types';
@@ -20,7 +20,7 @@ export function getNodeStats(
   const recommendations: RecommendationsList = [];
   fillDependencyStats(edges, dependencyStats);
   fillOrgScoreStats(node, items, edges, orgStats);
-  fillNodeStats(node, nodeStats, orgStats, dependencyStats);
+  fillNodeStats(node, items, nodeStats, orgStats, dependencyStats);
 
   const statKeys: Array<keyof NodeStats> = [
     'efferentCoupling',

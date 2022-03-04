@@ -1,30 +1,32 @@
 import { saveRecommendationsToFile } from './save_recommendations_to_file';
 import Path from 'path';
-import { LeafNode, ParentNode } from '../types/types';
+import { ApiItemMap, LeafNode, ParentNode } from '../types';
 import { dbScanRecluster } from './db_scan_recluster';
 import { GVEdgeMapping } from '../types/edge_types';
-import { isLeafNode } from '../zoom/zoom_out';
-import { getParentNode } from '../node.mock';
+import { isParentNode } from '../utils';
+import { getParentNode } from '../../../test/node.mock';
 import { moveNode } from './move_node';
-import { deCircularify } from '../utils';
+import { deCircularify } from '../../../utils';
 import { Move, orgScoreClustering } from './org_score_clustering';
-import { CLUSTERING_ALGOS } from '../config/config';
-import { getConfig } from '../config';
+import { CLUSTERING_ALGOS } from '../../../config/config';
+import { getConfig } from '../../../config';
 
 export function recommendClustering({
   outputId,
   root,
+  items,
   edges,
 }: {
   outputId: string;
   root: ParentNode | LeafNode;
+  items: ApiItemMap;
   edges: GVEdgeMapping;
 }) {
   const clusteringMethod = getConfig().clusteringAlgo;
   const config = getConfig();
   if (clusteringMethod === CLUSTERING_ALGOS.ORG_SCORE) {
     const movesMade: Array<Move> = [];
-    orgScoreClustering(root, edges, movesMade);
+    orgScoreClustering(root, items, edges, movesMade);
 
     saveRecommendationsToFile(
       Path.resolve(config.outputFolder, `${outputId}_org_score_recommendations.md`),
@@ -45,15 +47,15 @@ export function recommendClustering({
     );
     console.log('New clusters are ', JSON.stringify(newClusters, deCircularify, 2));
 
-    if (!isLeafNode(root)) {
+    if (isParentNode(root)) {
       root.children = [];
       let index = 0;
       for (const cluster of newClusters) {
-        const parent = getParentNode(index.toString(), root);
+        const parent = getParentNode(index.toString(), items, root);
         root.children.push(parent);
         index++;
         cluster.forEach((node) => {
-          moveNode(node, parent);
+          moveNode(node, parent, root);
         });
       }
     }

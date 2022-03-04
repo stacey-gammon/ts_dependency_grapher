@@ -1,5 +1,5 @@
-import { LeafNode, ParentNode } from '../../../types/types';
-import { isLeafNode } from '../zoom/zoom_out';
+import { LeafNode, ParentNode } from '../types';
+import { isParentNode } from '../utils';
 
 export function getNodeById(
   id: string,
@@ -9,7 +9,7 @@ export function getNodeById(
     return node;
   }
 
-  if (!isLeafNode(node)) {
+  if (isParentNode(node)) {
     for (const child of node.children) {
       const found = getNodeById(id, child);
       if (found) return found;
