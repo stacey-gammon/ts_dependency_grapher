@@ -1,3 +1,4 @@
+import fs from 'fs';
 import { ConfigOptions } from './config';
 import { NODE_SIZE_WEIGHT_OPTIONS, NODE_COLOR_WEIGHT_OPTIONS } from './node_weight_options';
 
@@ -14,6 +15,10 @@ export function validateConfig(config: ConfigOptions) {
   }
   if (config.nodeColorWeight) {
     throwIfNotOneOf(config.nodeColorWeight, Object.values(NODE_COLOR_WEIGHT_OPTIONS));
+  }
+
+  if (!fs.existsSync(config.repoCacheFolder)) {
+    fs.mkdirSync(config.repoCacheFolder);
   }
 
   if (typeof config.excludeTypes !== 'boolean') {

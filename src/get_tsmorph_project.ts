@@ -1,18 +1,17 @@
 import { Project } from 'ts-morph';
-import { RepoInfo } from './config/repo_config_settings';
-import { convertConfigRelativePathToAbsolutePath } from './utils';
 
-export function getTSMorphProject(repoInfo: RepoInfo): Project {
-  const project = new Project({ tsConfigFilePath: repoInfo.tsconfig });
+export function getTSMorphProject(
+  tsconfig: string,
+  extraSourceFileDirs: Array<string> = []
+): Project {
+  const project = new Project({ tsConfigFilePath: tsconfig });
 
-  // For some reason tsMorph won't pick up all files if just relyign on the tsconfig. Like, only a couple thousand.
-  const extraSourceFileDirs: string[] = repoInfo.extraSourceFileGlobs || [];
+  // Sometimes tsmorph won't pick up on all the files relying on the tsconfig alone.
   extraSourceFileDirs.forEach((sourceFilePath) => {
-    const fullPath = convertConfigRelativePathToAbsolutePath(sourceFilePath);
-    console.log(`Adding sources files at ${fullPath}`);
-    const addedFiles = project.addSourceFilesAtPaths(fullPath);
+    console.log(`Adding sources files at ${sourceFilePath}`);
+    const addedFiles = project.addSourceFilesAtPaths(sourceFilePath);
     if (addedFiles.length === 0) {
-      console.warn(`No files matching ${fullPath}`);
+      console.warn(`No files matching ${sourceFilePath}`);
     }
   });
   project.resolveSourceFileDependencies();

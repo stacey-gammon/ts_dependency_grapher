@@ -2,14 +2,70 @@
     "repos": [
         { 
             "full_name": "stacey-gammon/ts_dependency_grapher",
-            "tsconfig": "./examples/uses_index_files/tsconfig.json",
+            "tsconfig": "../tsconfig.json",
             "source": "file",
-            "outputName": "uses_index_files"
+            "outputName": "Self",
+            "description": "Self-analysis. Running the algorithm on itself."
+        },
+        { 
+            "fullName": "stacey-gammon/ts_dependency_grapher",
+            "tsconfig": "../examples/well_organized/tsconfig.json",
+            "source": "file",
+            "outputName": "Example 1",
+            "description": "An example of a well organized project",
+            "clearCache": true
+        },
+        { 
+            "fullName": "stacey-gammon/ts_dependency_grapher",
+            "tsconfig": "../examples/poor_organized/tsconfig.json",
+            "source": "file",
+            "outputName": "Example 2",
+            "description": "An example of a poorly organized project",
+            "clearCache": true
+        },
+        { 
+            "full_name": "elastic/kibana",
+            "tsconfig": "../../Elastic/kibana/tsconfig.json",
+            "source": "file",
+            "entries": [
+                "../../Elastic/kibana/src/plugins/**/*/public/index.ts",
+                "../../Elastic/kibana/src/plugins/**/*/common/index.ts",
+                "../../Elastic/kibana/src/plugins/**/*/server/index.ts"],
+            "showExternalNodesOnly": false,
+            "outputName": "Kibana",
+            "layoutEngines": [
+                { "name": "fdp" },
+                { "name": "sfdp" }
+            ],
+            "extraSourceFileGlobs": [
+                "../../Elastic/kibana/x-pack/plugins/**/*{.d.ts,.ts}",
+                "../../Elastic/kibana/src/plugins/**/*{.d.ts,.ts}",
+                "../../Elastic/kibana/packages/**/*{.d.ts,.ts}"
+            ],
+            "maxDepths": [0, 5]
+        },
+        { 
+            "fullName": "microsoft/vscode",
+            "tsconfig": "./src/tsconfig.json",
+            "outputName": "vscode",
+            "maxDepths": [0,3,4]
+        },
+        { 
+            "fullName": "angular/angular",
+            "tsconfig": "./packages/tsconfig.json",
+            "outputName": "angular",
+            "maxDepths": [0,2,3]
+        },
+        { 
+            "fullName": "grafana/grafana",
+            "tsconfig": "./tsconfig.json",
+            "outputName": "grafana",
+            "maxDepths": [0,4,6]
         }
     ],
-    "outputFolder": "docs/tst",
+    "outputFolder": "docs",
     "excludeFilePaths" : ["_test_", ".test.ts"],
-    "maxImageSize": "200",
+    "maxImageSize": "20",
     "buildDocsSite": true,
     "unusedNodeColor": "white",
     "nodeColorWeight": "OrgScore",

@@ -1,4 +1,4 @@
-import { RepoInfo } from './repo_config_settings';
+import { RepoConfigInput } from './repo_config';
 import { NODE_SIZE_WEIGHT_OPTIONS, NODE_COLOR_WEIGHT_OPTIONS } from './node_weight_options';
 
 export interface ConfigOptions {
@@ -6,15 +6,19 @@ export interface ConfigOptions {
   repoCacheFolder: string;
   // If true will delete all the cache files.
   clearCache?: boolean;
+
   // If true, only a useful color scheme will be used. If false, a color scheme will be chosen at
   // random. Having it false makes for prettier graphs, but it'll be harder to distinguish what
   // the colors indicate.
   usefulColors: boolean;
+
   // Array of repos you would like to analyze.
-  repos: Array<RepoInfo>;
+  repos: Array<RepoConfigInput>;
+
   // File glob path patterns you wish to skip over. Useful, for example, if you wish to
   // exclude test files and folders.
   excludeFilePaths: Array<string>;
+
   // Where the final images, dot files, and analysis files will be saved. If this
   // is for building the docs size, should be something within `docs`.
   outputFolder: string;

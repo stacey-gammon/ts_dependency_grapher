@@ -1,5 +1,6 @@
 import { CLUSTERING_ALGOS, ConfigOptions } from './config';
 import { NODE_COLOR_WEIGHT_OPTIONS } from './node_weight_options';
+import { RepoConfigInput } from './repo_config';
 
 export const DEFAULT_CONFIG: Partial<ConfigOptions> = {
   repoCacheFolder: '.repo_cache',
@@ -13,4 +14,8 @@ export const DEFAULT_CONFIG: Partial<ConfigOptions> = {
   outputFolder: 'docs',
   nodeColorWeight: NODE_COLOR_WEIGHT_OPTIONS.COLOR_BY_CLUSTER,
   excludeTypes: true,
+};
+
+export const DEFAULT_REPO_CONFIG = {
+  layoutEngines: [{ name: 'sfdp' }, { name: 'fdp' }],
 };

@@ -1,5 +1,5 @@
 import Path from 'path';
-import { LeafNode, ParentNode } from './types/types';
+import { LeafNode, ParentNode } from './grapher/dependency_builder';
 
 export function getRootRelativePath(fullPath: string, repoRoot: string): string | undefined {
   if (!fullPath.startsWith(repoRoot)) {

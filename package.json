@@ -19,7 +19,8 @@
     "build": "tsc",
     "lint": "eslint src",
     "watch": "tsc --watch",
-    "dep": "node build/src/index.js"
+    "docs": "node build/scripts/build_docs_site.js",
+    "run": "node build/scripts/run.js"
   },
   "dependencies": {
     "@octokit/rest": "^18.12.0",

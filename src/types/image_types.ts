@@ -1,6 +1,6 @@
-import { RepoInfo } from '../config/repo_config_settings';
+import { RepoConfig } from '../config/repo_config';
 
-export interface OutputImage {
+export interface ImageInfo {
   path: string;
   entry?: string;
   zoom?: string;
@@ -13,6 +13,6 @@ export interface OutputImageMapping {
 }
 
 export interface ImagesForRepoConfig {
-  images: Array<OutputImage>;
-  repoInfo: RepoInfo;
+  images: Array<ImageInfo>;
+  repoInfo: RepoConfig;
 }
