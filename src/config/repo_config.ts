@@ -1,3 +1,5 @@
+import { Config } from './config';
+
 export interface RepoConfigInput {
   // Should be in the format owner/repo
   readonly fullName: string;
@@ -47,7 +49,7 @@ export interface RepoConfigInput {
   readonly maxDepths?: Array<number>;
 }
 
-export interface RepoConfig {
+export interface RepoConfig extends Omit<Config, 'repos'> {
   // Where the images should go. This is inherited from ConfigOptions.
   readonly outputFolder: string;
 

@@ -21,7 +21,7 @@ export function buildDotFile(
   stats: AllNodeStats
 ) {
   if (repoInfo.clearCache || nconf.get('clearCache') || !fs.existsSync(path)) {
-    const text = getDiGraphText(edges, root, items, stats);
+    const text = getDiGraphText(edges, root, items, stats, repoInfo);
     if (!text) {
       throw new Error('Text not generated');
     }

@@ -9,8 +9,7 @@ import { ApiItem, ApiItemMap } from '../types/node_types';
 export function parseFiles(
   files: SourceFile[],
   repoRoot: string,
-  repoInfo: RepoConfig,
-  excludeFilesPaths?: Array<string>
+  repoInfo: RepoConfig
 ): { edges: GVEdgeMapping; root: ParentNode | LeafNode; items: ApiItemMap } {
   const edges: GVEdgeMapping = {};
   const items: ApiItemMap = {};
@@ -27,15 +26,15 @@ export function parseFiles(
     children: [],
   };
 
-  addNodesFromFiles(rootNode, repoRoot, files, items, excludeFilesPaths);
+  addNodesFromFiles(rootNode, repoRoot, files, items, repoInfo.excludeFilePaths);
   addEdgesFromFiles(
     root,
     edges,
     items,
     files,
+    repoInfo,
     repoRoot,
-    !!repoInfo.showExternalNodesOnly,
-    excludeFilesPaths
+    !!repoInfo.showExternalNodesOnly
   );
 
   return { edges, root, items };

@@ -1,7 +1,11 @@
-import { RepoConfigInput } from './repo_config';
+import { RepoConfig, RepoConfigInput } from './repo_config';
 import { NODE_SIZE_WEIGHT_OPTIONS, NODE_COLOR_WEIGHT_OPTIONS } from './node_weight_options';
 
-export interface ConfigOptions {
+export interface ConfigInput extends Partial<Omit<Config, 'repos'>> {
+  repos: Array<RepoConfigInput>;
+}
+
+export interface Config {
   // The folder the repos being downloaded will be saved in.
   repoCacheFolder: string;
   // If true will delete all the cache files.
@@ -13,7 +17,7 @@ export interface ConfigOptions {
   usefulColors: boolean;
 
   // Array of repos you would like to analyze.
-  repos: Array<RepoConfigInput>;
+  repos: Array<RepoConfig>;
 
   // File glob path patterns you wish to skip over. Useful, for example, if you wish to
   // exclude test files and folders.

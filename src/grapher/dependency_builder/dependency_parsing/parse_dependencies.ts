@@ -2,7 +2,6 @@ import { Project, SourceFile } from 'ts-morph';
 import Path from 'path';
 import { LeafNode, ParentNode, GVEdgeMapping } from '../types';
 import { RepoConfig } from '../../../config/repo_config';
-import { getConfig } from '../../../config';
 import { parseFiles } from './parse_files';
 import glob from 'glob';
 import { ApiItemMap } from '../types/node_types';
@@ -33,5 +32,5 @@ export function parseDependencies({
   }
   const repoRoot = Path.resolve(rootDirs[0].getPath(), '..');
 
-  return parseFiles(files, repoRoot, repoInfo, getConfig().excludeFilePaths);
+  return parseFiles(files, repoRoot, repoInfo);
 }

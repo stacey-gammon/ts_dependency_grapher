@@ -68,7 +68,7 @@
     "maxImageSize": "20",
     "buildDocsSite": true,
     "unusedNodeColor": "white",
-    "nodeColorWeight": "OrgScore",
+    "nodeColorWeight": "orgScore",
     "zooms": [],
     "clearDotCache": false,
     "refreshParsing": false,

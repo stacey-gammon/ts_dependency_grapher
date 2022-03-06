@@ -1,8 +1,7 @@
-import { CLUSTERING_ALGOS, ConfigOptions } from './config';
+import { CLUSTERING_ALGOS, Config } from './config';
 import { NODE_COLOR_WEIGHT_OPTIONS } from './node_weight_options';
-import { RepoConfigInput } from './repo_config';
 
-export const DEFAULT_CONFIG: Partial<ConfigOptions> = {
+export const DEFAULT_CONFIG: Partial<Config> = {
   repoCacheFolder: '.repo_cache',
   usefulColors: true,
   clusteringAlgo: CLUSTERING_ALGOS.ORG_SCORE,

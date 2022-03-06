@@ -7,8 +7,8 @@ import { getFilePathForTsNode, getIdForNode } from './tsmorph_utils';
 import { excludeFile } from './should_exclude_file';
 import { addEdge } from './add_edge';
 import { getNodeById } from './get_node_by_id';
-import { getConfig } from '../../../config';
 import { ApiItemMap } from '../types/node_types';
+import { RepoConfig } from '../../../config/repo_config';
 
 export function addEdges(
   file: SourceFile,
@@ -16,9 +16,9 @@ export function addEdges(
   root: ParentNode | LeafNode,
   items: ApiItemMap,
   repoRoot: string,
+  config: RepoConfig,
   showExternalNodesOnly?: boolean
 ) {
-  const config = getConfig();
   const excludeTypes = config.excludeTypes;
   const globalExcludePaths = config.excludeFilePaths;
   const exports = file.getExportedDeclarations();

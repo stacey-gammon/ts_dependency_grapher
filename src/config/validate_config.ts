@@ -1,13 +1,13 @@
 import fs from 'fs';
-import { ConfigOptions } from './config';
+import { Config } from './config';
 import { NODE_SIZE_WEIGHT_OPTIONS, NODE_COLOR_WEIGHT_OPTIONS } from './node_weight_options';
 
-export function validateConfig(config: ConfigOptions) {
+export function validateConfig(config: Config) {
   if (!config.repos) {
-    throw new Error('Config repos option is required');
+    throw new Error('repos option is required');
   }
   if (!(config.repos instanceof Array)) {
-    throw new Error('Config repos option is not an Array');
+    throw new Error('repos option is not an Array');
   }
 
   if (config.nodeSizeWeight) {

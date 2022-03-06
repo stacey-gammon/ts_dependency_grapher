@@ -46,7 +46,7 @@ export async function runDependencyAlgorithms({
     let stats = getNodeStats(root, items, edges);
 
     if (takeRecommendations && stats.recommendations) {
-      recommendClustering({ outputId, root, edges, items });
+      recommendClustering({ outputId, root, edges, items, config: repoInfo });
       stats = getNodeStats(root, items, edges);
     }
 
@@ -104,7 +104,7 @@ function buildGraph({
   edges: GVEdgeMapping;
   stats: AllNodeStats;
 }) {
-  generateCSVs(root, items, edges, fileNamePrefix, stats);
+  generateCSVs(root, items, edges, fileNamePrefix, stats, repoInfo);
 
   const dotOutputPath = Path.resolve(repoInfo.outputFolder, `${fileNamePrefix}.dot`);
 

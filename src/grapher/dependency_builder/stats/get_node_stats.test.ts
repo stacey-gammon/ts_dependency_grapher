@@ -5,15 +5,12 @@ import { getNodeStats } from './get_node_stats';
 import { createAndAddLeafNode, getParentNode } from '../../../test/node.mock';
 import { LeafNode, ParentNode, GVEdgeMapping, ApiItemMap } from '../types';
 import { getTSMorphProject } from '../../../get_tsmorph_project';
-import { resolveRepoConfigInput } from '../../repo';
-import { getConfig } from '../../../config';
+import { getTestConfig } from '../../../test/get_test_config';
+import { RepoConfig } from '../../../config/repo_config';
 
-function getRepoInfo(tsconfigPath: string) {
+function getRepoInfo(tsconfigPath: string): RepoConfig {
   const fullPath = Path.resolve(__dirname, tsconfigPath);
-  return resolveRepoConfigInput(
-    { fullName: 'test', tsconfig: fullPath, clearCache: true, layoutEngines: [] },
-    getConfig()
-  );
+  return getTestConfig(fullPath).repos[0];
 }
 
 it('fillNodeStats well organized', () => {

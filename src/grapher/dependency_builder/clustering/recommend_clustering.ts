@@ -8,23 +8,23 @@ import { getParentNode } from '../../../test/node.mock';
 import { moveNode } from './move_node';
 import { deCircularify } from '../../../utils';
 import { Move, orgScoreClustering } from './org_score_clustering';
-import { CLUSTERING_ALGOS } from '../../../config/config';
-import { getConfig } from '../../../config';
+import { CLUSTERING_ALGOS, Config } from '../../../config/config';
+import { RepoConfig } from '../../../config/repo_config';
 
 export function recommendClustering({
   outputId,
   root,
   items,
   edges,
+  config,
 }: {
   outputId: string;
   root: ParentNode | LeafNode;
   items: ApiItemMap;
   edges: GVEdgeMapping;
+  config: RepoConfig;
 }) {
-  const clusteringMethod = getConfig().clusteringAlgo;
-  const config = getConfig();
-  if (clusteringMethod === CLUSTERING_ALGOS.ORG_SCORE) {
+  if (config.clusteringAlgo === CLUSTERING_ALGOS.ORG_SCORE) {
     const movesMade: Array<Move> = [];
     orgScoreClustering(root, items, edges, movesMade);
 

@@ -1,4 +1,3 @@
-import { getConfig } from '../../config';
 import { AllNodeStats, ParentNode, LeafNode } from '../dependency_builder';
 import {
   CLUSTER_COLORS,
@@ -15,12 +14,17 @@ import {
 } from '../../config/node_weight_options';
 import { ApiItemMap } from '../dependency_builder/types/node_types';
 import { isParentNode } from '../dependency_builder/utils';
+import { RepoConfig } from '../../config/repo_config';
 
 const clusterToColorMap: { [key: string]: string } = {};
 let nextColorIndex = 0;
 
-export function getNodeText(node: LeafNode, items: ApiItemMap, stats: AllNodeStats): string {
-  const config = getConfig();
+export function getNodeText(
+  node: LeafNode,
+  items: ApiItemMap,
+  stats: AllNodeStats,
+  config: RepoConfig
+): string {
   const colorBy = config.nodeColorWeight;
   const sizeBy = config.nodeSizeWeight;
 
@@ -119,12 +123,13 @@ export function getNodesText(
   node: ParentNode | LeafNode,
   items: ApiItemMap,
   stats: AllNodeStats,
+  config: RepoConfig,
   level = 0
 ): string {
   let text = '';
 
   if (!isParentNode(node)) {
-    text += getNodeText(node, items, stats) + '\n';
+    text += getNodeText(node, items, stats, config) + '\n';
   } else {
     const color = getColorForLevel(level);
 
@@ -139,9 +144,9 @@ label="${getLabel(items[node.id].label)}"
 
       node.children.forEach((child) => {
         if (isLeafNode(child)) {
-          text += getNodeText(child, items, stats);
+          text += getNodeText(child, items, stats, config);
         } else {
-          text += getNodesText(child, items, stats, level + 1);
+          text += getNodesText(child, items, stats, config, level + 1);
         }
         +'\n';
       });

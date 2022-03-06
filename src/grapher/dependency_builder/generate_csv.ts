@@ -5,14 +5,15 @@ import { LeafNode, ParentNode, GVEdgeMapping, ApiItemMap } from './types';
 import { NodeStats } from './types/node_stats';
 import { isParentNode } from './utils';
 import { AllNodeStats } from '..';
-import { getConfig } from '../../config';
+import { RepoConfig } from '../../config/repo_config';
 
 export function generateCSVs(
   root: ParentNode | LeafNode,
   items: ApiItemMap,
   edges: GVEdgeMapping,
   name: string,
-  stats: AllNodeStats
+  stats: AllNodeStats,
+  config: RepoConfig
 ) {
   const columns: Array<keyof NodeStats | 'filePath' | 'complexityScore'> = [
     'filePath',
@@ -43,7 +44,7 @@ export function generateCSVs(
 ${colText}
 ${rowText.join('\n')}
 `;
-  fs.writeFileSync(Path.resolve(getConfig().outputFolder, `${name}_nodes.csv`), csvText);
+  fs.writeFileSync(Path.resolve(config.outputFolder, `${name}_nodes.csv`), csvText);
 
   const edgeCSVColText = 'source, destination, weight';
 
@@ -59,7 +60,7 @@ ${rowText.join('\n')}
 ${edgeCSVColText}
 ${edgeRows.join('\n')}
  `;
-  fs.writeFileSync(Path.resolve(getConfig().outputFolder, `${name}_edges.csv`), edgeCsvText);
+  fs.writeFileSync(Path.resolve(config.outputFolder, `${name}_edges.csv`), edgeCsvText);
 }
 
 function addRows(

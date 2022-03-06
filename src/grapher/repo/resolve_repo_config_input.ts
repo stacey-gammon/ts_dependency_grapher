@@ -1,5 +1,5 @@
 import Path from 'path';
-import { ConfigOptions } from '../../config/config';
+import { Config } from '../../config/config';
 import { DEFAULT_REPO_CONFIG } from '../../config/defaults';
 import { RepoConfig, RepoConfigInput } from '../../config/repo_config';
 
@@ -10,12 +10,10 @@ import { RepoConfig, RepoConfigInput } from '../../config/repo_config';
  * @param config
  * @returns
  */
-export function resolveRepoConfigInput(
-  repoConfig: RepoConfigInput,
-  config: ConfigOptions
-): RepoConfig {
+export function resolveRepoConfigInput(repoConfig: RepoConfigInput, config: Config): RepoConfig {
   const rootPath = repoConfig.rootPath || Path.resolve(config.repoCacheFolder, repoConfig.fullName);
   return {
+    ...config,
     ...repoConfig,
     ...DEFAULT_REPO_CONFIG,
     rootPath,

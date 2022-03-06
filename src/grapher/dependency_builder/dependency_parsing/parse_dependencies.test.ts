@@ -3,20 +3,12 @@ import Path from 'path';
 import { isLeafNode } from '../';
 import { getTSMorphProject } from '../../../get_tsmorph_project';
 import { RepoConfig } from '../../../config/repo_config';
-import { resolveRepoConfigInput } from '../../repo';
-import { getConfig } from '../../../config';
 import { isParentNode } from '../utils';
+import { getTestConfig } from '../../../test/get_test_config';
 
 function getRepoInfo(tsconfigPath: string): RepoConfig {
   const fullPath = Path.resolve(__dirname, tsconfigPath);
-  return resolveRepoConfigInput(
-    {
-      fullName: 'test',
-      tsconfig: fullPath,
-      layoutEngines: [],
-    },
-    getConfig()
-  );
+  return getTestConfig(fullPath).repos[0];
 }
 
 it('parseDependencies simple', () => {

@@ -1,1 +1,1 @@
-export { getConfig } from './get_config';
+export { intializeConfig } from './get_config';

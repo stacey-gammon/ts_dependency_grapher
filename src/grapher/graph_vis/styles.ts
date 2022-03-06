@@ -6,8 +6,6 @@
  * Side Public License, v 1.
  */
 
-import { getConfig } from '../../config';
-
 export const BLUE = ['#BFD1FF', '#95B2FF', '#5F8BFF', '#336BFF', '#0046FF'];
 export const RED = ['#FFC9C9', '#FF9393', '#FF5C5C', '#FF3131', '#FF0000'];
 
@@ -39,21 +37,21 @@ export const COLOR_SCHEMES = [SUNRISE_SCHEME, LIME, MOSS];
 let RANDOM_COLOR_INDEX = Math.floor(Math.random() * COLOR_SCHEMES.length);
 console.log('RANDOM_COLOR_INDEX', RANDOM_COLOR_INDEX);
 
-export function getCurrColorScheme() {
-  return getConfig().usefulColors ? BLUE : COLOR_SCHEMES[RANDOM_COLOR_INDEX];
+export function getCurrColorScheme(usefulColors?: boolean) {
+  return usefulColors ? BLUE : COLOR_SCHEMES[RANDOM_COLOR_INDEX];
 }
 
 export function regenerateColorScheme() {
   RANDOM_COLOR_INDEX = Math.floor(Math.random() * COLOR_SCHEMES.length);
 }
 
-export function getFontColor(bgColor: string): string {
-  return bgColor === getCurrColorScheme()[0] ||
-    bgColor === getCurrColorScheme()[1] ||
+export function getFontColor(bgColor: string, usefulColors = false): string {
+  return bgColor === getCurrColorScheme(usefulColors)[0] ||
+    bgColor === getCurrColorScheme(usefulColors)[1] ||
     bgColor === RED[0] ||
     bgColor === RED[1] ||
     bgColor === 'white'
-    ? getCurrColorScheme()[4]
+    ? getCurrColorScheme(usefulColors)[4]
     : 'white';
 }
 
